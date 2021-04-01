@@ -29,3 +29,13 @@ fun ImageView.setImageUrl(url: String?) {
                 .into(this)
     }
 }
+
+@BindingAdapter("isBookmark")
+fun ImageView.setBookmarkTint(isBookmark: Boolean?) {
+    isBookmark?.let {
+        if (it)
+            this.setColorFilter(R.color.teal_200)
+        else
+            this.setColorFilter(R.color.black)
+    }
+}

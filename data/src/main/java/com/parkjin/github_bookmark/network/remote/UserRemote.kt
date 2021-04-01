@@ -2,6 +2,7 @@ package com.parkjin.github_bookmark.network.remote
 
 import com.parkjin.github_bookmark.network.api.UserAPI
 import com.parkjin.github_bookmark.network.response.UserData
+import com.parkjin.github_bookmark.util.Constants
 import io.reactivex.Single
 
 /**
@@ -11,5 +12,5 @@ class UserRemote(
     private val api: UserAPI
 ) {
     fun getAllUser(name: String): Single<List<UserData>> =
-        api.getAllUser(name, 1, 100).map { it.body()?.items }
+        api.getAllUser(name, Constants.PAGE, Constants.PER_PAGE).map { it.body()?.items }
 }

@@ -1,7 +1,8 @@
 package com.parkjin.github_bookmark.di
 
+import com.parkjin.github_bookmark.usecase.AddBookMarkUserUseCase
 import com.parkjin.github_bookmark.usecase.GetAllSearchUserUseCase
-import com.parkjin.github_bookmark.usecase.GetBookmarkUseCase
+import com.parkjin.github_bookmark.usecase.GetAllBookmarkUserUseCase
 import org.koin.dsl.module
 
 /**
@@ -9,5 +10,6 @@ import org.koin.dsl.module
  */
 val useCaseModule = module {
     single { GetAllSearchUserUseCase(get()) }
-    single { GetBookmarkUseCase(get()) }
+    single { GetAllBookmarkUserUseCase(get()) }
+    single { AddBookMarkUserUseCase(get()) }
 }

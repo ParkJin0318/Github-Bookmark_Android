@@ -9,6 +9,6 @@ import org.koin.dsl.module
  * Presentation 계층의 ViewModel 클래스 의존성 관리 모듈
  */
 val viewModelModule = module {
-    viewModel { GithubViewModel() }
-    viewModel { BookmarkViewModel() }
+    viewModel { GithubViewModel(get(), get()) }
+    viewModel { BookmarkViewModel(get(), get()) }
 }

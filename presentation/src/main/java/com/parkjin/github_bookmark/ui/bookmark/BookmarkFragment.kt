@@ -5,7 +5,9 @@ import android.view.View
 import com.parkjin.github_bookmark.BR
 import com.parkjin.github_bookmark.R
 import com.parkjin.github_bookmark.base.BindingFragment
+import com.parkjin.github_bookmark.base.EventObserver
 import com.parkjin.github_bookmark.databinding.FragmentBookmarkBinding
+import com.parkjin.github_bookmark.extension.toast
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 
 class BookmarkFragment: BindingFragment<FragmentBookmarkBinding>() {
@@ -21,5 +23,19 @@ class BookmarkFragment: BindingFragment<FragmentBookmarkBinding>() {
         binding.setVariable(BR.viewModel, viewModel)
     }
 
-    override fun observeEvent() { }
+    override fun onResume() {
+        super.onResume()
+        viewModel.getAllBookmarkUser(viewModel.userName.value)
+    }
+
+    override fun observeEvent() {
+        with(viewModel) {
+            onBookmarkEvent.observe(this@BookmarkFragment, EventObserver {
+                getAllBookmarkUser(userName.value)
+            })
+            onErrorEvent.observe(this@BookmarkFragment, EventObserver {
+                toast(it)
+            })
+        }
+    }
 }

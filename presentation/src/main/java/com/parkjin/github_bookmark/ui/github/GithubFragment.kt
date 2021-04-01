@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import com.parkjin.github_bookmark.BR
 import com.parkjin.github_bookmark.R
 import com.parkjin.github_bookmark.base.BindingFragment
+import com.parkjin.github_bookmark.base.EventObserver
 import com.parkjin.github_bookmark.databinding.FragmentGithubBinding
+import com.parkjin.github_bookmark.extension.toast
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 
 class GithubFragment: BindingFragment<FragmentGithubBinding>() {
@@ -23,5 +25,19 @@ class GithubFragment: BindingFragment<FragmentGithubBinding>() {
         binding.setVariable(BR.viewModel, viewModel)
     }
 
-    override fun observeEvent() { }
+    override fun onResume() {
+        super.onResume()
+        viewModel.getAllSearchUser(viewModel.userName.value!!)
+    }
+
+    override fun observeEvent() {
+        with(viewModel) {
+            onBookmarkEvent.observe(this@GithubFragment, EventObserver {
+                getAllSearchUser(userName.value!!)
+            })
+            onErrorEvent.observe(this@GithubFragment, EventObserver {
+                toast(it)
+            })
+        }
+    }
 }

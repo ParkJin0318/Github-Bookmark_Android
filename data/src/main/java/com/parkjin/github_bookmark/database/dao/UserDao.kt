@@ -17,7 +17,7 @@ interface UserDao {
     @Query("SELECT * FROM user_table")
     fun getAllUser(): Single<List<UserEntity>>
 
-    @Query("SELECT * FROM user_table where name = :name")
+    @Query("SELECT * FROM user_table where name like '%' || :name || '%'")
     fun getAllUser(name: String): Single<List<UserEntity>>
 
     @Delete

@@ -14,6 +14,6 @@ data class BindingItem(
 ) {
     fun bind(binding: ViewDataBinding) {
         binding.setVariable(BR.viewModel, viewModel)
-        // binding.setVariable(BR.navigator, navigator)
+        binding.setVariable(BR.navigator, navigator)
     }
 }

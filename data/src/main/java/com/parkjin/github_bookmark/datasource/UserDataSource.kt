@@ -23,7 +23,7 @@ class UserDataSource(
     fun getAllSearchUser(name: String): Single<List<User>> {
         return Observable.combineLatest(
             remote.getAllUser(name).toObservable(),
-            cache.getAllUser(name).toObservable(), { userDataList , userEntityList ->
+            cache.getAllUser().toObservable(), { userDataList , userEntityList ->
                 val userNameList = userEntityList.map { it.name }
 
                 userDataList.map {
