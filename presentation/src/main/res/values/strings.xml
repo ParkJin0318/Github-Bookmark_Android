@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">Github_Bookmark</string>
+    <string name="app_name">Github Bookmark</string>
+    <string name="menu_github">Github</string>
+    <string name="menu_bookmark">Bookmark</string>
 </resources>

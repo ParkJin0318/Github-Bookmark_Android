@@ -5,6 +5,9 @@ import com.parkjin.github_bookmark.di.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
+/**
+ * 앱 실행시, Koin 모듈 작동
+ */
 class GithubBookmarkApplication: Application() {
 
     override fun onCreate() {
