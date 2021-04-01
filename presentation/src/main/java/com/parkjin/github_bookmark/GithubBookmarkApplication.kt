@@ -13,7 +13,7 @@ class GithubBookmarkApplication: Application() {
         startKoin {
             androidContext(this@GithubBookmarkApplication)
             val modules = listOf(
-                databaseModule, networkModule, cacheModule, remoteModule,
+                apiModule, databaseModule, networkModule, cacheModule, remoteModule,
                 dataSourceModule, repositoryModule, useCaseModule, viewModelModule
             )
             modules(modules)
