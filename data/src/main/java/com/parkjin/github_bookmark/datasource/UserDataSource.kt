@@ -27,11 +27,10 @@ class UserDataSource(
                 val userNameList = userEntityList.map { it.name }
 
                 userDataList.map {
-                    if (userNameList.contains(it.name)) {
+                    if (userNameList.contains(it.name))
                         it.toModel(true)
-                    } else {
+                    else
                         it.toModel(false)
-                    }
                 }
             }).singleOrError()
     }
@@ -47,10 +46,9 @@ class UserDataSource(
     /**
      * local 즐겨찾기 사용자 추가
      */
-    fun addBookmarkUser(user: User): Completable {
-        return if (!user.isBookmark)
+    fun addBookmarkUser(user: User): Completable =
+        if (!user.isBookmark)
             cache.insertUser(user.toEntity())
         else
             cache.deleteUser(user.toEntity())
-    }
 }

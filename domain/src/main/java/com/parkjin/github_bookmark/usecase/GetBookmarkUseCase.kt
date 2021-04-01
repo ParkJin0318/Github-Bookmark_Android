@@ -12,7 +12,7 @@ import io.reactivex.schedulers.Schedulers
 class GetBookmarkUseCase(
     private val repository: UserRepository
 ) {
-    fun execute(name: String): Single<List<User>> =
+    fun execute(name: String = ""): Single<List<User>> =
         repository.getAllBookmarkUser(name)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
