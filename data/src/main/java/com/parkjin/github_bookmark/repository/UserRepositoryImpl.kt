@@ -2,6 +2,7 @@ package com.parkjin.github_bookmark.repository
 
 import com.parkjin.github_bookmark.datasource.UserDataSource
 import com.parkjin.github_bookmark.model.User
+import io.reactivex.Completable
 import io.reactivex.Single
 
 /**
@@ -16,4 +17,7 @@ class UserRepositoryImpl(
 
     override fun getAllBookmarkUser(name: String): Single<List<User>> =
         dataSource.getAllBookmarkUser(name)
+
+    override fun addBookmarkUser(user: User): Completable =
+        dataSource.addBookmarkUser(user)
 }

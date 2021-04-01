@@ -1,5 +1,6 @@
 package com.parkjin.github_bookmark.di
 
+import com.parkjin.github_bookmark.network.api.UserAPI
 import com.parkjin.github_bookmark.util.Constants
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -8,6 +9,16 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+
+/**
+ * Data 계층의 API 의존성 관리 모듈
+ */
+val apiModule = module {
+    fun provideUserApi(retrofit: Retrofit): UserAPI {
+        return retrofit.create(UserAPI::class.java)
+    }
+    single { provideUserApi(get()) }
+}
 
 /**
  * Data 계층의 Network 모듈
