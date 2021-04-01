@@ -78,4 +78,7 @@ dependencies {
 
     // Material
     implementation "com.google.android.material:material:$rootProject.material_version"
+
+    implementation project(':domain')
+    implementation project(':data')
 }
