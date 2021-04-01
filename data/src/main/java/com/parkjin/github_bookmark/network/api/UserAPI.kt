@@ -6,8 +6,8 @@ import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-/*
-    Github User 조회 API
+/**
+ * Github User 조회 API
  */
 interface UserAPI {
     @GET("search/users")

@@ -4,8 +4,8 @@ import com.parkjin.github_bookmark.database.entity.UserEntity
 import com.parkjin.github_bookmark.model.User
 import com.parkjin.github_bookmark.network.response.UserData
 
-/*
-    User -> UserEntity 변환 Mapper
+/**
+ * User -> UserEntity 변환 Mapper
  */
 fun User.toEntity(): UserEntity =
     UserEntity(
@@ -13,8 +13,8 @@ fun User.toEntity(): UserEntity =
         this.profileImageUrl
     )
 
-/*
-    UserEntity -> User 변환 Mapper
+/**
+ * UserEntity -> User 변환 Mapper
  */
 fun UserEntity.toModel(): User =
     User(
@@ -23,8 +23,8 @@ fun UserEntity.toModel(): User =
         true
     )
 
-/*
-    UserData -> User 변환 Mapper
+/**
+ * UserData -> User 변환 Mapper
  */
 fun UserData.toModel(isBookmark: Boolean): User =
     User(

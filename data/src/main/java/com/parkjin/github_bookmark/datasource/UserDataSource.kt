@@ -6,16 +6,16 @@ import com.parkjin.github_bookmark.model.User
 import com.parkjin.github_bookmark.network.remote.UserRemote
 import io.reactivex.Single
 
-/*
-    remote, cache 조합하여 데이터를 반환
+/**
+ * remote, cache 조합하여 데이터를 반환
  */
 class UserDataSource(
     private val remote: UserRemote,
     private val cache: UserCache
 ) {
 
-    /*
-        local 즐겨찾기 된 사용자인지 판별하여 사용자 조회
+    /**
+     * local 즐겨찾기 된 사용자인지 판별하여 사용자 조회
      */
     fun getAllSearchUser(name: String): Single<List<User>> =
         remote.getAllUser(name).flatMap { userDataList ->
@@ -31,8 +31,8 @@ class UserDataSource(
             }
         }
 
-    /*
-        local 즐겨찾기 된 사용자 조회
+    /**
+     * local 즐겨찾기 된 사용자 조회
      */
     fun getAllBookmarkUser(name: String): Single<List<User>> =
         cache.getAllUser(name).map { userEntityList ->

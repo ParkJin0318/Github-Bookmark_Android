@@ -6,6 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 
+/**
+ * 보일러 플레이트 코드 제거를 위한 기본적인 Activity 클래스
+ */
 abstract class BindingActivity<VB : ViewDataBinding> : AppCompatActivity() {
 
     protected lateinit var binding : VB

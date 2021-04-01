@@ -6,6 +6,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 
+/**
+ * 공통적으로 사용하는 RecyclerViewAdapter
+ */
 class RecyclerViewAdapter : RecyclerView.Adapter<BindingViewHolder>() {
 
     private val itemList = mutableListOf<BindingItem>()

@@ -5,8 +5,8 @@ import com.parkjin.github_bookmark.database.entity.UserEntity
 import io.reactivex.Completable
 import io.reactivex.Single
 
-/*
-    Dao를 참조하여 DB 조회
+/**
+ * Dao를 참조하여 DB 조회
  */
 class UserCache(
     private val userDao: UserDao
