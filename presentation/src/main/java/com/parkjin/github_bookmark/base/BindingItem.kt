@@ -5,7 +5,7 @@ import androidx.databinding.ViewDataBinding
 import com.parkjin.github_bookmark.BR
 
 /**
- * RecyclerView에서 공통적으로 사용하는 Item 클래스
+ * RecyclerView에서 공통적으로 사용하는 Item
  */
 data class BindingItem(
     val viewModel: Any,

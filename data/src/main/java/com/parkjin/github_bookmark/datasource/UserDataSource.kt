@@ -18,7 +18,7 @@ class UserDataSource(
     private val cache: UserCache
 ) {
     /**
-     * local 즐겨찾기 된 사용자인지 판별하여 사용자 조회
+     * API 사용자 조회 및 local의 즐겨찾기 된 사용자인지 판별
      */
     fun getAllSearchUser(name: String): Single<List<User>> {
         return Observable.combineLatest(

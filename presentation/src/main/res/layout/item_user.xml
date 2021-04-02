@@ -4,6 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.parkjin.github_bookmark.ui.item.UserItemViewModel" />
@@ -16,33 +18,55 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            app:imageUrl="@{viewModel.item.profileImageUrl}"
-            tools:src="@drawable/ic_launcher_background"/>
+        android:orientation="vertical">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="@{viewModel.item.name}"
-            tools:text="ParkJin" />
+            android:background="@android:color/darker_gray"
+            android:visibility="@{viewModel.item.isHeaderShow ? View.VISIBLE : View.GONE}"
+            android:maxLength="1"
+            android:text="@{viewModel.header}"
+            android:textColor="@color/white"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            tools:text="P" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <ImageView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_star"
-            app:isBookmark="@{viewModel.item.isBookmark}"
-            android:onClick="@{() -> navigator.onClickBookmark(viewModel.item)}" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                app:imageUrl="@{viewModel.item.profileImageUrl}"
+                tools:src="@drawable/ic_launcher_background" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@{viewModel.item.name}"
+                tools:text="ParkJin" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> navigator.onClickBookmark(viewModel.item)}"
+                android:src="@drawable/ic_star"
+                app:isBookmark="@{viewModel.item.isBookmark}" />
+        </LinearLayout>
     </LinearLayout>
 </layout>
