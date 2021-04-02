@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">Github_Bookmark</string>
+    <string name="app_name">Github Bookmark</string>
+    <string name="menu_github">Github</string>
+    <string name="menu_bookmark">Bookmark</string>
+
+    <string name="search_user">사용자 이름을 입력해주세요</string>
+    <string name="bookmark_empty">즐겨찾기 사용자가 없습니다</string>
 </resources>
