@@ -12,6 +12,9 @@ import com.parkjin.github_bookmark.usecase.AddBookMarkUserUseCase
 import com.parkjin.github_bookmark.usecase.GetAllSearchUserUseCase
 import kotlin.collections.ArrayList
 
+/**
+ * GithubFragment의 ViewModel
+ */
 class GithubViewModel(
     private val getAllSearchUserUseCase: GetAllSearchUserUseCase,
     private val addBookMarkUserUseCase: AddBookMarkUserUseCase

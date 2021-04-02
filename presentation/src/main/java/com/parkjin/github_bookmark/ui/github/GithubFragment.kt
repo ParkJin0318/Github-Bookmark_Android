@@ -12,6 +12,9 @@ import com.parkjin.github_bookmark.databinding.FragmentGithubBinding
 import com.parkjin.github_bookmark.extension.toast
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 
+/**
+ * Github 사용자 목록을 표시하는 Fragment
+ */
 class GithubFragment: BindingFragment<FragmentGithubBinding>() {
 
     private val viewModel: GithubViewModel by lazy {

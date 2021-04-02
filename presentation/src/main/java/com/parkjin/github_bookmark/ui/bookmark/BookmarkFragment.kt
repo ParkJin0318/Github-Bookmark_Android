@@ -10,6 +10,9 @@ import com.parkjin.github_bookmark.databinding.FragmentBookmarkBinding
 import com.parkjin.github_bookmark.extension.toast
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 
+/**
+ * Bookmark 사용자 목록 표시하는 Fragment
+ */
 class BookmarkFragment: BindingFragment<FragmentBookmarkBinding>() {
 
     private val viewModel: BookmarkViewModel by lazy {

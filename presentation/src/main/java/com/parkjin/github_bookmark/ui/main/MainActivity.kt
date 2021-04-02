@@ -11,6 +11,9 @@ import com.parkjin.github_bookmark.ui.bookmark.BookmarkFragment
 import com.parkjin.github_bookmark.ui.github.GithubFragment
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 
+/**
+ * ViewPager, TabBar를 관리하는 MainActivity
+ */
 class MainActivity : BindingActivity<ActivityMainBinding>() {
 
     private lateinit var viewPagerAdapter: ViewPagerAdapter

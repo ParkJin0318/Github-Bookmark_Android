@@ -9,6 +9,9 @@ import com.parkjin.github_bookmark.R
 import com.parkjin.github_bookmark.base.BindingItem
 import com.parkjin.github_bookmark.base.RecyclerViewAdapter
 
+/**
+ * Data Binding 결합식 Extension 함수
+ */
 @BindingAdapter("recyclerItems")
 fun RecyclerView.setRecyclerViewItems(items: List<BindingItem>?) {
     if (adapter == null) {

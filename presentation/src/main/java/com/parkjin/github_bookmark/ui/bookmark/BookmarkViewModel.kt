@@ -12,6 +12,9 @@ import com.parkjin.github_bookmark.usecase.AddBookMarkUserUseCase
 import com.parkjin.github_bookmark.usecase.GetAllBookmarkUserUseCase
 import kotlin.collections.ArrayList
 
+/**
+ * BookmarkFragment의 ViewModel
+ */
 class BookmarkViewModel(
     private val getAllBookmarkUserUseCase: GetAllBookmarkUserUseCase,
     private val addBookMarkUserUseCase: AddBookMarkUserUseCase
