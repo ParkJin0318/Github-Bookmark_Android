@@ -23,13 +23,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/darker_gray"
             android:visibility="@{viewModel.item.isHeaderShow ? View.VISIBLE : View.GONE}"
             android:maxLength="1"
             android:text="@{viewModel.header}"
-            android:textColor="@color/white"
+            android:textColor="@android:color/darker_gray"
+            android:paddingTop="5dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
+            android:paddingBottom="5dp"
             tools:text="P" />
 
         <LinearLayout
@@ -44,14 +45,17 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 app:imageUrl="@{viewModel.item.profileImageUrl}"
                 tools:src="@drawable/ic_launcher_background" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="16sp"
                 android:layout_marginStart="10dp"
                 android:text="@{viewModel.item.name}"
                 tools:text="ParkJin" />

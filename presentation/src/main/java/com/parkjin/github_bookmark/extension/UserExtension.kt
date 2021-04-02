@@ -8,7 +8,7 @@ import com.parkjin.github_bookmark.ui.item.UserItemViewModel
 import java.util.*
 
 /**
- * User 객체 Extension 함수
+ * User -> BindingItem으로 변환
  */
 fun List<User>.toRecyclerItemList(navigator: UserItemNavigator) = map { it.toViewModel(navigator) }
 
@@ -21,6 +21,9 @@ fun UserItemViewModel.toRecyclerItem(navigator: UserItemNavigator) =
                 layoutId = R.layout.item_user
         )
 
+/**
+ * List 정렬 후 Header를 표시하는지 판단
+ */
 fun List<User>.headerSort(): List<User> {
     val userList = ArrayList<User>()
 
@@ -29,13 +32,12 @@ fun List<User>.headerSort(): List<User> {
     })
 
     while (!linkedList.isEmpty()) {
-        val item = linkedList.remove().apply {
+        val item: User = linkedList.remove().apply {
             this.isHeaderShow = true
         }
         userList.add(item)
 
-        while (linkedList.peek() != null &&
-                item.nameFirst() == linkedList.peek().nameFirst()) {
+        while (linkedList.peek() != null && item.nameFirst() == linkedList.peek()?.nameFirst()) {
             userList.add(linkedList.remove())
         }
     }

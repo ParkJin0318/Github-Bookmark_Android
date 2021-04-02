@@ -7,7 +7,8 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 
 /**
- * 공통적으로 사용하는 RecyclerViewAdapter
+ * 공통적으로 사용하는 RecyclerViewAdapter,
+ * BindingItem, BindingViewHolder를 사용하여 여러 아이템을 하나의 Adapter로 공유
  */
 class RecyclerViewAdapter : RecyclerView.Adapter<BindingViewHolder>() {
 

@@ -4,7 +4,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 
 /**
- * RecyclerView에서 공통적으로 사용하는 뷰홀더
+ * RecyclerView에서 공통적으로 사용하는 ViewHolder
  */
 class BindingViewHolder (
     val binding: ViewDataBinding
