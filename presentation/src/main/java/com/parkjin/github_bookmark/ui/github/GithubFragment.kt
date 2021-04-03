@@ -1,9 +1,7 @@
 package com.parkjin.github_bookmark.ui.github
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.parkjin.github_bookmark.BR
 import com.parkjin.github_bookmark.R
 import com.parkjin.github_bookmark.base.BindingFragment
@@ -35,9 +33,6 @@ class GithubFragment: BindingFragment<FragmentGithubBinding>() {
 
     override fun observeEvent() {
         with(viewModel) {
-            onBookmarkEvent.observe(this@GithubFragment, EventObserver {
-                getAllSearchUser(userName.value!!)
-            })
             onErrorEvent.observe(this@GithubFragment, EventObserver {
                 toast(it)
             })

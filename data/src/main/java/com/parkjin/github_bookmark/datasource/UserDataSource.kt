@@ -8,7 +8,6 @@ import com.parkjin.github_bookmark.network.remote.UserRemote
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import java.util.*
 
 /**
  * remote, cache 조합하여 데이터를 반환
@@ -24,13 +23,13 @@ class UserDataSource(
         return Observable.combineLatest(
             remote.getAllUser(name).toObservable(),
             cache.getAllUser().toObservable(), { userDataList , userEntityList ->
-                val userNameList = userEntityList.map { it.name }
 
-                userDataList.map {
-                    if (userNameList.contains(it.name))
-                        it.toModel(true)
-                    else
-                        it.toModel(false)
+                userDataList.map { userData ->
+                    val isBookmark = userEntityList
+                        .map { it.name }
+                        .contains(userData.name)
+
+                    userData.toModel(isBookmark)
                 }
             }).singleOrError()
     }
