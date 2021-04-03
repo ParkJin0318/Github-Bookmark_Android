@@ -33,9 +33,6 @@ class BookmarkFragment: BindingFragment<FragmentBookmarkBinding>() {
 
     override fun observeEvent() {
         with(viewModel) {
-            onBookmarkEvent.observe(this@BookmarkFragment, EventObserver {
-                getAllBookmarkUser(userName.value)
-            })
             onErrorEvent.observe(this@BookmarkFragment, EventObserver {
                 toast(it)
             })

@@ -12,6 +12,6 @@ class GetAllBookmarkUserUseCase(
     private val repository: UserRepository
 ) {
     fun execute(name: String): Single<List<User>> =
-       repository.getAllBookmarkUser(name)
-         .with()
+        repository.getAllBookmarkUser(name)
+            .with()
 }

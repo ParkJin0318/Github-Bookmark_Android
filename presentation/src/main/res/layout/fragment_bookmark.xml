@@ -48,7 +48,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:backgroundTint="@color/white"
                         android:hint="@string/search_user"
-                        android:text="@={viewModel.userName}"
+                        android:text="@={viewModel.inputName}"
                         android:singleLine="true"
                         android:inputType="textPersonName"
                         android:layout_width="match_parent"

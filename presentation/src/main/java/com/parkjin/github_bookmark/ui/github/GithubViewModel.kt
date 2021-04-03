@@ -19,38 +19,38 @@ class GithubViewModel(
     private val getAllSearchUserUseCase: GetAllSearchUserUseCase,
     private val addBookMarkUserUseCase: AddBookMarkUserUseCase
 ): BaseViewModel(), UserItemNavigator {
+    val inputName = MutableLiveData<String>("")
     val userName = MutableLiveData<String>("")
+
     val userItemList = MutableLiveData<ArrayList<BindingItem>>()
 
-    val onErrorEvent = MutableLiveData<Event<String>>()
-    val onBookmarkEvent = MutableLiveData<Event<Unit>>()
-
     val isLoading = MutableLiveData<Boolean>(false)
+    val onErrorEvent = MutableLiveData<Event<String>>()
 
     fun getAllSearchUser(name: String) {
-        if (name.isNotEmpty()) {
-            isLoading.value = true
+        if (name.isEmpty()) return
 
-            addDisposable(getAllSearchUserUseCase.execute(name)
-               .subscribe({
-                   userItemList.value =
-                           ArrayList(it.headerSort().toRecyclerItemList(this))
-                   isLoading.value = false
-                }, {
-                   onErrorEvent.value = Event(it.message.toString())
-                })
-            )
-        }
+        isLoading.value = true
+
+        addDisposable(getAllSearchUserUseCase.execute(name)
+            .subscribe({
+                userItemList.value = ArrayList(it.headerSort().toRecyclerItemList(this))
+                userName.value = name
+                isLoading.value = false
+            }, {
+                onErrorEvent.value = Event(it.message.toString())
+            })
+        )
     }
 
     fun onClickSearch() {
-        getAllSearchUser(userName.value!!)
+        getAllSearchUser(inputName.value!!)
     }
 
     override fun onClickBookmark(user: User) {
         addDisposable(addBookMarkUserUseCase.execute(user)
             .subscribe({
-                onBookmarkEvent.value = Event(Unit)
+                getAllSearchUser(userName.value!!)
             }, {
                 onErrorEvent.value = Event(it.message.toString())
             }))
