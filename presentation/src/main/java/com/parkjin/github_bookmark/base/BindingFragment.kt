@@ -13,13 +13,13 @@ import com.parkjin.github_bookmark.BR
 /**
  * 기본적인 Fragment 클래스
  */
-abstract class BindingFragment<VB : ViewDataBinding> : Fragment() {
+abstract class BindingFragment<VB: ViewDataBinding>: Fragment() {
 
-    protected lateinit var binding : VB
+    protected lateinit var binding: VB
         private set
 
     @LayoutRes
-    abstract fun getLayoutRes() : Int
+    abstract fun getLayoutRes(): Int
 
     protected abstract fun observeEvent()
 

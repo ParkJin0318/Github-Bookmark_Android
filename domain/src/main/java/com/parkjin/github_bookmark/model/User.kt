@@ -10,6 +10,6 @@ data class User(
     val isBookmark: Boolean,
     var isHeaderShow: Boolean = false
 ) {
-    fun nameFirst() : Char =
+    fun nameFirst(): Char =
             name.first().toUpperCase()
 }

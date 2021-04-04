@@ -8,7 +8,7 @@ import io.reactivex.Completable
 /**
  * Local의 즐겨찾기 사용자를 추가하는 UseCase 클래스
  */
-class AddBookMarkUserUseCase(
+class AddBookmarkUserUseCase(
     private val repository: UserRepository
 ) {
     fun execute(user: User): Completable =

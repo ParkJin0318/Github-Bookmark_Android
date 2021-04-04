@@ -8,7 +8,7 @@ import com.parkjin.github_bookmark.extension.headerSort
 import com.parkjin.github_bookmark.extension.toRecyclerItemList
 import com.parkjin.github_bookmark.model.User
 import com.parkjin.github_bookmark.ui.item.UserItemNavigator
-import com.parkjin.github_bookmark.usecase.AddBookMarkUserUseCase
+import com.parkjin.github_bookmark.usecase.AddBookmarkUserUseCase
 import com.parkjin.github_bookmark.usecase.GetAllSearchUserUseCase
 import kotlin.collections.ArrayList
 
@@ -17,7 +17,7 @@ import kotlin.collections.ArrayList
  */
 class GithubViewModel(
     private val getAllSearchUserUseCase: GetAllSearchUserUseCase,
-    private val addBookMarkUserUseCase: AddBookMarkUserUseCase
+    private val addBookmarkUserUseCase: AddBookmarkUserUseCase
 ): BaseViewModel(), UserItemNavigator {
     val inputName = MutableLiveData<String>("")
     val userName = MutableLiveData<String>("")
@@ -48,7 +48,7 @@ class GithubViewModel(
     }
 
     override fun onClickBookmark(user: User) {
-        addDisposable(addBookMarkUserUseCase.execute(user)
+        addDisposable(addBookmarkUserUseCase.execute(user)
             .subscribe({
                 getAllSearchUser(userName.value!!)
             }, {

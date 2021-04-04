@@ -9,13 +9,13 @@ import androidx.databinding.ViewDataBinding
 /**
  * 기본적인 Activity 클래스
  */
-abstract class BindingActivity<VB : ViewDataBinding> : AppCompatActivity() {
+abstract class BindingActivity<VB: ViewDataBinding>: AppCompatActivity() {
 
-    protected lateinit var binding : VB
+    protected lateinit var binding: VB
         private set
 
     @LayoutRes
-    abstract fun getLayoutRes() : Int
+    abstract fun getLayoutRes(): Int
 
     protected abstract fun observeEvent()
 
