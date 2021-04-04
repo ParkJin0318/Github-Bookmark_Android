@@ -14,7 +14,7 @@ import org.koin.androidx.viewmodel.ext.android.getViewModel
 /**
  * ViewPager, TabBar를 관리하는 MainActivity
  */
-class MainActivity : BindingActivity<ActivityMainBinding>() {
+class MainActivity: BindingActivity<ActivityMainBinding>() {
 
     private lateinit var viewPagerAdapter: ViewPagerAdapter
 
