@@ -19,10 +19,10 @@ class UserDataSource(
     /**
      * API 사용자 조회 및 local의 즐겨찾기 된 사용자인지 판별
      */
-    fun getAllSearchUser(name: String): Single<List<User>> {
-        return Observable.combineLatest(
-            remote.getAllUser(name).toObservable(),
-            cache.getAllUser().toObservable(), { userDataList , userEntityList ->
+    fun getAllSearchUser(name: String): Single<List<User>> =
+        Single.zip(
+            remote.getAllUser(name),
+            cache.getAllUser(name), { userDataList , userEntityList ->
 
                 userDataList.map { userData ->
                     val isBookmark = userEntityList
@@ -31,8 +31,7 @@ class UserDataSource(
 
                     userData.toModel(isBookmark)
                 }
-            }).singleOrError()
-    }
+            })
 
     /**
      * local 즐겨찾기 된 사용자 조회
