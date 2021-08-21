@@ -11,7 +11,7 @@ import retrofit2.http.Query
  */
 interface UserAPI {
     @GET("search/users")
-    fun getAllUser(
+    fun getUsersForName(
         @Query("q") name: String,
         @Query("page") page: Int,
         @Query("per_page") perPage: Int

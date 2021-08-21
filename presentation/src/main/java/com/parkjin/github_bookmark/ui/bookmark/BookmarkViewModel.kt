@@ -1,56 +1,75 @@
 package com.parkjin.github_bookmark.ui.bookmark
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.parkjin.github_bookmark.base.BaseViewModel
-import com.parkjin.github_bookmark.base.BindingItem
 import com.parkjin.github_bookmark.base.Event
-import com.parkjin.github_bookmark.extension.headerSort
-import com.parkjin.github_bookmark.extension.toRecyclerItemList
+import com.parkjin.github_bookmark.extension.networkOn
 import com.parkjin.github_bookmark.model.User
+import com.parkjin.github_bookmark.ui.item.UserAdapter
 import com.parkjin.github_bookmark.ui.item.UserItemNavigator
-import com.parkjin.github_bookmark.usecase.AddBookmarkUserUseCase
-import com.parkjin.github_bookmark.usecase.GetAllBookmarkUserUseCase
-import kotlin.collections.ArrayList
+import com.parkjin.github_bookmark.usecase.SelectBookmarkUserUseCase
+import com.parkjin.github_bookmark.usecase.GetBookmarkUsersUseCase
 
 /**
  * BookmarkFragment의 ViewModel
  */
 class BookmarkViewModel(
-    private val getAllBookmarkUserUseCase: GetAllBookmarkUserUseCase,
-    private val addBookmarkUserUseCase: AddBookmarkUserUseCase
-): BaseViewModel(), UserItemNavigator {
+    private val getBookmarkUsersUseCase: GetBookmarkUsersUseCase,
+    private val selectBookmarkUserUseCase: SelectBookmarkUserUseCase
+) : BaseViewModel(), UserItemNavigator {
+
     val inputName = MutableLiveData<String>("")
-    val userName = MutableLiveData<String>("")
 
-    val userItemList = MutableLiveData<ArrayList<BindingItem>>()
+    private val _userName = MutableLiveData<String>("")
+    val userName: LiveData<String>
+        get() = _userName
 
-    val isLoading = MutableLiveData<Boolean>(false)
-    val onErrorEvent = MutableLiveData<Event<String>>()
+    private val _isLoading = MutableLiveData<Boolean>(false)
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
 
-    fun getAllBookmarkUser(name: String?) {
-        isLoading.value = true
+    private val _onErrorEvent = MutableLiveData<Event<Throwable>>()
+    val onErrorEvent: LiveData<Event<Throwable>>
+        get() = _onErrorEvent
 
-        addDisposable(getAllBookmarkUserUseCase.execute(name ?: "")
-            .subscribe({
-                userItemList.value = ArrayList(it.headerSort().toRecyclerItemList(this))
-                userName.value = name
-                isLoading.value = false
-            }, {
-                onErrorEvent.value = Event(it.message.toString())
-            })
+    private val _isUserEmpty = MutableLiveData<Boolean>(true)
+    val isUserEmpty: LiveData<Boolean>
+        get() = _isUserEmpty
+
+    private val _adapter = UserAdapter(this)
+    val adapter: UserAdapter
+        get() = _adapter
+
+    fun getBookmarkUsers(name: String) {
+        _isLoading.value = true
+
+        addDisposable(
+            getBookmarkUsersUseCase.execute(name)
+                .networkOn()
+                .subscribe({
+                    adapter.submitList(it)
+                    _userName.value = name
+                    _isUserEmpty.value = it.isEmpty()
+                    _isLoading.value = false
+                }, {
+                    _onErrorEvent.value = Event(it)
+                })
         )
     }
 
     fun onClickSearch() {
-        getAllBookmarkUser(inputName.value!!)
+        getBookmarkUsers(inputName.value!!)
     }
 
     override fun onClickBookmark(user: User) {
-        addDisposable(addBookmarkUserUseCase.execute(user)
+        addDisposable(selectBookmarkUserUseCase.execute(user)
+            .networkOn()
             .subscribe({
-                getAllBookmarkUser(userName.value!!)
+                getBookmarkUsers(userName.value!!)
             }, {
-                onErrorEvent.value = Event(it.message.toString())
-            }))
+                _onErrorEvent.value = Event(it)
+            })
+        )
     }
 }

@@ -15,14 +15,11 @@ interface UserDao {
     fun insertUser(entity: UserEntity): Completable
 
     @Query("SELECT * FROM user_table")
-    fun getAllUser(): Single<List<UserEntity>>
+    fun getUsers(): Single<List<UserEntity>>
 
     @Query("SELECT * FROM user_table where name like '%' || :name || '%'")
-    fun getAllUser(name: String): Single<List<UserEntity>>
+    fun getUsersForName(name: String): Single<List<UserEntity>>
 
     @Delete
     fun deleteUser(entity: UserEntity): Completable
-
-    @Query("DELETE FROM user_table")
-    fun deleteAllUser(): Completable
 }

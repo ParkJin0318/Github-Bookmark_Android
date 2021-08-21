@@ -7,7 +7,7 @@ import io.reactivex.disposables.Disposable
 /**
  * 기본적인 ViewModel 클래스
  */
-abstract class BaseViewModel: ViewModel() {
+abstract class BaseViewModel : ViewModel() {
 
     private val disposables: CompositeDisposable = CompositeDisposable()
 

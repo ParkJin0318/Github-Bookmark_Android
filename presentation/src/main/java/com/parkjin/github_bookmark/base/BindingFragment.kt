@@ -13,7 +13,7 @@ import com.parkjin.github_bookmark.BR
 /**
  * 기본적인 Fragment 클래스
  */
-abstract class BindingFragment<VB: ViewDataBinding>: Fragment() {
+abstract class BindingFragment<VB : ViewDataBinding> : Fragment() {
 
     protected lateinit var binding: VB
         private set
@@ -23,8 +23,12 @@ abstract class BindingFragment<VB: ViewDataBinding>: Fragment() {
 
     protected abstract fun observeEvent()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater, getLayoutRes(), container, false)!!
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = DataBindingUtil.inflate(inflater, getLayoutRes(), container, false)
         return binding.root
     }
 
@@ -41,6 +45,6 @@ abstract class BindingFragment<VB: ViewDataBinding>: Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if(::binding.isInitialized) binding.unbind()
+        if (::binding.isInitialized) binding.unbind()
     }
 }

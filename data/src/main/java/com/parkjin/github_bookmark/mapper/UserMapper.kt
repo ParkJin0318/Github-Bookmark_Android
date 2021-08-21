@@ -19,16 +19,14 @@ fun User.toEntity(): UserEntity =
 fun UserEntity.toModel(): User =
     User(
         this.name,
-        this.profileImageUrl,
-        true
+        this.profileImageUrl
     )
 
 /**
  * UserData -> User 변환 Mapper
  */
-fun UserData.toModel(isBookmark: Boolean): User =
+fun UserData.toModel(): User =
     User(
         this.name,
-        this.profileImageUrl,
-        isBookmark
+        this.profileImageUrl
     )

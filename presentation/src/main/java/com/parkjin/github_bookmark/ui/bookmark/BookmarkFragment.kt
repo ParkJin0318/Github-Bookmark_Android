@@ -7,7 +7,7 @@ import com.parkjin.github_bookmark.R
 import com.parkjin.github_bookmark.base.BindingFragment
 import com.parkjin.github_bookmark.base.EventObserver
 import com.parkjin.github_bookmark.databinding.FragmentBookmarkBinding
-import com.parkjin.github_bookmark.extension.toast
+import com.parkjin.github_bookmark.extension.showMessage
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 
 /**
@@ -28,13 +28,13 @@ class BookmarkFragment: BindingFragment<FragmentBookmarkBinding>() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.getAllBookmarkUser(viewModel.userName.value)
+        viewModel.getBookmarkUsers(viewModel.userName.value!!)
     }
 
     override fun observeEvent() {
         with(viewModel) {
             onErrorEvent.observe(this@BookmarkFragment, EventObserver {
-                toast(it)
+                showMessage(it.message)
             })
         }
     }

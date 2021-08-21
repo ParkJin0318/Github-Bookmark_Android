@@ -7,8 +7,8 @@
         <import type="android.view.View" />
 
         <variable
-            name="viewModel"
-            type="com.parkjin.github_bookmark.ui.item.UserItemViewModel" />
+            name="model"
+            type="com.parkjin.github_bookmark.model.User" />
 
         <variable
             name="navigator"
@@ -23,9 +23,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="@{viewModel.item.isHeaderShow ? View.VISIBLE : View.GONE}"
+            android:visibility="@{model.isShowHeader ? View.VISIBLE : View.GONE}"
             android:maxLength="1"
-            android:text="@{viewModel.header}"
+            android:text="@{String.valueOf(model.firstName)}"
             android:textColor="@android:color/darker_gray"
             android:paddingTop="5dp"
             android:paddingStart="20dp"
@@ -47,7 +47,7 @@
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                app:imageUrl="@{viewModel.item.profileImageUrl}"
+                app:imageUrl="@{model.profileImageUrl}"
                 tools:src="@drawable/ic_launcher_background" />
 
             <TextView
@@ -57,7 +57,7 @@
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:layout_marginStart="10dp"
-                android:text="@{viewModel.item.name}"
+                android:text="@{model.name}"
                 tools:text="ParkJin" />
 
             <View
@@ -68,9 +68,9 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> navigator.onClickBookmark(viewModel.item)}"
+                android:onClick="@{() -> navigator.onClickBookmark(model)}"
                 android:src="@drawable/ic_star"
-                app:isBookmark="@{viewModel.item.isBookmark}" />
+                app:bookmark="@{model.isBookmark}" />
         </LinearLayout>
     </LinearLayout>
 </layout>

@@ -12,12 +12,18 @@ class UserRepositoryImpl(
     private val dataSource: UserDataSource
 ): UserRepository {
 
-    override fun getAllSearchUser(name: String): Single<List<User>> =
-        dataSource.getAllSearchUser(name)
+    override fun getUsersForName(name: String): Single<List<User>> =
+        dataSource.getUsersForName(name)
 
-    override fun getAllBookmarkUser(name: String): Single<List<User>> =
-        dataSource.getAllBookmarkUser(name)
+    override fun getBookmarkUsers(): Single<List<User>> =
+        dataSource.getBookmarkUsers()
+
+    override fun getBookmarkUsersForName(name: String): Single<List<User>> =
+        dataSource.getBookmarkUsersForName(name)
 
     override fun addBookmarkUser(user: User): Completable =
         dataSource.addBookmarkUser(user)
+
+    override fun deleteBookmarkUser(user: User): Completable =
+        dataSource.deleteBookmarkUser(user)
 }

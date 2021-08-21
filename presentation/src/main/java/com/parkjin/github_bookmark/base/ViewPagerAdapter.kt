@@ -7,9 +7,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 /**
  * 공통적으로 사용하는 ViewPagerAdapter
  */
-class ViewPagerAdapter(activity: FragmentActivity): FragmentStateAdapter(activity) {
+class ViewPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
 
-    private val fragmentList= mutableListOf<Fragment>()
+    private val fragmentList = mutableListOf<Fragment>()
 
     fun setFragmentList(fragments: ArrayList<Fragment>) {
         fragmentList.clear()

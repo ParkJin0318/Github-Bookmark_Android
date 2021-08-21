@@ -9,7 +9,7 @@ import androidx.databinding.ViewDataBinding
 /**
  * 기본적인 Activity 클래스
  */
-abstract class BindingActivity<VB: ViewDataBinding>: AppCompatActivity() {
+abstract class BindingActivity<VB : ViewDataBinding> : AppCompatActivity() {
 
     protected lateinit var binding: VB
         private set
@@ -33,6 +33,6 @@ abstract class BindingActivity<VB: ViewDataBinding>: AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if(::binding.isInitialized) binding.unbind()
+        if (::binding.isInitialized) binding.unbind()
     }
 }

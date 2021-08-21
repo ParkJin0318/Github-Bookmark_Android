@@ -72,7 +72,8 @@
                 android:visibility="@{viewModel.inputName.isEmpty() ? View.GONE : View.VISIBLE}"
                 android:scrollbars="none"
                 android:overScrollMode="never"
-                app:recyclerItems="@{viewModel.userItemList}" />
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:adapter="@{viewModel.adapter}"/>
 
             <TextView
                 android:layout_width="match_parent"

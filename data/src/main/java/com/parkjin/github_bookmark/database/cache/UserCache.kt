@@ -14,15 +14,12 @@ class UserCache(
     fun insertUser(entity: UserEntity): Completable =
         userDao.insertUser(entity)
 
-    fun getAllUser(name: String = ""): Single<List<UserEntity>> =
-        if (name.isEmpty())
-            userDao.getAllUser()
-        else
-            userDao.getAllUser(name)
+    fun getUsers(): Single<List<UserEntity>> =
+        userDao.getUsers()
+
+    fun getUsersForName(name: String): Single<List<UserEntity>> =
+        userDao.getUsersForName(name)
 
     fun deleteUser(entity: UserEntity): Completable =
         userDao.deleteUser(entity)
-
-    fun deleteAllUser(): Completable =
-        userDao.deleteAllUser()
 }

@@ -9,7 +9,14 @@ import io.reactivex.Single
  * Data 계층의 UserRepositoryImpl 클래스와 연결.
  */
 interface UserRepository {
-    fun getAllSearchUser(name: String): Single<List<User>>
-    fun getAllBookmarkUser(name: String): Single<List<User>>
+
+    fun getUsersForName(name: String): Single<List<User>>
+
+    fun getBookmarkUsers(): Single<List<User>>
+
+    fun getBookmarkUsersForName(name: String): Single<List<User>>
+
     fun addBookmarkUser(user: User): Completable
+
+    fun deleteBookmarkUser(user: User): Completable
 }

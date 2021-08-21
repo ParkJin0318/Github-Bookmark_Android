@@ -69,15 +69,16 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="@{viewModel.userItemList.size() == 0 ? View.GONE : View.VISIBLE}"
+                android:visibility="@{viewModel.isUserEmpty ? View.GONE : View.VISIBLE}"
                 android:scrollbars="none"
                 android:overScrollMode="never"
-                app:recyclerItems="@{viewModel.userItemList}" />
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:adapter="@{viewModel.adapter}" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="@{viewModel.userItemList.size() == 0 ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewModel.isUserEmpty ? View.VISIBLE : View.GONE}"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:gravity="center"

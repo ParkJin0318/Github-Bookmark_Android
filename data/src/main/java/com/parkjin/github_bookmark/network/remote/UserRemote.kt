@@ -11,6 +11,6 @@ import io.reactivex.Single
 class UserRemote(
     private val api: UserAPI
 ) {
-    fun getAllUser(name: String): Single<List<UserData>> =
-        api.getAllUser(name, Constants.PAGE, Constants.PER_PAGE).map { it.body()?.items }
+    fun getUsersForName(name: String): Single<List<UserData>> =
+        api.getUsersForName(name, Constants.PAGE, Constants.PER_PAGE).map { it.body()?.items }
 }
