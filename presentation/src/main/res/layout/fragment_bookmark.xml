@@ -32,8 +32,10 @@
             android:orientation="vertical">
 
             <com.parkjin.github_bookmark.component.InputFieldComponent
+                android:id="@+id/input_field"
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="wrap_content"
+                android:padding="10dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"

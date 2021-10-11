@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.parkjin.github_bookmark.base.BaseViewModel
 import com.parkjin.github_bookmark.base.Event
+import com.parkjin.github_bookmark.component.InputFieldViewModel
 import com.parkjin.github_bookmark.extension.networkOn
 import com.parkjin.github_bookmark.model.User
 import com.parkjin.github_bookmark.ui.item.UserAdapter
@@ -18,8 +19,6 @@ class BookmarkViewModel(
     private val getBookmarkUsersUseCase: GetBookmarkUsersUseCase,
     private val selectBookmarkUserUseCase: SelectBookmarkUserUseCase
 ) : BaseViewModel(), UserItemNavigator {
-
-    val inputName = MutableLiveData<String>("")
 
     private val _userName = MutableLiveData<String>("")
     val userName: LiveData<String>
@@ -56,10 +55,6 @@ class BookmarkViewModel(
                     _onErrorEvent.value = Event(it)
                 })
         )
-    }
-
-    fun onClickSearch() {
-        getBookmarkUsers(inputName.value!!)
     }
 
     override fun onClickBookmark(user: User) {

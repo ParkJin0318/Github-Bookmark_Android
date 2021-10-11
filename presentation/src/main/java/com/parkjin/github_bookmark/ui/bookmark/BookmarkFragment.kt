@@ -37,5 +37,11 @@ class BookmarkFragment: BindingFragment<FragmentBookmarkBinding>() {
                 showMessage(it.message)
             })
         }
+
+        with(binding.inputField.viewModel) {
+            onSearchEvent.observe(this@BookmarkFragment, EventObserver {
+                viewModel.getBookmarkUsers(it ?: return@EventObserver)
+            })
+        }
     }
 }
