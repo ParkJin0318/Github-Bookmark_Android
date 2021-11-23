@@ -1,11 +1,17 @@
 package com.parkjin.github_bookmark.di
 
+import com.parkjin.github_bookmark.network.api.UserAPI
 import com.parkjin.github_bookmark.network.remote.UserRemote
-import org.koin.dsl.module
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-/**
- * Data 계층의 Remote 의존성 관리 모듈
- */
-val remoteModule = module {
-    single { UserRemote(get()) }
+@Module
+@InstallIn(SingletonComponent::class)
+object RemoteModule {
+
+    @Provides
+    fun provideUserRemote(api: UserAPI): UserRemote = UserRemote(api)
+
 }

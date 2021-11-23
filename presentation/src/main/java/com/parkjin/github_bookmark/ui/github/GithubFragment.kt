@@ -2,22 +2,19 @@ package com.parkjin.github_bookmark.ui.github
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.viewModels
 import com.parkjin.github_bookmark.BR
 import com.parkjin.github_bookmark.R
 import com.parkjin.github_bookmark.base.BindingFragment
 import com.parkjin.github_bookmark.base.EventObserver
 import com.parkjin.github_bookmark.databinding.FragmentGithubBinding
 import com.parkjin.github_bookmark.extension.showMessage
-import org.koin.androidx.viewmodel.ext.android.getViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-/**
- * Github 사용자 목록을 표시하는 Fragment
- */
+@AndroidEntryPoint
 class GithubFragment: BindingFragment<FragmentGithubBinding>() {
 
-    private val viewModel: GithubViewModel by lazy {
-        getViewModel(GithubViewModel::class)
-    }
+    private val viewModel: GithubViewModel by viewModels()
 
     override fun getLayoutRes(): Int = R.layout.fragment_github
 

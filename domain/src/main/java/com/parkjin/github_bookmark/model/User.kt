@@ -3,10 +3,6 @@ package com.parkjin.github_bookmark.model
 import java.util.LinkedList
 import kotlin.collections.ArrayList
 
-/**
- * 사용자 인터페이스에 표시되는 모델로 UI에 필요한 User 정보를 가짐.
- */
-
 data class User(
     val name: String,
     val profileImageUrl: String

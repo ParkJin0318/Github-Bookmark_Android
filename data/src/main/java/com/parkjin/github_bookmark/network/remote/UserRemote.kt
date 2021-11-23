@@ -1,16 +1,16 @@
 package com.parkjin.github_bookmark.network.remote
 
+import com.parkjin.github_bookmark.extension.catch
 import com.parkjin.github_bookmark.network.api.UserAPI
 import com.parkjin.github_bookmark.network.response.UserData
-import com.parkjin.github_bookmark.util.Constants
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
+import javax.inject.Inject
 
-/**
- * API를 호출하여 Response 데이터를 받는 클래스
- */
-class UserRemote(
+class UserRemote @Inject constructor(
     private val api: UserAPI
 ) {
     fun getUsersForName(name: String): Single<List<UserData>> =
-        api.getUsersForName(name, Constants.PAGE, Constants.PER_PAGE).map { it.body()?.items }
+        api.getUsersForName(name)
+            .catch()
+            .map { it.items }
 }

@@ -1,11 +1,17 @@
 package com.parkjin.github_bookmark.di
 
 import com.parkjin.github_bookmark.database.cache.UserCache
-import org.koin.dsl.module
+import com.parkjin.github_bookmark.database.dao.UserDao
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-/**
- * Data 계층의 Cache 의존성 관리 모듈
- */
-val cacheModule = module {
-    single { UserCache(get()) }
+@Module
+@InstallIn(SingletonComponent::class)
+object CacheModule {
+
+    @Provides
+    fun provideUserCache(dao: UserDao): UserCache = UserCache(dao)
+
 }

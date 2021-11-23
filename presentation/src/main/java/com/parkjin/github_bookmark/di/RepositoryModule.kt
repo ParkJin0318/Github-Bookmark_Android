@@ -2,11 +2,15 @@ package com.parkjin.github_bookmark.di
 
 import com.parkjin.github_bookmark.repository.UserRepository
 import com.parkjin.github_bookmark.repository.UserRepositoryImpl
-import org.koin.dsl.module
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-/**
- * Domain, Data 계층의 Repository 의존성 관리 모듈
- */
-val repositoryModule = module {
-    single<UserRepository> { UserRepositoryImpl(get()) }
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
+
+    @Binds
+    abstract fun bindUserRepository(repositoryImpl: UserRepositoryImpl): UserRepository
 }

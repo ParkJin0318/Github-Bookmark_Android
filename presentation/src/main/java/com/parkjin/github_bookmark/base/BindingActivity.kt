@@ -6,9 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 
-/**
- * 기본적인 Activity 클래스
- */
 abstract class BindingActivity<VB : ViewDataBinding> : AppCompatActivity() {
 
     protected lateinit var binding: VB

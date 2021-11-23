@@ -2,13 +2,11 @@ package com.parkjin.github_bookmark.repository
 
 import com.parkjin.github_bookmark.datasource.UserDataSource
 import com.parkjin.github_bookmark.model.User
-import io.reactivex.Completable
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
+import javax.inject.Inject
 
-/**
- * Domain의 Repository 인터페이스를 구현한 클래스
- */
-class UserRepositoryImpl(
+class UserRepositoryImpl @Inject constructor(
     private val dataSource: UserDataSource
 ): UserRepository {
 

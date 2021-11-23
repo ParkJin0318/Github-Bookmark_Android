@@ -6,15 +6,14 @@ import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import org.koin.core.KoinComponent
 
 abstract class BaseComponent @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : ConstraintLayout(context, attrs, defStyleAttr), KoinComponent, LifecycleOwner {
+) : ConstraintLayout(context, attrs, defStyleAttr), LifecycleOwner {
 
-    private val lifecycleRegistry: LifecycleRegistry = LifecycleRegistry(this)
+    private lateinit var lifecycleRegistry: LifecycleRegistry
 
     override fun getLifecycle() = lifecycleRegistry
 
@@ -24,6 +23,7 @@ abstract class BaseComponent @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        lifecycleRegistry = LifecycleRegistry(this)
         onCreate()
     }
 

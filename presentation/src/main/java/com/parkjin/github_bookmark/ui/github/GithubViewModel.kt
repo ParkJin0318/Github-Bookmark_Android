@@ -2,7 +2,7 @@ package com.parkjin.github_bookmark.ui.github
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.parkjin.github_bookmark.base.BaseViewModel
+import androidx.lifecycle.ViewModel
 import com.parkjin.github_bookmark.base.Event
 import com.parkjin.github_bookmark.extension.networkOn
 import com.parkjin.github_bookmark.model.User
@@ -10,18 +10,22 @@ import com.parkjin.github_bookmark.ui.item.UserAdapter
 import com.parkjin.github_bookmark.ui.item.UserItemNavigator
 import com.parkjin.github_bookmark.usecase.SelectBookmarkUserUseCase
 import com.parkjin.github_bookmark.usecase.GetUsersUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
+import javax.inject.Inject
 
-/**
- * GithubFragment의 ViewModel
- */
-class GithubViewModel(
+@HiltViewModel
+class GithubViewModel @Inject constructor(
     private val getUsersUseCase: GetUsersUseCase,
     private val selectBookmarkUserUseCase: SelectBookmarkUserUseCase
-) : BaseViewModel(), UserItemNavigator {
+) : ViewModel(), UserItemNavigator {
 
-    val inputName = MutableLiveData<String>("")
+    private val disposables = CompositeDisposable()
 
-    private val _userName = MutableLiveData<String>("")
+    val inputName = MutableLiveData("")
+
+    private val _userName = MutableLiveData("")
     val userName: LiveData<String>
         get() = _userName
 
@@ -42,17 +46,15 @@ class GithubViewModel(
 
         _isLoading.value = true
 
-        addDisposable(
-            getUsersUseCase.execute(name)
-                .networkOn()
-                .subscribe({
-                    adapter.submitList(it)
-                    _userName.value = name
-                    _isLoading.value = false
-                }, {
-                    _onErrorEvent.value = Event(it)
-                })
-        )
+        getUsersUseCase.execute(name)
+            .networkOn()
+            .subscribe({
+                adapter.submitList(it)
+                _userName.value = name
+                _isLoading.value = false
+            }, {
+                _onErrorEvent.value = Event(it)
+            }).addTo(disposables)
     }
 
     fun onClickSearch() {
@@ -60,13 +62,17 @@ class GithubViewModel(
     }
 
     override fun onClickBookmark(user: User) {
-        addDisposable(selectBookmarkUserUseCase.execute(user)
+        selectBookmarkUserUseCase.execute(user)
             .networkOn()
             .subscribe({
                 getUsersForName(userName.value!!)
             }, {
                 _onErrorEvent.value = Event(it)
-            })
-        )
+            }).addTo(disposables)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        disposables.clear()
     }
 }

@@ -4,30 +4,23 @@ import android.app.Application
 import androidx.room.Room
 import com.parkjin.github_bookmark.database.AppDatabase
 import com.parkjin.github_bookmark.database.dao.UserDao
-import org.koin.android.ext.koin.androidApplication
-import org.koin.dsl.module
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-/**
- * Data 계층의 Room Dao 의존성 관리 모듈
- */
-val daoModule = module {
-    fun provideUserDao(database: AppDatabase): UserDao {
-        return database.userDao()
-    }
+@Module
+@InstallIn(SingletonComponent::class)
+object DatabaseModule {
 
-    single { provideUserDao(get()) }
-}
-
-/**
- * Data 계층의 Room Database 모듈
- */
-val databaseModule = module {
-    fun provideDatabase(application: Application): AppDatabase {
-        return Room.databaseBuilder(application, AppDatabase::class.java, "database")
+    @Provides
+    fun provideDatabase(application: Application): AppDatabase =
+        Room.databaseBuilder(application, AppDatabase::class.java, "database")
             .fallbackToDestructiveMigration()
             .allowMainThreadQueries()
             .build()
-    }
 
-    single { provideDatabase(androidApplication()) }
+    @Provides
+    fun provideUserDao(database: AppDatabase): UserDao = database.userDao()
+
 }

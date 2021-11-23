@@ -1,51 +1,43 @@
 package com.parkjin.github_bookmark.di
 
 import com.parkjin.github_bookmark.network.api.UserAPI
-import com.parkjin.github_bookmark.util.Constants
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.dsl.module
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-/**
- * Data 계층의 API 의존성 관리 모듈
- */
-val apiModule = module {
-    fun provideUserApi(retrofit: Retrofit): UserAPI {
-        return retrofit.create(UserAPI::class.java)
-    }
-    single { provideUserApi(get()) }
-}
+private const val DEFAULT_HOST = "https://api.github.com/"
+private const val TIME_OUT = 20
 
-/**
- * Data 계층의 Network 모듈
- */
-val networkModule = module {
+@Module
+@InstallIn(SingletonComponent::class)
+object NetworkModule {
 
-    /*
-        HttpLoggingInterceptor 설정
-     */
-    single {
+    @Provides
+    fun provideOkhttpClient(): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
-        OkHttpClient.Builder().addInterceptor(interceptor)
-            .readTimeout(20, TimeUnit.SECONDS)
-            .writeTimeout(20, TimeUnit.SECONDS).build()
+        return OkHttpClient.Builder().addInterceptor(interceptor)
+            .readTimeout(TIME_OUT.toLong(), TimeUnit.SECONDS)
+            .writeTimeout(TIME_OUT.toLong(), TimeUnit.SECONDS).build()
     }
 
-    /*
-        Retrofit Builder 설정
-     */
-    single {
+    @Provides
+    fun provideRetrofitBuilder(client: OkHttpClient): Retrofit =
         Retrofit.Builder()
-            .baseUrl(Constants.DEFAULT_HOST)
-            .client(get())
+            .baseUrl(DEFAULT_HOST)
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .build()
-    }
+
+    @Provides
+    fun provideUserApi(retrofit: Retrofit): UserAPI = retrofit.create(UserAPI::class.java)
 }

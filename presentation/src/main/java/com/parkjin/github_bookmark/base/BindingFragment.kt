@@ -10,9 +10,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.parkjin.github_bookmark.BR
 
-/**
- * 기본적인 Fragment 클래스
- */
 abstract class BindingFragment<VB : ViewDataBinding> : Fragment() {
 
     protected lateinit var binding: VB

@@ -2,10 +2,10 @@ package com.parkjin.github_bookmark.component
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.parkjin.github_bookmark.base.BaseViewModel
+import androidx.lifecycle.ViewModel
 import com.parkjin.github_bookmark.base.Event
 
-class InputFieldViewModel : BaseViewModel() {
+class InputFieldViewModel : ViewModel() {
 
     val input = MutableLiveData<String>("")
 

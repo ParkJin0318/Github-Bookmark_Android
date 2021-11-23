@@ -2,9 +2,6 @@ package com.parkjin.github_bookmark.network.response
 
 import com.google.gson.annotations.SerializedName
 
-/**
- * 기본적인 Response 클래스
- */
 data class Response<T>(
     @SerializedName("total_count")
     val count: Int,

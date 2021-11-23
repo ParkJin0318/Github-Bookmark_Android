@@ -1,11 +1,19 @@
 package com.parkjin.github_bookmark.di
 
+import com.parkjin.github_bookmark.database.cache.UserCache
 import com.parkjin.github_bookmark.datasource.UserDataSource
-import org.koin.dsl.module
+import com.parkjin.github_bookmark.network.remote.UserRemote
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-/**
- * Data 계층의 DataSource 의존성 관리 모듈
- */
-val dataSourceModule = module {
-    single { UserDataSource(get(), get()) }
+@Module
+@InstallIn(SingletonComponent::class)
+object DataSourceModule {
+
+    @Provides
+    fun provideUserDataSource(remote: UserRemote, cache: UserCache): UserDataSource =
+        UserDataSource(remote, cache)
+
 }

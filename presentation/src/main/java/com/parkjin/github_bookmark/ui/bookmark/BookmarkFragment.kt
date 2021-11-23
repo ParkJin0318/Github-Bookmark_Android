@@ -2,22 +2,19 @@ package com.parkjin.github_bookmark.ui.bookmark
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.viewModels
 import com.parkjin.github_bookmark.BR
 import com.parkjin.github_bookmark.R
 import com.parkjin.github_bookmark.base.BindingFragment
 import com.parkjin.github_bookmark.base.EventObserver
 import com.parkjin.github_bookmark.databinding.FragmentBookmarkBinding
 import com.parkjin.github_bookmark.extension.showMessage
-import org.koin.androidx.viewmodel.ext.android.getViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-/**
- * Bookmark 사용자 목록 표시하는 Fragment
- */
+@AndroidEntryPoint
 class BookmarkFragment: BindingFragment<FragmentBookmarkBinding>() {
 
-    private val viewModel: BookmarkViewModel by lazy {
-        getViewModel(BookmarkViewModel::class)
-    }
+    private val viewModel: BookmarkViewModel by viewModels()
 
     override fun getLayoutRes(): Int = R.layout.fragment_bookmark
 
