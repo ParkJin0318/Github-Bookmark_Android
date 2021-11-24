@@ -14,7 +14,7 @@ class GetBookmarkUsersUseCase(
             else repository.getBookmarkUsersForName(name)
 
         return newUsers.map { users ->
-            users.map { it.bookmarked(true) }
-        }.map { it.sort() }
+                users.map { it.copy(bookmarked = true) }
+            }.map { it.sort() }
     }
 }

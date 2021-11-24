@@ -15,7 +15,7 @@ class GetUsersUseCase(
         ) { users, bookmarkUsers ->
 
             users.map { user ->
-                user.bookmarked(
+                user.copy(bookmarked =
                     bookmarkUsers
                         .map { it.name }
                         .contains(user.name)

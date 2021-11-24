@@ -8,6 +8,6 @@ class SelectBookmarkUserUseCase(
     private val repository: UserRepository
 ) {
     fun execute(user: User): Completable =
-        if (!user.isBookmark) repository.addBookmarkUser(user)
+        if (user.bookmarked.not()) repository.addBookmarkUser(user)
         else repository.deleteBookmarkUser(user)
 }

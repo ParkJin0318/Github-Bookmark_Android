@@ -15,62 +15,63 @@
             type="com.parkjin.github_bookmark.ui.item.UserItemNavigator" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="@{model.isShowHeader ? View.VISIBLE : View.GONE}"
             android:maxLength="1"
-            android:text="@{String.valueOf(model.firstName)}"
-            android:textColor="@android:color/darker_gray"
-            android:paddingTop="5dp"
             android:paddingStart="20dp"
+            android:paddingTop="5dp"
             android:paddingEnd="20dp"
             android:paddingBottom="5dp"
-            tools:text="P" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@{String.valueOf(model.name.toUpperCase())}"
+            android:textColor="@android:color/darker_gray"
+            android:visibility="@{model.showHeader ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="P" />
 
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:imageUrl="@{model.profileImageUrl}"
-                tools:src="@drawable/ic_launcher_background" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{model.name}"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView"
+            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintTop_toTopOf="@+id/imageView"
+            tools:text="ParkJin" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="16sp"
-                android:layout_marginStart="10dp"
-                android:text="@{model.name}"
-                tools:text="ParkJin" />
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/selector_bookmark"
+            android:button="@null"
+            android:onClick="@{() -> navigator.onClickBookmark(model)}"
+            android:checked="@{model.bookmarked}"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/imageView" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:imageUrl="@{model.profileImageUrl}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2"
+            tools:src="@drawable/ic_launcher_background" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> navigator.onClickBookmark(model)}"
-                android:src="@drawable/ic_star"
-                app:bookmark="@{model.isBookmark}" />
-        </LinearLayout>
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

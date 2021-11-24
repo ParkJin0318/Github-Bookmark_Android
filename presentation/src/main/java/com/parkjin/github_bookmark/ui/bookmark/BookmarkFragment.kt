@@ -21,11 +21,7 @@ class BookmarkFragment: BindingFragment<FragmentBookmarkBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.setVariable(BR.viewModel, viewModel)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.getBookmarkUsers(viewModel.userName.value!!)
+        viewModel.getBookmarkUsers()
     }
 
     override fun observeEvent() {

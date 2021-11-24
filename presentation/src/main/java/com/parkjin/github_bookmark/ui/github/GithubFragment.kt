@@ -23,15 +23,16 @@ class GithubFragment: BindingFragment<FragmentGithubBinding>() {
         binding.setVariable(BR.viewModel, viewModel)
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.getUsersForName(viewModel.userName.value!!)
-    }
-
     override fun observeEvent() {
         with(viewModel) {
             onErrorEvent.observe(this@GithubFragment, EventObserver {
                 showMessage(it.message)
+            })
+        }
+
+        with(binding.inputField.viewModel) {
+            onSearchEvent.observe(this@GithubFragment, EventObserver {
+                viewModel.getUsersForName(it ?: return@EventObserver)
             })
         }
     }

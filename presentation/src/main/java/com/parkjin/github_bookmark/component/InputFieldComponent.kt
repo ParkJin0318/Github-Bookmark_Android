@@ -3,6 +3,8 @@ package com.parkjin.github_bookmark.component
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.findViewTreeViewModelStoreOwner
 import com.parkjin.github_bookmark.base.BaseComponent
 import com.parkjin.github_bookmark.databinding.ComponentInputFieldBinding
 
@@ -13,7 +15,11 @@ class InputFieldComponent @JvmOverloads constructor(
 ) : BaseComponent(context, attrs, defStyleAttr) {
 
     private lateinit var binding: ComponentInputFieldBinding
-    val viewModel: InputFieldViewModel = InputFieldViewModel()
+    val viewModel: InputFieldViewModel by lazy {
+        findViewTreeViewModelStoreOwner()
+            ?.let { ViewModelProvider(it)[InputFieldViewModel::class.java] }
+            ?: InputFieldViewModel()
+    }
 
     override fun onCreate() {
         binding = ComponentInputFieldBinding.inflate(

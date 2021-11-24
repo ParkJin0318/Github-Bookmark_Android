@@ -1,7 +1,7 @@
 package com.parkjin.github_bookmark.network.api
 
 import com.parkjin.github_bookmark.network.response.Response
-import com.parkjin.github_bookmark.network.response.UserData
+import com.parkjin.github_bookmark.network.response.UserResponse
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -16,5 +16,5 @@ interface UserAPI {
         @Query("q") name: String,
         @Query("page") page: Int = DEFAULT_PAGE,
         @Query("per_page") perPage: Int = DEFAULT_PER_PAGE
-    ): Single<retrofit2.Response<Response<List<UserData>>>>
+    ): Single<retrofit2.Response<Response<List<UserResponse>>>>
 }
