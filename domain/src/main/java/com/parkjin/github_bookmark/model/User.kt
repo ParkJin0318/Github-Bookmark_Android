@@ -16,6 +16,11 @@ val User.upperName: String
 val User.firstName: Char
     get() = name.first().uppercaseChar()
 
+enum class UserType(val title: String) {
+    GITHUB("Github"),
+    BOOKMARK("Bookmark");
+}
+
 fun List<User>.sort(): List<User> {
     val newUsers: ArrayList<User> = arrayListOf()
 

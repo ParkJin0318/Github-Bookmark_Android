@@ -14,12 +14,9 @@ abstract class BindingActivity<VB : ViewDataBinding> : AppCompatActivity() {
     @LayoutRes
     abstract fun getLayoutRes(): Int
 
-    protected abstract fun observeEvent()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         performDataBinding()
-        observeEvent()
     }
 
     private fun performDataBinding() {

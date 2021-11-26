@@ -7,17 +7,13 @@ import com.parkjin.github_bookmark.base.BindingActivity
 import com.parkjin.github_bookmark.base.ViewPagerAdapter
 import com.parkjin.github_bookmark.databinding.ActivityMainBinding
 import com.parkjin.github_bookmark.model.User
+import com.parkjin.github_bookmark.model.UserType
 import com.parkjin.github_bookmark.ui.bookmark.BookmarkFragment
 import com.parkjin.github_bookmark.ui.github.GithubFragment
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.subjects.PublishSubject
 
-val bookmarkUserSubject: PublishSubject<Pair<User, TabType>> = PublishSubject.create()
-
-enum class TabType(val title: String) {
-    GITHUB("Github"),
-    BOOKMARK("Bookmark");
-}
+val bookmarkUserSubject: PublishSubject<Pair<User, UserType>> = PublishSubject.create()
 
 @AndroidEntryPoint
 class MainActivity: BindingActivity<ActivityMainBinding>() {
@@ -42,9 +38,7 @@ class MainActivity: BindingActivity<ActivityMainBinding>() {
         binding.pagerLayout.adapter = viewPagerAdapter
 
         TabLayoutMediator(binding.tabLayout, binding.pagerLayout) { tab, position ->
-            tab.text = TabType.values()[position].title
+            tab.text = UserType.values()[position].title
         }.attach()
     }
-
-    override fun observeEvent() { }
 }

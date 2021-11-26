@@ -8,7 +8,6 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import com.parkjin.github_bookmark.BR
 
 abstract class BindingFragment<VB : ViewDataBinding> : Fragment() {
 

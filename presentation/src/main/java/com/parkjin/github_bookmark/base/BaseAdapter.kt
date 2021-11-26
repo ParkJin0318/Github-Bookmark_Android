@@ -12,11 +12,23 @@ abstract class BaseAdapter<T: Any, VH: RecyclerView.ViewHolder> : RecyclerView.A
 
     fun getItem(position: Int): T = _currentList[position]
 
+    /**
+     * notify
+     */
     fun notifyItemChanged(item: T) {
         val index = currentList.indexOf(item)
         notifyItemChanged(index)
     }
 
+    fun notifyItemsChanged(items: List<T>) {
+        _currentList.clear()
+        val itemCount = addItems(items).dec()
+        notifyItemRangeChanged(0, itemCount)
+    }
+
+    /**
+     * addAll
+     */
     fun addItems(items: List<T>): Int {
         _currentList.addAll(items)
         return currentList.size
@@ -28,6 +40,9 @@ abstract class BaseAdapter<T: Any, VH: RecyclerView.ViewHolder> : RecyclerView.A
         notifyItemRangeInserted(positionStart, itemCount)
     }
 
+    /**
+     * add
+     */
     fun addItem(item: T): Int {
         _currentList.add(item)
         return currentList.indexOf(item)
@@ -38,6 +53,23 @@ abstract class BaseAdapter<T: Any, VH: RecyclerView.ViewHolder> : RecyclerView.A
         notifyItemInserted(index)
     }
 
+    /**
+     * removeAll
+     */
+    fun removeItems(items: List<T>): Int {
+        _currentList.removeAll(items)
+        return currentList.size
+    }
+
+    fun removeItemsChanged(items: List<T>) {
+        val positionStart = currentList.size
+        val itemCount = removeItems(items).dec()
+        notifyItemRangeRemoved(positionStart, itemCount)
+    }
+
+    /**
+     * remove
+     */
     fun removeItem(item: T): Int {
         val index = currentList.indexOf(item)
         _currentList.remove(item)
@@ -49,11 +81,9 @@ abstract class BaseAdapter<T: Any, VH: RecyclerView.ViewHolder> : RecyclerView.A
         notifyItemRemoved(index)
     }
 
-    fun replaceItemsChanged(items: List<T>) {
-        _currentList.clear()
-        addItemsChanged(items)
-    }
-
+    /**
+     * replace
+     */
     fun replaceItem(oldItem: T, newItem: T): Int {
         val index = currentList.indexOf(oldItem)
         _currentList[index] = newItem

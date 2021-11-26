@@ -4,13 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.parkjin.github_bookmark.base.Event
-import com.parkjin.github_bookmark.extension.networkOn
+import com.parkjin.github_bookmark.extension.subscribe
 import com.parkjin.github_bookmark.model.User
+import com.parkjin.github_bookmark.model.UserType
+import com.parkjin.github_bookmark.provider.SchedulerProvider
 import com.parkjin.github_bookmark.ui.item.UserAdapter
 import com.parkjin.github_bookmark.ui.item.UserItemNavigator
-import com.parkjin.github_bookmark.ui.main.TabType
 import com.parkjin.github_bookmark.ui.main.bookmarkUserSubject
-import com.parkjin.github_bookmark.usecase.SelectBookmarkUserUseCase
+import com.parkjin.github_bookmark.usecase.BookmarkUserUseCase
 import com.parkjin.github_bookmark.usecase.GetUsersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -21,9 +22,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GithubViewModel @Inject constructor(
+    private val scheduler: SchedulerProvider,
     private val getUsersUseCase: GetUsersUseCase,
-    private val selectBookmarkUserUseCase: SelectBookmarkUserUseCase
+    private val bookmarkUserUseCase: BookmarkUserUseCase
 ) : ViewModel(), UserItemNavigator {
+
+    private val currentUserType = UserType.GITHUB
 
     private val disposable = CompositeDisposable()
 
@@ -41,15 +45,54 @@ class GithubViewModel @Inject constructor(
 
     init {
         bookmarkUserSubject
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(this::updateUserToList, Throwable::printStackTrace)
+            .distinctUntilChanged()
+            .subscribeOn(scheduler.io)
+            .observeOn(scheduler.ui)
+            .subscribe(this::updateBookmarkUser, Throwable::printStackTrace)
             .addTo(disposable)
     }
 
-    private fun updateUserToList(data: Pair<User, TabType>) {
+    fun getUsersForName(name: String) {
+        if (name.isEmpty()) return
+
+        _isLoading.value = true
+
+        getUsersUseCase.execute(name, currentUserType)
+            .subscribe(
+                scheduler = scheduler,
+                disposable = disposable,
+                onSuccess = {
+                    adapter.notifyItemsChanged(it)
+                    _isLoading.value = false
+                },
+                onError = {
+                    _onErrorEvent.value = Event(it)
+                }
+            )
+    }
+
+    override fun onClickBookmark(name: String) {
+        val user = adapter.currentList.find { it.name == name } ?: return
+
+        bookmarkUserUseCase.execute(user)
+            .subscribe(
+                scheduler = scheduler,
+                disposable = disposable,
+                onSuccess = {
+                    val newUser = user.copy(bookmarked = user.bookmarked.not())
+                    adapter.replaceItem(user, newUser)
+
+                    bookmarkUserSubject.onNext(Pair(newUser, currentUserType))
+                },
+                onError = {
+                    _onErrorEvent.value = Event(it)
+                }
+            )
+    }
+
+    private fun updateBookmarkUser(data: Pair<User, UserType>) {
         data.let { (user, tab) ->
-            if (tab == TabType.GITHUB) return
+            if (tab == currentUserType) return
 
             adapter.currentList
                 .find { it.name == user.name }
@@ -58,34 +101,6 @@ class GithubViewModel @Inject constructor(
                     adapter.replaceItemChanged(it, newUser)
                 }
         }
-    }
-
-    fun getUsersForName(name: String) {
-        if (name.isEmpty()) return
-
-        _isLoading.value = true
-
-        getUsersUseCase.execute(name)
-            .networkOn()
-            .subscribe({
-                adapter.replaceItemsChanged(it)
-                _isLoading.value = false
-            }, {
-                _onErrorEvent.value = Event(it)
-            }).addTo(disposable)
-    }
-
-    override fun onClickBookmark(user: User) {
-        selectBookmarkUserUseCase.execute(user)
-            .networkOn()
-            .subscribe({
-                val newUser = user.copy(bookmarked = user.bookmarked.not())
-                adapter.replaceItem(user, newUser)
-
-                bookmarkUserSubject.onNext(Pair(newUser, TabType.GITHUB))
-            }, {
-                _onErrorEvent.value = Event(it)
-            }).addTo(disposable)
     }
 
     override fun onCleared() {

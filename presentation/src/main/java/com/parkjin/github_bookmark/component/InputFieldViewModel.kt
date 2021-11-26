@@ -7,7 +7,7 @@ import com.parkjin.github_bookmark.base.Event
 
 class InputFieldViewModel : ViewModel() {
 
-    val input = MutableLiveData<String>("")
+    val input = MutableLiveData("")
 
     private val _onSearchEvent = MutableLiveData<Event<String?>>()
     val onSearchEvent: LiveData<Event<String?>>

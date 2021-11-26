@@ -1,25 +1,50 @@
 package com.parkjin.github_bookmark.usecase
 
 import com.parkjin.github_bookmark.model.User
+import com.parkjin.github_bookmark.model.UserType
 import com.parkjin.github_bookmark.model.sort
+import com.parkjin.github_bookmark.provider.SchedulerProvider
 import com.parkjin.github_bookmark.repository.UserRepository
 import io.reactivex.rxjava3.core.Single
+import javax.inject.Inject
 
-class GetUsersUseCase(
+class GetUsersUseCase @Inject constructor(
+    private val scheduler: SchedulerProvider,
     private val repository: UserRepository
 ) {
-    fun execute(name: String): Single<List<User>> =
-        Single.zip(
-            repository.getUsersForName(name),
-            repository.getBookmarkUsers()
-        ) { users, bookmarkUsers ->
-
-            users.map { user ->
-                user.copy(bookmarked =
-                    bookmarkUsers
-                        .map { it.name }
-                        .contains(user.name)
-                )
-            }.sort()
+    fun execute(name: String, type: UserType): Single<List<User>> {
+        val users = when (type) {
+            UserType.GITHUB -> getGithubUser(name)
+            UserType.BOOKMARK -> getBookmarkUser(name)
         }
+
+        return users.map { it.sort() }
+            .subscribeOn(scheduler.io)
+    }
+
+    private fun getGithubUser(name: String): Single<List<User>> {
+        val getGithubUsers = repository.getUsersForName(name)
+            .subscribeOn(scheduler.io)
+
+        val getBookmarkUsers = repository.getBookmarkUsers()
+            .subscribeOn(scheduler.io)
+
+        return Single.zip(getGithubUsers, getBookmarkUsers) { users, bookmarkUsers ->
+            users.map { user ->
+                val bookmarked = bookmarkUsers.map { it.name }.contains(user.name)
+                user.copy(bookmarked = bookmarked)
+            }
+        }
+    }
+
+    private fun getBookmarkUser(name: String): Single<List<User>> {
+        val bookmarkUsers =
+            if (name.isEmpty()) repository.getBookmarkUsers()
+            else repository.getBookmarkUsersForName(name)
+
+        return bookmarkUsers.map { users ->
+            users.map { it.copy(bookmarked = true) }
+        }
+    }
+
 }

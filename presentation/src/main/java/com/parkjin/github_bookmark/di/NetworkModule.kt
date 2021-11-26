@@ -12,12 +12,12 @@ import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-private const val DEFAULT_HOST = "https://api.github.com/"
-private const val TIME_OUT = 20
-
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
+    private const val DEFAULT_HOST = "https://api.github.com/"
+    private const val TIME_OUT = 20
 
     @Provides
     fun provideOkhttpClient(): OkHttpClient {
