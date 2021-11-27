@@ -2,7 +2,6 @@ package com.parkjin.github_bookmark.usecase
 
 import com.parkjin.github_bookmark.model.User
 import com.parkjin.github_bookmark.model.UserType
-import com.parkjin.github_bookmark.model.sort
 import com.parkjin.github_bookmark.provider.SchedulerProvider
 import com.parkjin.github_bookmark.repository.UserRepository
 import io.reactivex.rxjava3.core.Single
@@ -18,8 +17,7 @@ class GetUsersUseCase @Inject constructor(
             UserType.BOOKMARK -> getBookmarkUser(name)
         }
 
-        return users.map { it.sort() }
-            .subscribeOn(scheduler.io)
+        return users.subscribeOn(scheduler.io)
     }
 
     private fun getGithubUser(name: String): Single<List<User>> {

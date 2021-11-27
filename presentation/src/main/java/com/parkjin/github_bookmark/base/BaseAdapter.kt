@@ -48,8 +48,19 @@ abstract class BaseAdapter<T: Any, VH: RecyclerView.ViewHolder> : RecyclerView.A
         return currentList.indexOf(item)
     }
 
+    fun addItem(frontItem: T, item: T): Int {
+        val index = currentList.indexOf(frontItem).inc()
+        _currentList.add(index, item)
+        return currentList.indexOf(item)
+    }
+
     fun addItemChanged(item: T) {
         val index = addItem(item)
+        notifyItemInserted(index)
+    }
+
+    fun addItemChanged(frontItem: T, item: T) {
+        val index = addItem(frontItem, item)
         notifyItemInserted(index)
     }
 
