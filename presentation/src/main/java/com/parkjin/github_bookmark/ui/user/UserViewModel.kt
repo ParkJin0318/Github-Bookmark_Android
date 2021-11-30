@@ -27,6 +27,8 @@ class UserViewModel @Inject constructor(
     private val bookmarkUserUseCase: BookmarkUserUseCase
 ) : ViewModel(), UserAdapter.UserListener {
 
+    val adapter: UserAdapter = UserAdapter(this)
+
     private var currentUserType = UserType.GITHUB
 
     private val disposable = CompositeDisposable()
@@ -35,16 +37,12 @@ class UserViewModel @Inject constructor(
     val onErrorEvent: LiveData<Event<Throwable>>
         get() = _onErrorEvent
 
-    private val _adapter = UserAdapter(this)
-    val adapter: UserAdapter
-        get() = _adapter
-
     init {
         bookmarkUserSubject
             .distinctUntilChanged()
             .subscribeOn(scheduler.io)
             .observeOn(scheduler.ui)
-            .subscribe(this::updateBookmarkUser, Throwable::printStackTrace)
+            .subscribe(this::notifyUserBookmark, Throwable::printStackTrace)
             .addTo(disposable)
     }
 
@@ -70,35 +68,8 @@ class UserViewModel @Inject constructor(
             )
     }
 
-    private fun List<User>.toUserListUIModels(): List<UserListUIModel> {
-        val userListUIModels: MutableList<UserListUIModel> = mutableListOf()
-
-        val users = LinkedList(this.sortedBy { it.name.uppercase() })
-
-        while (!users.isEmpty()) {
-            val user = users.remove()
-
-            userListUIModels.add(UserListUIModel.UserHeader(user.firstName))
-            userListUIModels.add(UserListUIModel.UserItem(user))
-
-            while (users.peek() != null && user.firstName == users.peek()?.firstName) {
-                userListUIModels.add(UserListUIModel.UserItem(users.remove()))
-            }
-        }
-
-        return userListUIModels
-    }
-
-    private fun findUserHeader(firstName: String) = adapter.currentList
-        .filterIsInstance<UserListUIModel.UserHeader>()
-        .find { it.header == firstName }
-
-    private fun findUserItem(find: (User) -> Boolean) = adapter.currentList
-        .filterIsInstance<UserListUIModel.UserItem>()
-        .find { find.invoke(it.user) }
-
     override fun onClickBookmark(name: String) {
-        val model = findUserItem { it.name == name } ?: return
+        val model = adapter.currentList.findUserItem { it.name == name } ?: return
         val user = model.user
 
         bookmarkUserUseCase.execute(user)
@@ -117,42 +88,50 @@ class UserViewModel @Inject constructor(
             )
     }
 
-    private fun updateBookmarkUser(data: Pair<User, UserType>) {
-        data.let { (user, type) ->
-            val model = findUserItem { it.name == user.name }
+    private fun notifyUserBookmark(data: Pair<User, UserType>) {
+        data.let { (user, bookmarkedType) ->
+            val model = adapter.currentList.findUserItem { it.name == user.name }
 
             when (currentUserType) {
-                UserType.GITHUB -> {
-                    if (type == currentUserType) return
-
-                    model?.let {
-                        val newUser = it.user.copy(bookmarked = it.user.bookmarked.not())
-                        adapter.replaceItemChanged(it, UserListUIModel.UserItem(newUser))
-                    }
-                }
-                UserType.BOOKMARK -> {
-                    model?.let {
-                        adapter.removeItemChanged(model)
-
-                        findUserItem { it.firstName == model.user.firstName }
-                            ?: let {
-                                findUserHeader(model.user.firstName)
-                                    ?.let { adapter.removeItemChanged(it) }
-                            }
-                    } ?: let {
-                        findUserHeader(user.firstName)
-                            ?.let {
-                                adapter.addItemChanged(it, UserListUIModel.UserItem(user))
-                            } ?: let {
-                                adapter.addItemsChanged(listOf(
-                                    UserListUIModel.UserHeader(user.firstName),
-                                    UserListUIModel.UserItem(user)
-                                ))
-                            }
-                    }
-                }
+                UserType.GITHUB -> notifyGithubUser(model, bookmarkedType)
+                UserType.BOOKMARK -> notifyBookmarkUser(user, model)
             }
         }
+    }
+
+    private fun notifyGithubUser(model: UserListUIModel.UserItem?, bookmarkedType: UserType) {
+        if (model == null || bookmarkedType == UserType.GITHUB) return
+
+        val user = model.user
+        val newUser = user.copy(bookmarked = user.bookmarked.not())
+        adapter.replaceItemChanged(model, UserListUIModel.UserItem(newUser))
+    }
+
+    private fun notifyBookmarkUser(user: User, model: UserListUIModel.UserItem?) {
+        val header = adapter.currentList.findUserHeader(user.firstName)
+        model?.let { removeBookmarkUser(it, header) } ?: addBookmarkUser(user, header)
+    }
+
+    private fun addBookmarkUser(user: User, header: UserListUIModel.UserHeader?) {
+        if (header == null) {
+            adapter.addItemsChanged(
+                listOf(
+                    UserListUIModel.UserHeader(user.firstName),
+                    UserListUIModel.UserItem(user)
+                )
+            )
+        } else {
+            adapter.addItemChanged(header, UserListUIModel.UserItem(user))
+        }
+    }
+
+    private fun removeBookmarkUser(model: UserListUIModel.UserItem, header: UserListUIModel.UserHeader?) {
+        adapter.removeItemChanged(model)
+
+        val notExistOtherUser = adapter.currentList
+            .findUserItem { it.firstName == model.user.firstName } == null
+
+        if (notExistOtherUser) header?.let { adapter.removeItemChanged(it) }
     }
 
     private fun setLoading(isLoading: Boolean) {
@@ -167,3 +146,30 @@ class UserViewModel @Inject constructor(
         disposable.clear()
     }
 }
+
+private fun List<User>.toUserListUIModels(): List<UserListUIModel> {
+    val userListUIModels: MutableList<UserListUIModel> = mutableListOf()
+
+    val users = LinkedList(this.sortedBy { it.name.uppercase() })
+
+    while (!users.isEmpty()) {
+        val user = users.remove()
+
+        userListUIModels.add(UserListUIModel.UserHeader(user.firstName))
+        userListUIModels.add(UserListUIModel.UserItem(user))
+
+        while (users.peek() != null && user.firstName == users.peek()?.firstName) {
+            userListUIModels.add(UserListUIModel.UserItem(users.remove()))
+        }
+    }
+
+    return userListUIModels
+}
+
+private fun List<UserListUIModel>.findUserHeader(firstName: String) =
+    this.filterIsInstance<UserListUIModel.UserHeader>()
+        .find { it.header == firstName }
+
+private fun List<UserListUIModel>.findUserItem(find: (User) -> Boolean) =
+    this.filterIsInstance<UserListUIModel.UserItem>()
+        .find { find.invoke(it.user) }
