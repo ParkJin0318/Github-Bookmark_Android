@@ -150,19 +150,13 @@ class UserViewModel @Inject constructor(
 private fun List<User>.toUserListUIModels(): List<UserListUIModel> {
     val userListUIModels: MutableList<UserListUIModel> = mutableListOf()
 
-    val users = LinkedList(this.sortedBy { it.name.uppercase() })
-
-    while (!users.isEmpty()) {
-        val user = users.remove()
-
-        userListUIModels.add(UserListUIModel.UserHeader(user.firstName))
-        userListUIModels.add(UserListUIModel.UserItem(user))
-
-        while (users.peek() != null && user.firstName == users.peek()?.firstName) {
-            userListUIModels.add(UserListUIModel.UserItem(users.remove()))
+    this.sortedBy(User::name)
+        .groupBy(User::firstName)
+        .entries
+        .forEach { (header, users) ->
+            userListUIModels.add(UserListUIModel.UserHeader(header))
+            userListUIModels.addAll(users.map(UserListUIModel::UserItem))
         }
-    }
-
     return userListUIModels
 }
 
