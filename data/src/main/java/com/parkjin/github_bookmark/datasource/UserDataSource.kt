@@ -13,8 +13,8 @@ class UserDataSource @Inject constructor(
     private val remote: UserRemote,
     private val cache: UserCache
 ) {
-    fun getUsersForName(name: String): Single<List<User>> =
-        remote.getUsersForName(name).map { userDataList ->
+    fun getUsersForName(name: String, page: Int): Single<List<User>> =
+        remote.getUsersForName(name, page).map { userDataList ->
             userDataList.map { it.toModel() }
         }
 

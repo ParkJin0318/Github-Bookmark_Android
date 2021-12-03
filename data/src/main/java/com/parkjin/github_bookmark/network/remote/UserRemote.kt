@@ -9,8 +9,8 @@ import javax.inject.Inject
 class UserRemote @Inject constructor(
     private val api: UserAPI
 ) {
-    fun getUsersForName(name: String): Single<List<UserResponse>> =
-        api.getUsersForName(name)
+    fun getUsersForName(name: String, page: Int): Single<List<UserResponse>> =
+        api.getUsersForName(name, page)
             .catch()
             .map { it.items }
 }

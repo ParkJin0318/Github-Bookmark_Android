@@ -10,8 +10,8 @@ class UserRepositoryImpl @Inject constructor(
     private val dataSource: UserDataSource
 ): UserRepository {
 
-    override fun getUsersForName(name: String): Single<List<User>> =
-        dataSource.getUsersForName(name)
+    override fun getUsersForName(name: String, page: Int): Single<List<User>> =
+        dataSource.getUsersForName(name, page)
 
     override fun getBookmarkUsers(): Single<List<User>> =
         dataSource.getBookmarkUsers()

@@ -6,7 +6,7 @@ import io.reactivex.rxjava3.core.Single
 
 interface UserRepository {
 
-    fun getUsersForName(name: String): Single<List<User>>
+    fun getUsersForName(name: String, page: Int): Single<List<User>>
 
     fun getBookmarkUsers(): Single<List<User>>
 

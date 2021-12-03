@@ -11,17 +11,17 @@ class GetUsersUseCase @Inject constructor(
     private val scheduler: SchedulerProvider,
     private val repository: UserRepository
 ) {
-    fun execute(name: String, type: UserType): Single<List<User>> {
+    fun execute(name: String, type: UserType, page: Int = 1): Single<List<User>> {
         val users = when (type) {
-            UserType.GITHUB -> getGithubUser(name)
+            UserType.GITHUB -> getGithubUser(name, page)
             UserType.BOOKMARK -> getBookmarkUser(name)
         }
 
         return users.subscribeOn(scheduler.io)
     }
 
-    private fun getGithubUser(name: String): Single<List<User>> {
-        val getGithubUsers = repository.getUsersForName(name)
+    private fun getGithubUser(name: String, page: Int): Single<List<User>> {
+        val getGithubUsers = repository.getUsersForName(name, page)
             .subscribeOn(scheduler.io)
 
         val getBookmarkUsers = repository.getBookmarkUsers()
