@@ -13,8 +13,8 @@ sealed class UserListViewHolder(val view: View) : RecyclerView.ViewHolder(view) 
         private val binding: ViewUserHeaderItemBinding
     ) : UserListViewHolder(binding.root) {
 
-        fun bind(header: String) {
-            binding.header = header
+        fun bind(item: UserListItem.UserHeader) {
+            binding.header = item.header
         }
     }
 
@@ -23,8 +23,8 @@ sealed class UserListViewHolder(val view: View) : RecyclerView.ViewHolder(view) 
         private val listener: UserListAdapter.UserListener
     ) : UserListViewHolder(binding.root) {
 
-        fun bind(item: User) {
-            binding.model = item
+        fun bind(item: UserListItem.UserItem) {
+            binding.item = item
             binding.listener = listener
         }
     }

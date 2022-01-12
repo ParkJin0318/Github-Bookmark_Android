@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.parkjin.github_bookmark.R
 import com.parkjin.github_bookmark.databinding.ViewLoadingItemBinding
 import com.parkjin.github_bookmark.databinding.ViewUserHeaderItemBinding
 import com.parkjin.github_bookmark.databinding.ViewUserItemBinding
+import com.parkjin.github_bookmark.model.User
 
 class UserListAdapter(
     private val listener: UserListener
@@ -60,16 +60,20 @@ class UserListAdapter(
         val item = getItem(position)
 
         when (holder) {
-            is UserListViewHolder.UserHeaderViewHolder -> {
-                val model = item as UserListItem.UserHeader
-                holder.bind(model.header)
-            }
-            is UserListViewHolder.UserItemViewHolder -> {
-                val model = item as UserListItem.UserItem
-                holder.bind(model.user)
-            }
-            else -> return
+            is UserListViewHolder.UserHeaderViewHolder ->
+                holder.bind(item as UserListItem.UserHeader)
+
+            is UserListViewHolder.UserItemViewHolder ->
+                holder.bind(item as UserListItem.UserItem)
         }
+    }
+
+    fun notifyBookmark(userItem: UserListItem.UserItem) {
+        currentList.filterIsInstance<UserListItem.UserItem>()
+            .find { it.user.name == userItem.user.name }
+            ?.let {
+                it.bookmarked = userItem.bookmarked
+            }
     }
 
     interface UserListener {

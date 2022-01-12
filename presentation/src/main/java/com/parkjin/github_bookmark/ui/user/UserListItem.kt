@@ -20,7 +20,10 @@ sealed class UserListItem {
         override val type = UserListType.USER_HEADER
     }
 
-    data class UserItem(val user: User) : UserListItem() {
+    data class UserItem(
+        val user: User,
+        var bookmarked: Boolean = user.bookmarked
+    ) : UserListItem() {
         override val type = UserListType.USER_ITEM
     }
 

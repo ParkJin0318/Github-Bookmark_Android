@@ -12,7 +12,7 @@ class UserListDiffCallback : DiffUtil.ItemCallback<UserListItem>() {
         val isSameUser = oldItem is UserListItem.UserItem
                 && newItem is UserListItem.UserItem
                 && oldItem.user.name == newItem.user.name
-                && oldItem.user.bookmarked == newItem.user.bookmarked
+                && oldItem.bookmarked == newItem.bookmarked
 
         val isSameLoading = oldItem is UserListItem.Loading
                 && newItem is UserListItem.Loading

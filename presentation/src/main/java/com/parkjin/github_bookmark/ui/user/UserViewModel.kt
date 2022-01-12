@@ -44,12 +44,14 @@ class UserViewModel @Inject constructor(
         get() = userListItems.filterIsInstance<UserListItem.UserItem>()
 
     init {
-        BookmarkStore.register()
-            .distinctUntilChanged()
-            .subscribeOn(scheduler.io)
-            .observeOn(scheduler.ui)
-            .subscribe({
+        initEvent()
+    }
 
+    private fun initEvent() {
+        BookmarkStore.register()
+            .subscribeOn(scheduler.io)
+            .subscribe({
+                handleBookmarkEvent(BookmarkStore.userItem, BookmarkStore.userType)
             }, Throwable::printStackTrace)
             .addTo(disposable)
     }
@@ -87,24 +89,55 @@ class UserViewModel @Inject constructor(
     }
 
     override fun onClickBookmark(name: String) {
-        val model = userItems.find { it.user.name == name } ?: return
-        bookmarkToUser(model.user, userListItems.indexOf(model))
+        val item = userItems.find { it.user.name == name } ?: return
+        bookmarkToUser(item, userListItems.indexOf(item))
     }
 
-    private fun bookmarkToUser(user: User, index: Int) {
-        bookmarkUserUseCase.execute(user)
+    private fun bookmarkToUser(userItem: UserListItem.UserItem, index: Int) {
+        bookmarkUserUseCase.execute(userItem.user)
             .subscribe(
                 scheduler = scheduler,
                 disposable = disposable,
                 onSuccess = {
-                    val newUser = user.copy(bookmarked = user.bookmarked.not())
-                    userListItems[index] = UserListItem.UserItem(newUser)
-                    BookmarkStore.update(currentUserType to user)
+                    val item = UserListItem.UserItem(userItem.user, userItem.bookmarked.not())
+
+                    when (currentUserType) {
+                        UserType.GITHUB -> {
+                            userListItems[index] = item
+                            adapter.notifyBookmark(item)
+                        }
+                        UserType.BOOKMARK -> {
+                            userListItems.removeAt(index)
+                            submitList()
+                        }
+                    }
+                    BookmarkStore.update(currentUserType, item)
                 },
                 onError = {
                     _onErrorEvent.value = Event(it)
                 }
             )
+    }
+
+    private fun handleBookmarkEvent(userItem: UserListItem.UserItem?, type: UserType) {
+        if (userItem == null || type == currentUserType) return
+
+        val item = userItems.find { it.user.name == userItem.user.name }
+
+        when (type) {
+            UserType.GITHUB -> {
+                item?.let { userListItems.remove(it) }
+                    ?: userListItems.add(userItem)
+            }
+            UserType.BOOKMARK -> {
+                item?.let {
+                    val index = userListItems.indexOf(it)
+                    userListItems[index] = userItem
+                    adapter.notifyBookmark(userItem)
+                }
+            }
+        }
+        submitList()
     }
 
     private fun submitList() {
