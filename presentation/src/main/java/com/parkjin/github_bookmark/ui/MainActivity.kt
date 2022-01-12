@@ -7,7 +7,7 @@ import com.parkjin.github_bookmark.base.BindingActivity
 import com.parkjin.github_bookmark.base.ViewPagerAdapter
 import com.parkjin.github_bookmark.databinding.ActivityMainBinding
 import com.parkjin.github_bookmark.model.UserType
-import com.parkjin.github_bookmark.ui.user.UserFragment
+import com.parkjin.github_bookmark.ui.user.UserListFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,8 +22,8 @@ class MainActivity: BindingActivity<ActivityMainBinding>() {
 
     private fun setTabLayout() {
         val fragments = listOf(
-            UserFragment.newInstance(UserFragment.Argument(UserType.GITHUB)),
-            UserFragment.newInstance(UserFragment.Argument(UserType.BOOKMARK))
+            UserListFragment.newInstance(UserListFragment.Argument(UserType.GITHUB)),
+            UserListFragment.newInstance(UserListFragment.Argument(UserType.BOOKMARK))
         )
 
         val viewPagerAdapter = ViewPagerAdapter(this).apply {

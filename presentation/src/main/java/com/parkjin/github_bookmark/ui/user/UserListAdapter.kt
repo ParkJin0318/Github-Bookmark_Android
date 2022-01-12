@@ -3,21 +3,21 @@ package com.parkjin.github_bookmark.ui.user
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.parkjin.github_bookmark.R
-import com.parkjin.github_bookmark.base.BaseAdapter
 import com.parkjin.github_bookmark.databinding.ViewLoadingItemBinding
 import com.parkjin.github_bookmark.databinding.ViewUserHeaderItemBinding
 import com.parkjin.github_bookmark.databinding.ViewUserItemBinding
 
-class UserAdapter(
+class UserListAdapter(
     private val listener: UserListener
-) : BaseAdapter<UserListUIModel, RecyclerView.ViewHolder>() {
+) : ListAdapter<UserListItem, UserListViewHolder>(UserListDiffCallback()) {
 
-    override fun getItemViewType(position: Int) = getItem(position).toViewType()
+    override fun getItemViewType(position: Int) = getItem(position).type.ordinal
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-        when (UserListType.get(viewType)) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserListViewHolder =
+        when (UserListType.from(viewType)) {
             UserListType.USER_HEADER -> {
                 val binding: ViewUserHeaderItemBinding =
                     DataBindingUtil.inflate(
@@ -27,7 +27,7 @@ class UserAdapter(
                         false
                     )
 
-                UserHeaderViewHolder(binding)
+                UserListViewHolder.UserHeaderViewHolder(binding)
             }
 
             UserListType.USER_ITEM -> {
@@ -39,7 +39,7 @@ class UserAdapter(
                         false
                     )
 
-                UserItemViewHolder(binding, listener)
+                UserListViewHolder.UserItemViewHolder(binding, listener)
             }
 
             UserListType.LOADING -> {
@@ -51,23 +51,24 @@ class UserAdapter(
                         false
                     )
 
-                LoadingViewHolder(binding)
+                UserListViewHolder.LoadingViewHolder(binding)
             }
         }
 
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: UserListViewHolder, position: Int) {
         val item = getItem(position)
 
         when (holder) {
-            is UserHeaderViewHolder -> {
-                val model = item as UserListUIModel.UserHeader
+            is UserListViewHolder.UserHeaderViewHolder -> {
+                val model = item as UserListItem.UserHeader
                 holder.bind(model.header)
             }
-            is UserItemViewHolder -> {
-                val model = item as UserListUIModel.UserItem
+            is UserListViewHolder.UserItemViewHolder -> {
+                val model = item as UserListItem.UserItem
                 holder.bind(model.user)
             }
+            else -> return
         }
     }
 

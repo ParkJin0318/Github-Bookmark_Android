@@ -12,14 +12,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.parkjin.github_bookmark.component.InputFieldComponent
-            android:id="@+id/input_field"
+        <LinearLayout
+            android:id="@+id/box_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/input_keyword"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@={viewModel.inputKeyword}" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/btn_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:onClick="@{() -> viewModel.onClickSearch()}"
+                android:src="@drawable/ic_search" />
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
@@ -31,6 +49,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/input_field" />
+            app:layout_constraintTop_toBottomOf="@id/box_search" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -10,7 +10,7 @@
 
         <variable
             name="listener"
-            type="com.parkjin.github_bookmark.ui.user.UserAdapter.UserListener" />
+            type="com.parkjin.github_bookmark.ui.user.UserListAdapter.UserListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

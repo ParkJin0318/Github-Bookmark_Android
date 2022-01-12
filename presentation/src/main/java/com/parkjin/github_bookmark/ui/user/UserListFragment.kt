@@ -10,18 +10,18 @@ import com.parkjin.github_bookmark.R
 import com.parkjin.github_bookmark.base.BindingFragment
 import com.parkjin.github_bookmark.base.EventObserver
 import com.parkjin.github_bookmark.databinding.FragmentUserBinding
-import com.parkjin.github_bookmark.extension.showMessage
+import com.parkjin.github_bookmark.extension.showToast
 import com.parkjin.github_bookmark.model.UserType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.parcelize.Parcelize
 
 @AndroidEntryPoint
-class UserFragment: BindingFragment<FragmentUserBinding>() {
+class UserListFragment: BindingFragment<FragmentUserBinding>() {
 
     companion object {
         private const val ARGUMENT_KEY = "ARGUMENT_KEY"
 
-        fun newInstance(argument: Argument) = UserFragment().apply {
+        fun newInstance(argument: Argument) = UserListFragment().apply {
             this.arguments = bundleOf(
                 ARGUMENT_KEY to argument
             )
@@ -42,14 +42,8 @@ class UserFragment: BindingFragment<FragmentUserBinding>() {
 
     override fun observeEvent() {
         with(viewModel) {
-            onErrorEvent.observe(this@UserFragment, EventObserver {
-                showMessage(it.message)
-            })
-        }
-
-        with(binding.inputField.viewModel) {
-            onSearchEvent.observe(this@UserFragment, EventObserver {
-                viewModel.getUsers(it ?: return@EventObserver)
+            onErrorEvent.observe(this@UserListFragment, EventObserver {
+                context?.showToast(it.message)
             })
         }
     }

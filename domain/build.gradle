@@ -3,15 +3,15 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'kotlin-parcelize'
 }
 
 android {
-    compileSdkVersion 31
-    buildToolsVersion "30.0.3"
+    compileSdk 31
 
     defaultConfig {
-        minSdkVersion 23
-        targetSdkVersion 31
+        minSdk 23
+        targetSdk 31
         versionCode 1
         versionName "1.0"
 
@@ -34,11 +34,11 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     // Rx
-    implementation "io.reactivex.rxjava3:rxandroid:$rootProject.rxAndroid_version"
-    implementation "io.reactivex.rxjava3:rxjava:$rootProject.rxJava_version"
-    implementation "io.reactivex.rxjava3:rxkotlin:$rootProject.rxKotlin_version"
+    implementation "io.reactivex.rxjava3:rxandroid:$rootProject.rxAndroidVersion"
+    implementation "io.reactivex.rxjava3:rxjava:$rootProject.rxJavaVersion"
+    implementation "io.reactivex.rxjava3:rxkotlin:$rootProject.rxKotlinVersion"
 
     // Hilt
-    implementation "com.google.dagger:hilt-android:$rootProject.hilt_version"
-    kapt "com.google.dagger:hilt-compiler:$rootProject.hilt_version"
+    implementation "com.google.dagger:hilt-android:$rootProject.hiltVersion"
+    kapt "com.google.dagger:hilt-compiler:$rootProject.hiltVersion"
 }
