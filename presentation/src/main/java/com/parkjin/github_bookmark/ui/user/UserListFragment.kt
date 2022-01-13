@@ -37,7 +37,7 @@ class UserListFragment: BindingFragment<FragmentUserBinding>() {
         binding.setVariable(BR.viewModel, viewModel)
 
         arguments?.getParcelable<Argument>(ARGUMENT_KEY)
-            ?.let { viewModel.setUserType(it.type) }
+            ?.let { viewModel.initUserType(it.type) }
     }
 
     override fun observeEvent() {

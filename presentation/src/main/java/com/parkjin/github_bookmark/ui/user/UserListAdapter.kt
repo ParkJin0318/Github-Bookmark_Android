@@ -68,12 +68,9 @@ class UserListAdapter(
         }
     }
 
-    fun notifyBookmark(userItem: UserListItem.UserItem) {
-        currentList.filterIsInstance<UserListItem.UserItem>()
-            .find { it.user.name == userItem.user.name }
-            ?.let {
-                it.bookmarked = userItem.bookmarked
-            }
+    fun notifyUserBookmark(position: Int) {
+        (currentList[position] as? UserListItem.UserItem)
+            ?.let { it.bookmarked = it.bookmarked.not() }
     }
 
     interface UserListener {

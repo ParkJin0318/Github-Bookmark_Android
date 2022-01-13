@@ -4,22 +4,23 @@ import com.parkjin.github_bookmark.model.UserType
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 
-object BookmarkStore {
+object UserStore {
 
     private val notifier: PublishSubject<Unit> = PublishSubject.create()
 
-    var userType: UserType = UserType.GITHUB
-        private set
+    private var _userType: UserType = UserType.GITHUB
+    val userType: UserType get() = _userType
 
-    var userItem: UserListItem.UserItem? = null
-        private set
+    private var _userItem: UserListItem.UserItem? = null
+    val userItem: UserListItem.UserItem get() = _userItem!!
 
     fun register(): Observable<Unit> = notifier
 
     fun update(userType: UserType, userItem: UserListItem.UserItem) {
-        this.userType = userType
-        this.userItem = userItem
+        _userType = userType
+        _userItem = userItem
 
         notifier.onNext(Unit)
     }
+
 }

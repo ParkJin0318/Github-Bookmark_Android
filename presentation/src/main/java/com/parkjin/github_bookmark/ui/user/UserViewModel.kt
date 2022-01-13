@@ -18,7 +18,6 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.*
 import javax.inject.Inject
 
-
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val scheduler: SchedulerProvider,
@@ -47,22 +46,23 @@ class UserViewModel @Inject constructor(
         initEvent()
     }
 
-    private fun initEvent() {
-        BookmarkStore.register()
-            .subscribeOn(scheduler.io)
-            .subscribe({
-                handleBookmarkEvent(BookmarkStore.userItem, BookmarkStore.userType)
-            }, Throwable::printStackTrace)
-            .addTo(disposable)
-    }
-
-    fun setUserType(type: UserType) {
+    fun initUserType(type: UserType) {
         currentUserType = type
         if (type == UserType.BOOKMARK) loadUsers()
     }
 
     fun onClickSearch() {
         loadUsers(inputKeyword.value ?: "")
+    }
+
+    override fun onClickBookmark(name: String) {
+        val item = userItems.find { it.user.name == name } ?: return
+        bookmarkToUser(item)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        disposable.clear()
     }
 
     private fun loadUsers(name: String = "") {
@@ -88,30 +88,58 @@ class UserViewModel @Inject constructor(
             )
     }
 
-    override fun onClickBookmark(name: String) {
-        val item = userItems.find { it.user.name == name } ?: return
-        bookmarkToUser(item, userListItems.indexOf(item))
-    }
-
-    private fun bookmarkToUser(userItem: UserListItem.UserItem, index: Int) {
-        bookmarkUserUseCase.execute(userItem.user)
+    private fun initEvent() {
+        UserStore.register()
             .subscribe(
                 scheduler = scheduler,
                 disposable = disposable,
                 onSuccess = {
-                    val item = UserListItem.UserItem(userItem.user, userItem.bookmarked.not())
+                    if (UserStore.userType == currentUserType) return@subscribe
+
+                    val findItem = userItems.find { it.user.name == UserStore.userItem.user.name }
+
+                    when (UserStore.userType) {
+                        UserType.GITHUB -> {
+                            findItem?.let { userListItems.remove(it) }
+                                ?: userListItems.add(UserStore.userItem)
+                        }
+                        UserType.BOOKMARK -> {
+                            findItem?.let {
+                                val position = userListItems.indexOf(it)
+                                userListItems[position] = UserStore.userItem
+                            }
+                        }
+                    }
+                    submitList()
+                },
+                onError = Throwable::printStackTrace
+            )
+    }
+
+    private fun bookmarkToUser(item: UserListItem.UserItem) {
+        bookmarkUserUseCase.execute(item.user)
+            .subscribe(
+                scheduler = scheduler,
+                disposable = disposable,
+                onSuccess = {
+                    val position = userListItems.indexOf(item)
+                    val newUserItem = UserListItem.UserItem(
+                        user = item.user,
+                        bookmarked = item.bookmarked.not()
+                    )
 
                     when (currentUserType) {
                         UserType.GITHUB -> {
-                            userListItems[index] = item
-                            adapter.notifyBookmark(item)
+                            userListItems[position] = newUserItem
+                            notifyUserBookmark(position)
                         }
                         UserType.BOOKMARK -> {
-                            userListItems.removeAt(index)
+                            userListItems.removeAt(position)
                             submitList()
                         }
                     }
-                    BookmarkStore.update(currentUserType, item)
+
+                    UserStore.update(currentUserType, newUserItem)
                 },
                 onError = {
                     _onErrorEvent.value = Event(it)
@@ -119,34 +147,12 @@ class UserViewModel @Inject constructor(
             )
     }
 
-    private fun handleBookmarkEvent(userItem: UserListItem.UserItem?, type: UserType) {
-        if (userItem == null || type == currentUserType) return
-
-        val item = userItems.find { it.user.name == userItem.user.name }
-
-        when (type) {
-            UserType.GITHUB -> {
-                item?.let { userListItems.remove(it) }
-                    ?: userListItems.add(userItem)
-            }
-            UserType.BOOKMARK -> {
-                item?.let {
-                    val index = userListItems.indexOf(it)
-                    userListItems[index] = userItem
-                    adapter.notifyBookmark(userItem)
-                }
-            }
-        }
-        submitList()
-    }
-
     private fun submitList() {
         adapter.submitList(userListItems.toMutableList())
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        disposable.clear()
+    private fun notifyUserBookmark(position: Int) {
+        adapter.notifyUserBookmark(position)
     }
 
     private fun List<User>.toUserListItems(): List<UserListItem> {
@@ -154,7 +160,6 @@ class UserViewModel @Inject constructor(
 
         this.sortedBy(User::name)
             .groupBy(User::firstName)
-            .entries
             .forEach { (header, users) ->
                 userListItems.add(UserListItem.UserHeader(header))
                 userListItems.addAll(users.map(UserListItem::UserItem))
