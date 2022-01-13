@@ -13,8 +13,6 @@ import com.parkjin.github_bookmark.usecase.BookmarkUserUseCase
 import com.parkjin.github_bookmark.usecase.GetUsersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.*
 import javax.inject.Inject
 
@@ -38,6 +36,9 @@ class UserViewModel @Inject constructor(
         get() = _onErrorEvent
 
     private val userListItems: MutableList<UserListItem> = mutableListOf()
+
+    private val headerItems: List<UserListItem.UserHeader>
+        get() = userListItems.filterIsInstance<UserListItem.UserHeader>()
 
     private val userItems: List<UserListItem.UserItem>
         get() = userListItems.filterIsInstance<UserListItem.UserItem>()
@@ -96,15 +97,26 @@ class UserViewModel @Inject constructor(
                 onSuccess = {
                     if (UserStore.userType == currentUserType) return@subscribe
 
-                    val findItem = userItems.find { it.user.name == UserStore.userItem.user.name }
+                    val userItem = userItems.find { it.user.name == UserStore.userItem.user.name }
 
                     when (UserStore.userType) {
                         UserType.GITHUB -> {
-                            findItem?.let { userListItems.remove(it) }
-                                ?: userListItems.add(UserStore.userItem)
+                            userItem?.let { userListItems.remove(it) }
+                                ?: let {
+                                    val headerItem = headerItems.find { it.header == UserStore.userItem.user.firstName }
+
+                                    headerItem?.let {
+                                        val position = userListItems.indexOf(it)
+                                        userListItems.add(position.inc(), UserStore.userItem)
+                                    } ?: let {
+                                        val item = UserStore.userItem
+                                        userListItems.add(UserListItem.UserHeader(item.user.firstName))
+                                        userListItems.add(item)
+                                    }
+                                }
                         }
                         UserType.BOOKMARK -> {
-                            findItem?.let {
+                            userItem?.let {
                                 val position = userListItems.indexOf(it)
                                 userListItems[position] = UserStore.userItem
                             }
@@ -135,6 +147,13 @@ class UserViewModel @Inject constructor(
                         }
                         UserType.BOOKMARK -> {
                             userListItems.removeAt(position)
+
+                            userItems.find { it.user.firstName == item.user.firstName }
+                                ?: let {
+                                    headerItems.find { it.header == item.user.firstName }
+                                        ?.let { userListItems.remove(it) }
+                                }
+
                             submitList()
                         }
                     }
