@@ -186,5 +186,3 @@ class UserViewModel @Inject constructor(
         return userListItems
     }
 }
-
-

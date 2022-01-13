@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.parkjin.github_bookmark.databinding.ViewLoadingItemBinding
 import com.parkjin.github_bookmark.databinding.ViewUserHeaderItemBinding
 import com.parkjin.github_bookmark.databinding.ViewUserItemBinding
-import com.parkjin.github_bookmark.model.User
 
 sealed class UserListViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 

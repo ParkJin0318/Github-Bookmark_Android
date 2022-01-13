@@ -8,7 +8,6 @@ import com.parkjin.github_bookmark.R
 import com.parkjin.github_bookmark.databinding.ViewLoadingItemBinding
 import com.parkjin.github_bookmark.databinding.ViewUserHeaderItemBinding
 import com.parkjin.github_bookmark.databinding.ViewUserItemBinding
-import com.parkjin.github_bookmark.model.User
 
 class UserListAdapter(
     private val listener: UserListener
