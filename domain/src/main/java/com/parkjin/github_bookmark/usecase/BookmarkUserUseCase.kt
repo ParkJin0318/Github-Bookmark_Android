@@ -10,9 +10,9 @@ class BookmarkUserUseCase @Inject constructor(
     private val scheduler: SchedulerProvider,
     private val repository: UserRepository
 ) {
-    fun execute(user: User): Completable {
+    fun execute(user: User, bookmarked: Boolean): Completable {
         val bookmarkUser =
-            if (user.bookmarked.not()) repository.addBookmarkUser(user)
+            if (bookmarked.not()) repository.addBookmarkUser(user)
             else repository.deleteBookmarkUser(user)
 
         return bookmarkUser.subscribeOn(scheduler.io)

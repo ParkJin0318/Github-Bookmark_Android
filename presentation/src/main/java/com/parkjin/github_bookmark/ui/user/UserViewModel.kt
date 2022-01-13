@@ -97,28 +97,28 @@ class UserViewModel @Inject constructor(
                 onSuccess = {
                     if (UserStore.userType == currentUserType) return@subscribe
 
-                    val userItem = userItems.find { it.user.name == UserStore.userItem.user.name }
+                    val userItem = UserStore.userItem ?: return@subscribe
+                    val findItem = userItems.find { it.user.name == userItem.user.name }
 
                     when (UserStore.userType) {
                         UserType.GITHUB -> {
-                            userItem?.let { userListItems.remove(it) }
+                            findItem?.let { userListItems.remove(it) }
                                 ?: let {
-                                    val headerItem = headerItems.find { it.header == UserStore.userItem.user.firstName }
+                                    val headerItem = headerItems.find { it.header == userItem.user.firstName }
 
                                     headerItem?.let {
                                         val position = userListItems.indexOf(it)
-                                        userListItems.add(position.inc(), UserStore.userItem)
+                                        userListItems.add(position.inc(), userItem)
                                     } ?: let {
-                                        val item = UserStore.userItem
-                                        userListItems.add(UserListItem.UserHeader(item.user.firstName))
-                                        userListItems.add(item)
+                                        userListItems.add(UserListItem.UserHeader(userItem.user.firstName))
+                                        userListItems.add(userItem)
                                     }
                                 }
                         }
                         UserType.BOOKMARK -> {
-                            userItem?.let {
+                            findItem?.let {
                                 val position = userListItems.indexOf(it)
-                                userListItems[position] = UserStore.userItem
+                                userListItems[position] = userItem
                             }
                         }
                     }
@@ -129,7 +129,7 @@ class UserViewModel @Inject constructor(
     }
 
     private fun bookmarkToUser(item: UserListItem.UserItem) {
-        bookmarkUserUseCase.execute(item.user)
+        bookmarkUserUseCase.execute(item.user, item.bookmarked)
             .subscribe(
                 scheduler = scheduler,
                 disposable = disposable,

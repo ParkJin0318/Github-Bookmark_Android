@@ -8,17 +8,17 @@ object UserStore {
 
     private val notifier: PublishSubject<Unit> = PublishSubject.create()
 
-    private var _userType: UserType = UserType.GITHUB
-    val userType: UserType get() = _userType
+    var userType: UserType = UserType.GITHUB
+        private set
 
-    private var _userItem: UserListItem.UserItem? = null
-    val userItem: UserListItem.UserItem get() = _userItem!!
+    var userItem: UserListItem.UserItem? = null
+        private set
 
     fun register(): Observable<Unit> = notifier
 
     fun update(userType: UserType, userItem: UserListItem.UserItem) {
-        _userType = userType
-        _userItem = userItem
+        this.userType = userType
+        this.userItem = userItem
 
         notifier.onNext(Unit)
     }
