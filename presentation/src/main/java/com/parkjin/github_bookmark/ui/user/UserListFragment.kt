@@ -21,9 +21,9 @@ class UserListFragment: BindingFragment<FragmentUserBinding>() {
     companion object {
         private const val ARGUMENT_KEY = "ARGUMENT_KEY"
 
-        fun newInstance(argument: Argument) = UserListFragment().apply {
+        fun newInstance(type: UserType) = UserListFragment().apply {
             this.arguments = bundleOf(
-                ARGUMENT_KEY to argument
+                ARGUMENT_KEY to Argument(type)
             )
         }
     }

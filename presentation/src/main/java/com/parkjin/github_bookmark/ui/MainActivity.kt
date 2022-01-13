@@ -17,20 +17,19 @@ class MainActivity: BindingActivity<ActivityMainBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTabLayout()
+        initTabLayout()
     }
 
-    private fun setTabLayout() {
-        val fragments = listOf(
-            UserListFragment.newInstance(UserListFragment.Argument(UserType.GITHUB)),
-            UserListFragment.newInstance(UserListFragment.Argument(UserType.BOOKMARK))
-        )
-
-        val viewPagerAdapter = ViewPagerAdapter(this).apply {
-            setFragmentList(fragments)
-        }
-
-        binding.pagerLayout.adapter = viewPagerAdapter
+    private fun initTabLayout() {
+        binding.pagerLayout.adapter = ViewPagerAdapter(this)
+            .apply {
+                setFragmentList(
+                    listOf(
+                        UserListFragment.newInstance(UserType.GITHUB),
+                        UserListFragment.newInstance(UserType.BOOKMARK)
+                    )
+                )
+            }
 
         TabLayoutMediator(binding.tabLayout, binding.pagerLayout) { tab, position ->
             tab.text = UserType.values()[position].title
