@@ -28,8 +28,5 @@ sealed class UserListViewHolder(val view: View) : RecyclerView.ViewHolder(view) 
         }
     }
 
-    class LoadingViewHolder(
-        private val binding: ViewLoadingItemBinding
-    ) : UserListViewHolder(binding.root)
-
+    class LoadingViewHolder(binding: ViewLoadingItemBinding) : UserListViewHolder(binding.root)
 }

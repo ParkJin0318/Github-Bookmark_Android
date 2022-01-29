@@ -21,15 +21,12 @@ class MainActivity: BindingActivity<ActivityMainBinding>() {
     }
 
     private fun initTabLayout() {
-        binding.pagerLayout.adapter = ViewPagerAdapter(this)
-            .apply {
-                setFragmentList(
-                    listOf(
-                        UserListFragment.newInstance(UserType.GITHUB),
-                        UserListFragment.newInstance(UserType.BOOKMARK)
-                    )
-                )
-            }
+        binding.pagerLayout.adapter = ViewPagerAdapter(
+            this,
+            listOf(
+                UserListFragment.newInstance(UserType.GITHUB),
+                UserListFragment.newInstance(UserType.BOOKMARK)
+            ))
 
         TabLayoutMediator(binding.tabLayout, binding.pagerLayout) { tab, position ->
             tab.text = UserType.values()[position].title

@@ -22,5 +22,4 @@ object UserStore {
 
         notifier.onNext(Unit)
     }
-
 }

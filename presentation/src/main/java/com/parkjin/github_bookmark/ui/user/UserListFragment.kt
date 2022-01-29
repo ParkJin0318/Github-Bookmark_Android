@@ -34,10 +34,10 @@ class UserListFragment: BindingFragment<FragmentUserBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.setVariable(BR.viewModel, viewModel)
+        val argument = arguments?.getParcelable<Argument>(ARGUMENT_KEY) ?: return
 
-        arguments?.getParcelable<Argument>(ARGUMENT_KEY)
-            ?.let { viewModel.initUserType(it.type) }
+        binding.setVariable(BR.viewModel, viewModel)
+        viewModel.initUserType(argument.type)
     }
 
     override fun observeEvent() {
