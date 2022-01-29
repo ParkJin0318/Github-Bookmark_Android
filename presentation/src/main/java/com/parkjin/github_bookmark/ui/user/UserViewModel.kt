@@ -22,10 +22,7 @@ class UserViewModel @Inject constructor(
     private val scheduler: SchedulerProvider,
     private val getUsersUseCase: GetUsersUseCase,
     private val bookmarkUserUseCase: BookmarkUserUseCase
-) : ViewModel(), UserListAdapter.UserListener {
-
-    val inputKeyword = MutableLiveData<String>()
-    val adapter = UserListAdapter(this)
+) : ViewModel() {
 
     private val disposable = CompositeDisposable()
     private val bookmarkToUser: PublishSubject<UserListItem.UserItem> = PublishSubject.create()
@@ -36,6 +33,17 @@ class UserViewModel @Inject constructor(
         get() = _onErrorEvent
 
     private var currentUserType = UserType.GITHUB
+
+    val inputKeyword = MutableLiveData<String>()
+    val adapter = UserListAdapter(object : UserListAdapter.UserListener {
+        override fun onClickBookmark(name: String) {
+            val item = userListItems.toUserItems()
+                .find { it.user.name == name }
+                ?: return
+
+            bookmarkToUser.onNext(item)
+        }
+    })
 
     init {
         initEvent()
@@ -48,13 +56,6 @@ class UserViewModel @Inject constructor(
 
     fun onClickSearch() {
         loadUsers(inputKeyword.value ?: "")
-    }
-
-    override fun onClickBookmark(name: String) {
-        val item = userListItems.toUserItems()
-            .find { it.user.name == name }
-            ?: return
-        bookmarkToUser.onNext(item)
     }
 
     override fun onCleared() {
