@@ -5,4 +5,5 @@ import io.reactivex.rxjava3.core.Scheduler
 interface SchedulerProvider {
     val ui: Scheduler
     val io: Scheduler
+    val computation: Scheduler
 }

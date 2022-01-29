@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.parkjin.github_bookmark.base.Event
+import com.parkjin.github_bookmark.extension.onDebounce
 import com.parkjin.github_bookmark.extension.onNetwork
 import com.parkjin.github_bookmark.model.UserType
 import com.parkjin.github_bookmark.provider.SchedulerProvider
@@ -12,6 +13,8 @@ import com.parkjin.github_bookmark.usecase.GetUsersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
+import io.reactivex.rxjava3.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,18 +25,17 @@ class UserViewModel @Inject constructor(
 ) : ViewModel(), UserListAdapter.UserListener {
 
     val inputKeyword = MutableLiveData<String>()
-
-    val adapter: UserListAdapter = UserListAdapter(this)
-
-    private var currentUserType = UserType.GITHUB
+    val adapter = UserListAdapter(this)
 
     private val disposable = CompositeDisposable()
+    private val bookmarkToUser: PublishSubject<UserListItem.UserItem> = PublishSubject.create()
+    private val userListItems: MutableList<UserListItem> = mutableListOf()
 
     private val _onErrorEvent = MutableLiveData<Event<Throwable>>()
     val onErrorEvent: LiveData<Event<Throwable>>
         get() = _onErrorEvent
 
-    private val userListItems: MutableList<UserListItem> = mutableListOf()
+    private var currentUserType = UserType.GITHUB
 
     init {
         initEvent()
@@ -52,7 +54,7 @@ class UserViewModel @Inject constructor(
         val item = userListItems.toUserItems()
             .find { it.user.name == name }
             ?: return
-        bookmarkToUser(item)
+        bookmarkToUser.onNext(item)
     }
 
     override fun onCleared() {
@@ -65,6 +67,7 @@ class UserViewModel @Inject constructor(
             .filter { UserStore.userType != currentUserType }
             .filter { UserStore.userItem != null }
             .map { UserStore.userItem!! }
+            .onNetwork(scheduler)
             .subscribe({ userItem ->
                 val findItem = userListItems.toUserItems()
                     .find { it.user.name == userItem.user.name }
@@ -85,29 +88,16 @@ class UserViewModel @Inject constructor(
                 submitList()
             }, Throwable::printStackTrace)
             .addTo(disposable)
-    }
 
-    private fun loadUsers(name: String = "") {
-        if (userListItems.lastOrNull() == UserListItem.Loading) return
-
-        val loadingItem = UserListItem.Loading
-        userListItems.add(loadingItem)
-        submitList()
-
-        getUsersUseCase.execute(name, currentUserType)
-            .onNetwork(scheduler)
-            .subscribe({
-                userListItems.clear()
-                userListItems.remove(loadingItem)
-                userListItems.addAll(it.toUserListItems())
-                submitList()
-            }, {
-                _onErrorEvent.value = Event(it)
-            }).addTo(disposable)
+        bookmarkToUser.distinctUntilChanged()
+            .onDebounce(scheduler)
+            .subscribe(this::bookmarkToUser, Throwable::printStackTrace)
+            .addTo(disposable)
     }
 
     private fun bookmarkToUser(item: UserListItem.UserItem) {
         bookmarkUserUseCase.execute(item.user, item.bookmarked)
+            .onNetwork(scheduler)
             .subscribe({
                 val position = userListItems.indexOf(item)
                 val newUserItem = UserListItem.UserItem(
@@ -127,6 +117,25 @@ class UserViewModel @Inject constructor(
                 }
 
                 UserStore.update(currentUserType, newUserItem)
+            }, {
+                _onErrorEvent.value = Event(it)
+            }).addTo(disposable)
+    }
+
+    private fun loadUsers(name: String = "") {
+        if (userListItems.lastOrNull() == UserListItem.Loading) return
+
+        val loadingItem = UserListItem.Loading
+        userListItems.add(loadingItem)
+        submitList()
+
+        getUsersUseCase.execute(name, currentUserType)
+            .onNetwork(scheduler)
+            .subscribe({
+                userListItems.clear()
+                userListItems.remove(loadingItem)
+                userListItems.addAll(it.toUserListItems())
+                submitList()
             }, {
                 _onErrorEvent.value = Event(it)
             }).addTo(disposable)
