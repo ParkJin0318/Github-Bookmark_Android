@@ -6,7 +6,7 @@ data class User(
     val bookmarked: Boolean = false
 )
 
-val User.firstName: String
+val User.header: String
     get() = name.first().uppercaseChar().toString()
 
 enum class UserType(val title: String) {
