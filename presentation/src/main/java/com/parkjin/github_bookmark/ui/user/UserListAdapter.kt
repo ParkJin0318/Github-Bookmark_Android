@@ -3,6 +3,7 @@ package com.parkjin.github_bookmark.ui.user
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.parkjin.github_bookmark.R
 import com.parkjin.github_bookmark.databinding.ViewLoadingItemBinding
@@ -11,9 +12,9 @@ import com.parkjin.github_bookmark.databinding.ViewUserItemBinding
 
 class UserListAdapter(
     private val listener: UserListener
-) : ListAdapter<UserListItem, UserListViewHolder>(UserListDiffCallback()) {
+) : ListAdapter<UserListItem, UserListViewHolder>(DiffItemCallback()) {
 
-    override fun getItemViewType(position: Int) = getItem(position).type.ordinal
+    override fun getItemViewType(position: Int) = getItem(position).itemType
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserListViewHolder =
         when (UserListType.from(viewType)) {
@@ -73,6 +74,32 @@ class UserListAdapter(
     }
 
     interface UserListener {
+
         fun onClickBookmark(name: String)
+    }
+
+    private class DiffItemCallback : DiffUtil.ItemCallback<UserListItem>() {
+
+        override fun areItemsTheSame(oldItem: UserListItem, newItem: UserListItem): Boolean {
+            val isSameHeader = oldItem is UserListItem.UserHeader
+                    && newItem is UserListItem.UserHeader
+                    && oldItem.header == newItem.header
+
+            val isSameUser = oldItem is UserListItem.UserItem
+                    && newItem is UserListItem.UserItem
+                    && oldItem.user.name == newItem.user.name
+                    && oldItem.bookmarked == newItem.bookmarked
+
+            val isSameLoading = oldItem is UserListItem.Loading
+                    && newItem is UserListItem.Loading
+                    && oldItem == newItem
+
+            return isSameHeader || isSameUser || isSameLoading
+        }
+
+        override fun areContentsTheSame(
+            oldItem: UserListItem,
+            newItem: UserListItem
+        ) = oldItem == newItem
     }
 }
