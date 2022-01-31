@@ -40,5 +40,13 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$rootProject.hiltVersion"
     kapt "com.google.dagger:hilt-compiler:$rootProject.hiltVersion"
 
+    // Room
+    implementation 'org.xerial:sqlite-jdbc:3.36.0'
+    implementation ("androidx.room:room-runtime:$rootProject.roomVersion") { exclude(group:'org.xerial') }
+    kapt ("androidx.room:room-compiler:$rootProject.roomVersion") { exclude(group:'org.xerial') }
+    implementation ("androidx.room:room-rxjava3:$rootProject.roomVersion") { exclude(group:'org.xerial') }
+    testImplementation ("androidx.room:room-testing:$rootProject.roomVersion") { exclude(group:'org.xerial') }
+
+    implementation project(':data')
     implementation project(':domain')
 }

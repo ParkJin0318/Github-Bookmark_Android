@@ -1,16 +1,18 @@
 package com.parkjin.github_bookmark.ui.user
 
-import android.view.View
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.parkjin.github_bookmark.databinding.ViewLoadingItemBinding
 import com.parkjin.github_bookmark.databinding.ViewUserHeaderItemBinding
 import com.parkjin.github_bookmark.databinding.ViewUserItemBinding
 
-sealed class UserListViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+sealed class UserListViewHolder(
+    open val binding: ViewDataBinding
+) : RecyclerView.ViewHolder(binding.root) {
 
     class UserHeaderViewHolder(
-        private val binding: ViewUserHeaderItemBinding
-    ) : UserListViewHolder(binding.root) {
+        override val binding: ViewUserHeaderItemBinding
+    ) : UserListViewHolder(binding) {
 
         fun bind(item: UserListItem.UserHeader) {
             binding.header = item.header
@@ -18,9 +20,9 @@ sealed class UserListViewHolder(val view: View) : RecyclerView.ViewHolder(view) 
     }
 
     class UserItemViewHolder(
-        private val binding: ViewUserItemBinding,
+        override val binding: ViewUserItemBinding,
         private val listener: UserListAdapter.UserListener
-    ) : UserListViewHolder(binding.root) {
+    ) : UserListViewHolder(binding) {
 
         fun bind(item: UserListItem.UserItem) {
             binding.item = item
@@ -28,5 +30,5 @@ sealed class UserListViewHolder(val view: View) : RecyclerView.ViewHolder(view) 
         }
     }
 
-    class LoadingViewHolder(binding: ViewLoadingItemBinding) : UserListViewHolder(binding.root)
+    class LoadingViewHolder(binding: ViewLoadingItemBinding) : UserListViewHolder(binding)
 }

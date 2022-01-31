@@ -2,3 +2,5 @@ include ':domain'
 include ':data'
 include ':presentation'
 rootProject.name = "Github_Bookmark"
+include ':remote'
+include ':local'

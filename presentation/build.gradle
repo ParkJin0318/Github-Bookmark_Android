@@ -15,6 +15,7 @@ android {
         targetSdk 31
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -79,6 +80,11 @@ dependencies {
     // Material
     implementation "com.google.android.material:material:$rootProject.materialVersion"
 
+    // Multidex
+    implementation "com.android.support:multidex:2.0.1"
+
     implementation project(':domain')
     implementation project(':data')
+    implementation project(':remote')
+    implementation project(':local')
 }

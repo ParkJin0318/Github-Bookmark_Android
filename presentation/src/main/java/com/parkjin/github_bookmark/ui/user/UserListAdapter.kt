@@ -65,6 +65,8 @@ class UserListAdapter(
 
             is UserListViewHolder.UserItemViewHolder ->
                 holder.bind(item as UserListItem.UserItem)
+
+            else -> return
         }
     }
 

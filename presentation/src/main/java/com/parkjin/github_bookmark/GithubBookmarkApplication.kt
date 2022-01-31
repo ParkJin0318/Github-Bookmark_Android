@@ -1,7 +1,7 @@
 package com.parkjin.github_bookmark
 
-import android.app.Application
+import androidx.multidex.MultiDexApplication
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class GithubBookmarkApplication: Application()
+class GithubBookmarkApplication: MultiDexApplication()

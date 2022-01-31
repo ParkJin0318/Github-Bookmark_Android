@@ -7,7 +7,6 @@ import com.parkjin.github_bookmark.base.Event
 import com.parkjin.github_bookmark.extension.onDebounce
 import com.parkjin.github_bookmark.extension.onNetwork
 import com.parkjin.github_bookmark.model.UserType
-import com.parkjin.github_bookmark.provider.SchedulerProvider
 import com.parkjin.github_bookmark.usecase.BookmarkUserUseCase
 import com.parkjin.github_bookmark.usecase.GetUsersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +17,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
-    private val scheduler: SchedulerProvider,
     private val getUsersUseCase: GetUsersUseCase,
     private val bookmarkUserUseCase: BookmarkUserUseCase
 ) : ViewModel() {
@@ -67,7 +65,7 @@ class UserViewModel @Inject constructor(
             .filter { UserStore.userType != currentUserType }
             .filter { UserStore.userItem != null }
             .map { UserStore.userItem!! }
-            .onNetwork(scheduler)
+            .onNetwork()
             .subscribe({ userItem ->
                 val findItem = userListItems.toUserItems()
                     .find { it.user.name == userItem.user.name }
@@ -90,14 +88,14 @@ class UserViewModel @Inject constructor(
             .addTo(disposable)
 
         bookmarkToUser.distinctUntilChanged()
-            .onDebounce(scheduler)
+            .onDebounce()
             .subscribe(this::bookmarkToUser, Throwable::printStackTrace)
             .addTo(disposable)
     }
 
     private fun bookmarkToUser(item: UserListItem.UserItem) {
         bookmarkUserUseCase.execute(item.user, item.bookmarked)
-            .onNetwork(scheduler)
+            .onNetwork()
             .subscribe({
                 val position = userListItems.indexOf(item)
                 val newUserItem = UserListItem.UserItem(
@@ -130,7 +128,7 @@ class UserViewModel @Inject constructor(
         submitList()
 
         getUsersUseCase.execute(name, currentUserType)
-            .onNetwork(scheduler)
+            .onNetwork()
             .subscribe({
                 userListItems.clear()
                 userListItems.remove(loadingItem)
