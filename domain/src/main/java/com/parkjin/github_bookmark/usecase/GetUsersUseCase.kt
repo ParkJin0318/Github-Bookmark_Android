@@ -1,10 +1,10 @@
 package com.parkjin.github_bookmark.usecase
 
-import com.parkjin.github_bookmark.extension.subscribeOnIO
 import com.parkjin.github_bookmark.model.User
 import com.parkjin.github_bookmark.model.UserType
 import com.parkjin.github_bookmark.repository.UserRepository
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 class GetUsersUseCase @Inject constructor(
@@ -15,9 +15,9 @@ class GetUsersUseCase @Inject constructor(
             UserType.GITHUB ->
                 Single.zip(
                     repository.getGithubUsers(name)
-                        .subscribeOnIO(),
+                        .subscribeOn(Schedulers.io()),
                     repository.getBookmarkUsers(name)
-                        .subscribeOnIO()
+                        .subscribeOn(Schedulers.io())
                 ) { githubUsers, bookmarkUsers ->
                     githubUsers.map { user ->
                         val bookmarked = bookmarkUsers.map { it.name }.contains(user.name)
@@ -27,8 +27,5 @@ class GetUsersUseCase @Inject constructor(
 
             UserType.BOOKMARK ->
                 repository.getBookmarkUsers(name)
-                    .map { users ->
-                        users.map { it.copy(bookmarked = true) }
-                    }
         }
 }

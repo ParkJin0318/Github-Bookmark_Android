@@ -6,5 +6,5 @@ data class GithubResponse<T>(
     @SerializedName("total_count")
     val count: Int,
     @SerializedName("items")
-    val items: T
+    val items: List<T>
 )

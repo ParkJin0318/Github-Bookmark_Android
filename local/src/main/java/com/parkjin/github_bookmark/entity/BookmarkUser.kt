@@ -13,13 +13,13 @@ data class BookmarkUser(
 
 fun BookmarkUser.toModel() =
     User(
-        this.name,
-        this.profileImageUrl
+        name = name,
+        profileImageUrl = profileImageUrl,
+        bookmarked = true
     )
 
 fun User.toEntity() =
     BookmarkUser(
-        this.name,
-        this.profileImageUrl
+        name = name,
+        profileImageUrl = profileImageUrl
     )
-

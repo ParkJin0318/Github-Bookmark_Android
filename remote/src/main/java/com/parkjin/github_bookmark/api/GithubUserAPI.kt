@@ -14,8 +14,8 @@ interface GithubUserAPI {
 
     @GET("search/users")
     fun getGithubUsers(
-        @Query("q") name: String,
+        @Query("q", encoded = true) name: String,
         @Query("page") page: Int = DEFAULT_PAGE,
         @Query("per_page") perPage: Int = DEFAULT_PER_PAGE
-    ): Single<Response<GithubResponse<List<GithubUser>>>>
+    ): Single<Response<GithubResponse<GithubUser>>>
 }
