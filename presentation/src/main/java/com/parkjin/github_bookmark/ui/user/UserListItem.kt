@@ -1,7 +1,7 @@
 package com.parkjin.github_bookmark.ui.user
 
-import com.parkjin.github_bookmark.model.User
-import com.parkjin.github_bookmark.model.header
+import com.parkjin.github_bookmark.domain.model.User
+import com.parkjin.github_bookmark.domain.model.header
 
 enum class UserListType {
     USER_HEADER,

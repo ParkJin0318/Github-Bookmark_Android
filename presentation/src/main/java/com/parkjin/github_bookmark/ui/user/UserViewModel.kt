@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import com.parkjin.github_bookmark.base.Event
 import com.parkjin.github_bookmark.extension.onDebounce
 import com.parkjin.github_bookmark.extension.onNetwork
-import com.parkjin.github_bookmark.model.UserType
-import com.parkjin.github_bookmark.usecase.BookmarkUserUseCase
-import com.parkjin.github_bookmark.usecase.GetUsersUseCase
+import com.parkjin.github_bookmark.domain.model.UserType
+import com.parkjin.github_bookmark.domain.usecase.BookmarkUserUseCase
+import com.parkjin.github_bookmark.domain.usecase.GetUsersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo

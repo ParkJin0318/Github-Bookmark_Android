@@ -6,7 +6,7 @@ import com.parkjin.github_bookmark.R
 import com.parkjin.github_bookmark.base.BindingActivity
 import com.parkjin.github_bookmark.base.ViewPagerAdapter
 import com.parkjin.github_bookmark.databinding.ActivityMainBinding
-import com.parkjin.github_bookmark.model.UserType
+import com.parkjin.github_bookmark.domain.model.UserType
 import com.parkjin.github_bookmark.ui.user.UserListFragment
 import dagger.hilt.android.AndroidEntryPoint
 

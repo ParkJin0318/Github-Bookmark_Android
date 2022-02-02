@@ -11,7 +11,7 @@ import com.parkjin.github_bookmark.base.BindingFragment
 import com.parkjin.github_bookmark.base.EventObserver
 import com.parkjin.github_bookmark.databinding.FragmentUserBinding
 import com.parkjin.github_bookmark.extension.showToast
-import com.parkjin.github_bookmark.model.UserType
+import com.parkjin.github_bookmark.domain.model.UserType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.parcelize.Parcelize
 
