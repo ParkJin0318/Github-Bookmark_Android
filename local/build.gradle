@@ -5,13 +5,11 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk rootProject.compileSdk
 
     defaultConfig {
-        minSdk 23
-        targetSdk 31
-        versionCode 1
-        versionName "1.0"
+        minSdk rootProject.minSdk
+        targetSdk rootProject.targetSdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -31,14 +29,12 @@ android {
 }
 
 dependencies {
+    implementation project(':data')
+
     // Rx
     implementation "io.reactivex.rxjava3:rxandroid:$rootProject.rxAndroidVersion"
     implementation "io.reactivex.rxjava3:rxjava:$rootProject.rxJavaVersion"
     implementation "io.reactivex.rxjava3:rxkotlin:$rootProject.rxKotlinVersion"
-
-    // Hilt
-    implementation "com.google.dagger:hilt-android:$rootProject.hiltVersion"
-    kapt "com.google.dagger:hilt-compiler:$rootProject.hiltVersion"
 
     // Room
     implementation 'org.xerial:sqlite-jdbc:3.36.0'
@@ -46,7 +42,4 @@ dependencies {
     kapt ("androidx.room:room-compiler:$rootProject.roomVersion") { exclude(group:'org.xerial') }
     implementation ("androidx.room:room-rxjava3:$rootProject.roomVersion") { exclude(group:'org.xerial') }
     testImplementation ("androidx.room:room-testing:$rootProject.roomVersion") { exclude(group:'org.xerial') }
-
-    implementation project(':data')
-    implementation project(':domain')
 }

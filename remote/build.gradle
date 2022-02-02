@@ -5,13 +5,13 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk rootProject.compileSdk
 
     defaultConfig {
         minSdk 23
         targetSdk 31
-        versionCode 1
-        versionName "1.0"
+        minSdk rootProject.minSdk
+        targetSdk rootProject.targetSdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -31,14 +31,12 @@ android {
 }
 
 dependencies {
+    implementation project(':data')
+
     // Rx
     implementation "io.reactivex.rxjava3:rxandroid:$rootProject.rxAndroidVersion"
     implementation "io.reactivex.rxjava3:rxjava:$rootProject.rxJavaVersion"
     implementation "io.reactivex.rxjava3:rxkotlin:$rootProject.rxKotlinVersion"
-
-    // Hilt
-    implementation "com.google.dagger:hilt-android:$rootProject.hiltVersion"
-    kapt "com.google.dagger:hilt-compiler:$rootProject.hiltVersion"
 
     // Okhttp
     implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp3Version"
@@ -47,7 +45,4 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit2Version"
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit2Version"
     implementation "com.squareup.retrofit2:adapter-rxjava3:$rootProject.retrofit2Version"
-
-    implementation project(':data')
-    implementation project(':domain')
 }

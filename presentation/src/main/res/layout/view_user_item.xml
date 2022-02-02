@@ -6,11 +6,11 @@
     <data>
         <variable
             name="item"
-            type="com.parkjin.github_bookmark.ui.user.UserListItem.UserItem" />
+            type="com.parkjin.github_bookmark.presentation.ui.user.UserListItem.UserItem" />
 
         <variable
             name="listener"
-            type="com.parkjin.github_bookmark.ui.user.UserListAdapter.UserListener" />
+            type="com.parkjin.github_bookmark.presentation.ui.user.UserListAdapter.UserListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -2,21 +2,23 @@ package com.parkjin.github_bookmark.domain.usecase
 
 import com.parkjin.github_bookmark.domain.model.User
 import com.parkjin.github_bookmark.domain.model.UserType
-import com.parkjin.github_bookmark.domain.repository.UserRepository
+import com.parkjin.github_bookmark.domain.repository.BookmarkUserRepository
+import com.parkjin.github_bookmark.domain.repository.GithubUserRepository
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
-import javax.inject.Inject
 
-class GetUsersUseCase @Inject constructor(
-    private val repository: UserRepository
+class GetUsersUseCase(
+    private val githubUserRepository: GithubUserRepository,
+    private val bookmarkUserRepository: BookmarkUserRepository,
 ) {
+
     fun execute(name: String, type: UserType): Single<List<User>> =
         when (type) {
             UserType.GITHUB ->
                 Single.zip(
-                    repository.getGithubUsers(name)
+                    githubUserRepository.getUsers(name)
                         .subscribeOn(Schedulers.io()),
-                    repository.getBookmarkUsers(name)
+                    bookmarkUserRepository.getUsers(name)
                         .subscribeOn(Schedulers.io())
                 ) { githubUsers, bookmarkUsers ->
                     githubUsers.map { user ->
@@ -26,6 +28,6 @@ class GetUsersUseCase @Inject constructor(
                 }
 
             UserType.BOOKMARK ->
-                repository.getBookmarkUsers(name)
+                bookmarkUserRepository.getUsers(name)
         }
 }

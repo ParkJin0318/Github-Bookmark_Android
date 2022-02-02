@@ -1,5 +1,11 @@
 buildscript {
     ext {
+        compileSdk = 31
+        targetSdk = 31
+        minSdk = 23
+        versionCode = 1
+        versionName = "1.0"
+
         kotlinVersion = '1.6.10'
         gradleVersion = '7.0.4'
 

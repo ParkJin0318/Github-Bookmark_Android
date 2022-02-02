@@ -1,5 +1,5 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
@@ -7,18 +7,16 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk rootProject.compileSdk
 
     defaultConfig {
-        applicationId "com.parkjin.github_bookmark"
-        minSdk 23
-        targetSdk 31
-        versionCode 1
-        versionName "1.0"
-        multiDexEnabled true
+        minSdk rootProject.minSdk
+        targetSdk rootProject.targetSdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
+
     buildFeatures {
         dataBinding = true
     }
@@ -38,16 +36,10 @@ android {
 }
 
 dependencies {
+    implementation project(':domain')
+
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation "androidx.fragment:fragment-ktx:1.4.0"
-
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation "androidx.fragment:fragment-ktx:1.4.1"
 
     // Rx
     implementation "io.reactivex.rxjava3:rxandroid:$rootProject.rxAndroidVersion"
@@ -58,33 +50,10 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$rootProject.hiltVersion"
     kapt "com.google.dagger:hilt-compiler:$rootProject.hiltVersion"
 
-    // Okhttp
-    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp3Version"
-
-    // Retrofit
-    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit2Version"
-    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit2Version"
-    implementation "com.squareup.retrofit2:adapter-rxjava3:$rootProject.retrofit2Version"
-
-    // Room
-    implementation 'org.xerial:sqlite-jdbc:3.36.0'
-    implementation ("androidx.room:room-runtime:$rootProject.roomVersion") { exclude(group:'org.xerial') }
-    kapt ("androidx.room:room-compiler:$rootProject.roomVersion") { exclude(group:'org.xerial') }
-    implementation ("androidx.room:room-rxjava3:$rootProject.roomVersion") { exclude(group:'org.xerial') }
-    testImplementation ("androidx.room:room-testing:$rootProject.roomVersion") { exclude(group:'org.xerial') }
-
     // Glide
     implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
     kapt "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
 
     // Material
     implementation "com.google.android.material:material:$rootProject.materialVersion"
-
-    // Multidex
-    implementation "com.android.support:multidex:2.0.1"
-
-    implementation project(':domain')
-    implementation project(':data')
-    implementation project(':remote')
-    implementation project(':local')
 }
