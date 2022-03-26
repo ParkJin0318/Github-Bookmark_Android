@@ -15,7 +15,7 @@
         android:allowBackup="false">
 
         <activity
-            android:name="com.parkjin.github_bookmark.presentation.ui.MainActivity"
+            android:name="com.parkjin.github_bookmark.presentation.ui.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

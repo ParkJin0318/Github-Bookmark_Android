@@ -6,21 +6,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 
-abstract class BindingActivity<VB : ViewDataBinding> : AppCompatActivity() {
+abstract class BindingActivity<VB : ViewDataBinding>(
+    @LayoutRes private val layoutRes: Int
+) : AppCompatActivity() {
 
     protected lateinit var binding: VB
         private set
 
-    @LayoutRes
-    abstract fun getLayoutRes(): Int
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        performDataBinding()
-    }
-
-    private fun performDataBinding() {
-        binding = DataBindingUtil.setContentView(this, getLayoutRes())
+        binding = DataBindingUtil.setContentView(this, layoutRes)
         binding.lifecycleOwner = this
         binding.executePendingBindings()
     }

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.parkjin.github_bookmark.domain.model.UserType
 import com.parkjin.github_bookmark.domain.usecase.BookmarkUserUseCase
 import com.parkjin.github_bookmark.domain.usecase.GetUsersUseCase
-import com.parkjin.github_bookmark.presentation.extension.onDebounce
+import com.parkjin.github_bookmark.presentation.extension.debounce
 import com.parkjin.github_bookmark.presentation.extension.onNetwork
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -15,7 +15,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
 
 @HiltViewModel
-class UserViewModel @Inject constructor(
+class UserListViewModel @Inject constructor(
     private val getUsersUseCase: GetUsersUseCase,
     private val bookmarkUserUseCase: BookmarkUserUseCase
 ) : ViewModel() {
@@ -60,16 +60,16 @@ class UserViewModel @Inject constructor(
     }
 
     private fun initEvent() {
-        UserStore.register()
-            .filter { UserStore.userType != currentUserType }
-            .filter { UserStore.userItem != null }
-            .map { UserStore.userItem!! }
+        UserListItemManager.register()
+            .filter { UserListItemManager.userType != currentUserType }
+            .filter { UserListItemManager.userItem != null }
+            .map { UserListItemManager.userItem!! }
             .onNetwork()
             .subscribe({ userItem ->
                 val findItem = userListItems.toUserItems()
                     .find { it.user.name == userItem.user.name }
 
-                when (UserStore.userType) {
+                when (UserListItemManager.userType) {
                     UserType.GITHUB -> {
                         findItem?.let { userListItems.removeUserItem(it) }
                             ?: let { userListItems.addUserItem(userItem) }
@@ -87,7 +87,7 @@ class UserViewModel @Inject constructor(
             .addTo(disposable)
 
         bookmarkToUser.distinctUntilChanged()
-            .onDebounce()
+            .debounce(100L)
             .subscribe(this::bookmarkToUser, Throwable::printStackTrace)
             .addTo(disposable)
     }
@@ -113,7 +113,7 @@ class UserViewModel @Inject constructor(
                     }
                 }
 
-                UserStore.update(currentUserType, newUserItem)
+                UserListItemManager.onNext(currentUserType, newUserItem)
             }, {
                 _onErrorEvent.value = com.parkjin.github_bookmark.presentation.base.Event(it)
             }).addTo(disposable)

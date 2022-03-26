@@ -11,8 +11,8 @@ fun <T: Any> Observable<T>.onNetwork(): Observable<T> =
     this.subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
-fun <T: Any> Observable<T>.onDebounce(): Observable<T> =
-    this.debounce(500L, TimeUnit.MICROSECONDS, Schedulers.computation())
+fun <T: Any> Observable<T>.debounce(timeOut: Long): Observable<T> =
+    this.debounce(timeOut, TimeUnit.MILLISECONDS, Schedulers.computation())
 
 fun <T: Any> Single<T>.onNetwork(): Single<T> =
     this.subscribeOn(Schedulers.io())

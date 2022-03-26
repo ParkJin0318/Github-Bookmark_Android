@@ -15,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.parcelize.Parcelize
 
 @AndroidEntryPoint
-class UserListFragment : BindingFragment<FragmentUserBinding>() {
+class UserListFragment : BindingFragment<FragmentUserBinding>(R.layout.fragment_user) {
 
     companion object {
         private const val ARGUMENT_KEY = "ARGUMENT_KEY"
@@ -27,9 +27,7 @@ class UserListFragment : BindingFragment<FragmentUserBinding>() {
         }
     }
 
-    private val viewModel: UserViewModel by viewModels()
-
-    override fun getLayoutRes(): Int = R.layout.fragment_user
+    private val viewModel: UserListViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,7 +37,7 @@ class UserListFragment : BindingFragment<FragmentUserBinding>() {
         viewModel.initUserType(argument.type)
     }
 
-    override fun observeEvent() {
+    override fun observeLiveData() {
         with(viewModel) {
             onErrorEvent.observe(this@UserListFragment,
                 com.parkjin.github_bookmark.presentation.base.EventObserver {
