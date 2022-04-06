@@ -8,6 +8,7 @@
     >
 
     <androidx.appcompat.widget.AppCompatEditText
+        style="@style/TextAppearance.Component.Subtitle1"
         android:id="@+id/txt_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

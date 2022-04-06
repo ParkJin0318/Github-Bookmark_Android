@@ -19,40 +19,44 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
+            android:id="@+id/txt_name"
+            style="@style/TextAppearance.Component.Subtitle2"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/spacing16"
             android:text="@{item.user.name}"
             android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="@+id/imageView"
-            tools:text="ParkJin" />
+            app:layout_constraintBottom_toBottomOf="@+id/img_user"
+            app:layout_constraintEnd_toStartOf="@+id/appCompatCheckBox"
+            app:layout_constraintStart_toEndOf="@+id/img_user"
+            app:layout_constraintTop_toTopOf="@+id/img_user"
+            tools:text="ParkJin"
+            />
 
         <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/appCompatCheckBox"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginEnd="8dp"
             android:background="@drawable/selector_bookmark"
             android:button="@null"
-            android:onClick="@{() -> listener.onClickBookmark(item.user.name)}"
             android:checked="@{item.bookmarked}"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
+            android:onClick="@{() -> listener.onClickBookmark(item.user.name)}"
+            app:layout_constraintStart_toEndOf="@id/txt_name"
+            app:layout_constraintBottom_toBottomOf="@+id/img_user"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageView" />
+            app:layout_constraintTop_toTopOf="@+id/img_user"
+            />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageView"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:id="@+id/img_user"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             app:imageUrl="@{item.user.profileImageUrl}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_launcher_background"/>
+            tools:src="@drawable/ic_user"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -24,8 +24,8 @@ class UserListViewModel @Inject constructor(
     private val bookmarkToUser: PublishSubject<UserListItem.UserItem> = PublishSubject.create()
     private val userListItems: MutableList<UserListItem> = mutableListOf()
 
-    private val _onErrorEvent = MutableLiveData<com.parkjin.github_bookmark.presentation.base.Event<Throwable>>()
-    val onErrorEvent: LiveData<com.parkjin.github_bookmark.presentation.base.Event<Throwable>>
+    private val _onErrorEvent = MutableLiveData<com.parkjin.github_bookmark.presentation.core.Event<Throwable>>()
+    val onErrorEvent: LiveData<com.parkjin.github_bookmark.presentation.core.Event<Throwable>>
         get() = _onErrorEvent
 
     private var currentUserType = UserType.GITHUB
@@ -115,7 +115,7 @@ class UserListViewModel @Inject constructor(
 
                 UserListItemManager.onNext(currentUserType, newUserItem)
             }, {
-                _onErrorEvent.value = com.parkjin.github_bookmark.presentation.base.Event(it)
+                _onErrorEvent.value = com.parkjin.github_bookmark.presentation.core.Event(it)
             }).addTo(disposable)
     }
 
@@ -134,7 +134,7 @@ class UserListViewModel @Inject constructor(
                 userListItems.addAll(it.toUserListItems())
                 submitList()
             }, {
-                _onErrorEvent.value = com.parkjin.github_bookmark.presentation.base.Event(it)
+                _onErrorEvent.value = com.parkjin.github_bookmark.presentation.core.Event(it)
             }).addTo(disposable)
     }
 

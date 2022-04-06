@@ -5,8 +5,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import com.parkjin.github_bookmark.component.extension.setLayoutParams
+import com.parkjin.github_bookmark.component.loading.LoadingView
 import com.parkjin.github_bookmark.presentation.R
-import com.parkjin.github_bookmark.presentation.databinding.ViewLoadingItemBinding
 import com.parkjin.github_bookmark.presentation.databinding.ViewUserHeaderItemBinding
 import com.parkjin.github_bookmark.presentation.databinding.ViewUserItemBinding
 
@@ -43,15 +44,13 @@ class UserListAdapter(
             }
 
             UserListType.LOADING -> {
-                val binding: ViewLoadingItemBinding =
-                    DataBindingUtil.inflate(
-                        LayoutInflater.from(parent.context),
-                        R.layout.view_loading_item,
-                        parent,
-                        false
-                    )
-
-                UserListViewHolder.LoadingViewHolder(binding)
+                UserListViewHolder.LoadingViewHolder(
+                    LoadingView(parent.context)
+                        .setLayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                        )
+                )
             }
         }
 

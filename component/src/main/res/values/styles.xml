@@ -34,12 +34,12 @@
 
     <style name="TextAppearance.Component.Subtitle1">
         <item name="android:textSize">@dimen/font_subtitle1</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
     <style name="TextAppearance.Component.Subtitle2">
         <item name="android:textSize">@dimen/font_subtitle2</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
     <style name="TextAppearance.Component.Body1">

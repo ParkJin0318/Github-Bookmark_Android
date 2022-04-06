@@ -1,4 +1,4 @@
-package com.parkjin.github_bookmark.presentation.base
+package com.parkjin.github_bookmark.presentation.core
 
 import androidx.lifecycle.Observer
 

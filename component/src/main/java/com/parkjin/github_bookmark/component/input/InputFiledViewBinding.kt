@@ -1,4 +1,4 @@
-package com.parkjin.github_bookmark.component
+package com.parkjin.github_bookmark.component.input
 
 import android.text.Editable
 import android.text.TextWatcher

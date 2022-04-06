@@ -1,10 +1,11 @@
-package com.parkjin.github_bookmark.component
+package com.parkjin.github_bookmark.component.input
 
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.parkjin.github_bookmark.component.R
 
 class InputFieldView @JvmOverloads constructor(
     context: Context,

@@ -4,8 +4,8 @@ import android.os.Bundle
 import com.google.android.material.tabs.TabLayoutMediator
 import com.parkjin.github_bookmark.domain.model.UserType
 import com.parkjin.github_bookmark.presentation.R
-import com.parkjin.github_bookmark.presentation.base.BindingActivity
-import com.parkjin.github_bookmark.presentation.base.ViewPagerAdapter
+import com.parkjin.github_bookmark.presentation.core.BindingActivity
+import com.parkjin.github_bookmark.presentation.core.ViewPagerAdapter
 import com.parkjin.github_bookmark.presentation.databinding.ActivityMainBinding
 import com.parkjin.github_bookmark.presentation.ui.user.UserListFragment
 import dagger.hilt.android.AndroidEntryPoint

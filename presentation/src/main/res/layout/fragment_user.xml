@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <data>
         <variable
@@ -10,28 +11,32 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
-        <com.parkjin.github_bookmark.component.InputFieldView
+        <com.parkjin.github_bookmark.component.input.InputFieldView
             android:id="@+id/input_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:text="@={viewModel.inputKeyword}"
-            app:onSearchClick="@{() -> viewModel.onClickSearch()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:onSearchClick="@{() -> viewModel.onClickSearch()}"
+            app:text="@={viewModel.inputKeyword}"
+            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:overScrollMode="never"
             android:scrollbars="none"
-            app:adapter="@{viewModel.adapter}"
+            app:userAdapter="@{viewModel.adapter}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/input_field" />
+            app:layout_constraintTop_toBottomOf="@id/input_field"
+            />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

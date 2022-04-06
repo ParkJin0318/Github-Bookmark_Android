@@ -8,7 +8,7 @@ import androidx.fragment.app.viewModels
 import com.parkjin.github_bookmark.domain.model.UserType
 import com.parkjin.github_bookmark.presentation.BR
 import com.parkjin.github_bookmark.presentation.R
-import com.parkjin.github_bookmark.presentation.base.BindingFragment
+import com.parkjin.github_bookmark.presentation.core.BindingFragment
 import com.parkjin.github_bookmark.presentation.databinding.FragmentUserBinding
 import com.parkjin.github_bookmark.presentation.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,7 +40,7 @@ class UserListFragment : BindingFragment<FragmentUserBinding>(R.layout.fragment_
     override fun observeLiveData() {
         with(viewModel) {
             onErrorEvent.observe(this@UserListFragment,
-                com.parkjin.github_bookmark.presentation.base.EventObserver {
+                com.parkjin.github_bookmark.presentation.core.EventObserver {
                     context?.showToast(it.message)
                 })
         }
