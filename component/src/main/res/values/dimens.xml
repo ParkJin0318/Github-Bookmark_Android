@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Font -->
+    <dimen name="font_headline1">96sp</dimen>
+    <dimen name="font_headline2">60sp</dimen>
+    <dimen name="font_headline3">48sp</dimen>
+    <dimen name="font_headline4">34sp</dimen>
+    <dimen name="font_headline5">24sp</dimen>
+    <dimen name="font_headline6">20sp</dimen>
+
+    <dimen name="font_subtitle1">16sp</dimen>
+    <dimen name="font_subtitle2">14sp</dimen>
+
+    <dimen name="font_body1">16sp</dimen>
+    <dimen name="font_body2">16sp</dimen>
+
+    <!-- Spacing -->
+    <dimen name="spacing2">2dp</dimen>
+    <dimen name="spacing4">4dp</dimen>
+    <dimen name="spacing8">8dp</dimen>
+    <dimen name="spacing12">12dp</dimen>
+    <dimen name="spacing16">16dp</dimen>
+    <dimen name="spacing20">20dp</dimen>
+</resources>

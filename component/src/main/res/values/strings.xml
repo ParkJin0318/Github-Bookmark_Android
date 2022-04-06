@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="input_field_hint">검색할 이름을 입력해주세요</string>
+</resources>

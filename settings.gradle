@@ -5,3 +5,4 @@ rootProject.name = "Github_Bookmark"
 include ':remote'
 include ':local'
 include ':presentation'
+include ':component'

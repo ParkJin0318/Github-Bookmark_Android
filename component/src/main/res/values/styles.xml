@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="TextAppearance.Component" parent="Widget.AppCompat.TextView" />
+
+    <style name="TextAppearance.Component.Headline1">
+        <item name="android:textSize">@dimen/font_headline1</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.Component.Headline2">
+        <item name="android:textSize">@dimen/font_headline2</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.Component.Headline3">
+        <item name="android:textSize">@dimen/font_headline3</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.Component.Headline4">
+        <item name="android:textSize">@dimen/font_headline4</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.Component.Headline5">
+        <item name="android:textSize">@dimen/font_headline5</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.Component.Headline6">
+        <item name="android:textSize">@dimen/font_headline6</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.Component.Subtitle1">
+        <item name="android:textSize">@dimen/font_subtitle1</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.Component.Subtitle2">
+        <item name="android:textSize">@dimen/font_subtitle2</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.Component.Body1">
+        <item name="android:textSize">@dimen/font_body1</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TextAppearance.Component.Body2">
+        <item name="android:textSize">@dimen/font_body2</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+</resources>

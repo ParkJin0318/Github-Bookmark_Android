@@ -32,7 +32,6 @@ dependencies {
     implementation project(':data')
 
     // Rx
-    implementation "io.reactivex.rxjava3:rxandroid:$rootProject.rxAndroidVersion"
     implementation "io.reactivex.rxjava3:rxjava:$rootProject.rxJavaVersion"
     implementation "io.reactivex.rxjava3:rxkotlin:$rootProject.rxKotlinVersion"
 
