@@ -6,12 +6,11 @@ import androidx.lifecycle.ViewModel
 import com.parkjin.github_bookmark.domain.model.UserType
 import com.parkjin.github_bookmark.domain.usecase.BookmarkUserUseCase
 import com.parkjin.github_bookmark.domain.usecase.GetUsersUseCase
-import com.parkjin.github_bookmark.presentation.extension.debounce
+import com.parkjin.github_bookmark.presentation.core.Event
 import com.parkjin.github_bookmark.presentation.extension.onNetwork
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,25 +20,22 @@ class UserListViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val disposable = CompositeDisposable()
-    private val bookmarkToUser: PublishSubject<UserListItem.UserItem> = PublishSubject.create()
     private val userListItems: MutableList<UserListItem> = mutableListOf()
 
-    private val _onErrorEvent = MutableLiveData<com.parkjin.github_bookmark.presentation.core.Event<Throwable>>()
-    val onErrorEvent: LiveData<com.parkjin.github_bookmark.presentation.core.Event<Throwable>>
+    private val _onErrorEvent = MutableLiveData<Event<Throwable>>()
+    val onErrorEvent: LiveData<Event<Throwable>>
         get() = _onErrorEvent
 
     private var currentUserType = UserType.GITHUB
 
     val inputKeyword = MutableLiveData<String>()
-    val adapter = UserListAdapter(object : UserListAdapter.UserListener {
-        override fun onClickBookmark(name: String) {
-            val item = userListItems.toUserItems()
-                .find { it.user.name == name }
-                ?: return
+    val adapter = UserListAdapter { name ->
+        val item = userListItems.toUserItems()
+            .find { it.user.name == name }
+            ?: return@UserListAdapter
 
-            bookmarkToUser.onNext(item)
-        }
-    })
+        bookmarkToUser(item)
+    }
 
     init {
         initEvent()
@@ -85,11 +81,6 @@ class UserListViewModel @Inject constructor(
                 submitList()
             }, Throwable::printStackTrace)
             .addTo(disposable)
-
-        bookmarkToUser.distinctUntilChanged()
-            .debounce(100L)
-            .subscribe(this::bookmarkToUser, Throwable::printStackTrace)
-            .addTo(disposable)
     }
 
     private fun bookmarkToUser(item: UserListItem.UserItem) {
@@ -115,7 +106,7 @@ class UserListViewModel @Inject constructor(
 
                 UserListItemManager.onNext(currentUserType, newUserItem)
             }, {
-                _onErrorEvent.value = com.parkjin.github_bookmark.presentation.core.Event(it)
+                _onErrorEvent.value = Event(it)
             }).addTo(disposable)
     }
 
@@ -134,7 +125,7 @@ class UserListViewModel @Inject constructor(
                 userListItems.addAll(it.toUserListItems())
                 submitList()
             }, {
-                _onErrorEvent.value = com.parkjin.github_bookmark.presentation.core.Event(it)
+                _onErrorEvent.value = Event(it)
             }).addTo(disposable)
     }
 

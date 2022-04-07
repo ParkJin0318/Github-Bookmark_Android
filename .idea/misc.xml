@@ -8,8 +8,14 @@
         <entry key="..\:/Users/parkjin/Documents/GitHub/Github-Bookmark_Android/presentation/src/main/res/layout/fragment_bookmark.xml" value="0.35280797101449274" />
         <entry key="..\:/Users/parkjin/Documents/GitHub/Github-Bookmark_Android/presentation/src/main/res/layout/fragment_github.xml" value="0.3067708333333333" />
         <entry key="component/src/main/res/drawable/ic_search.xml" value="0.5035" />
+        <entry key="component/src/main/res/drawable/ic_star.xml" value="0.2115" />
+        <entry key="component/src/main/res/drawable/ic_user.xml" value="0.2115" />
+        <entry key="component/src/main/res/drawable/selector_bookmark.xml" value="0.2115" />
+        <entry key="component/src/main/res/layout/view_header.xml" value="0.2776268115942029" />
         <entry key="component/src/main/res/layout/view_input_field.xml" value="0.6947916666666667" />
         <entry key="component/src/main/res/layout/view_loading.xml" value="0.6947916666666667" />
+        <entry key="component/src/main/res/layout/view_user.xml" value="0.2776268115942029" />
+        <entry key="component/src/main/res/layout/view_user_item.xml" value="0.375" />
         <entry key="presentation/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.166" />
         <entry key="presentation/src/main/res/drawable/ic_launcher_background.xml" value="0.166" />
         <entry key="presentation/src/main/res/drawable/ic_search.xml" value="0.166" />
@@ -21,12 +27,12 @@
         <entry key="presentation/src/main/res/layout/component_input_field.xml" value="0.5635416666666667" />
         <entry key="presentation/src/main/res/layout/fragment_bookmark.xml" value="0.4161458333333333" />
         <entry key="presentation/src/main/res/layout/fragment_github.xml" value="0.6232449297971919" />
-        <entry key="presentation/src/main/res/layout/fragment_user.xml" value="0.4791666666666667" />
+        <entry key="presentation/src/main/res/layout/fragment_user.xml" value="0.28243243243243243" />
         <entry key="presentation/src/main/res/layout/item_user.xml" value="0.4311594202898551" />
         <entry key="presentation/src/main/res/layout/view_header_item.xml" value="0.6942708333333333" />
         <entry key="presentation/src/main/res/layout/view_loading_item.xml" value="0.6942708333333333" />
         <entry key="presentation/src/main/res/layout/view_user_header_item.xml" value="0.42552083333333335" />
-        <entry key="presentation/src/main/res/layout/view_user_item.xml" value="0.6947916666666667" />
+        <entry key="presentation/src/main/res/layout/view_user_item.xml" value="0.5053333333333333" />
         <entry key="presentation/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.166" />
         <entry key="presentation/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.166" />
       </map>

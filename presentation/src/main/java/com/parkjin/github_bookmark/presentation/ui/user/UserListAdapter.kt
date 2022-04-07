@@ -1,59 +1,31 @@
 package com.parkjin.github_bookmark.presentation.ui.user
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.parkjin.github_bookmark.component.extension.setLayoutParams
+import com.parkjin.github_bookmark.component.header.HeaderView
 import com.parkjin.github_bookmark.component.loading.LoadingView
-import com.parkjin.github_bookmark.presentation.R
-import com.parkjin.github_bookmark.presentation.databinding.ViewUserHeaderItemBinding
-import com.parkjin.github_bookmark.presentation.databinding.ViewUserItemBinding
+import com.parkjin.github_bookmark.component.user.UserItemView
 
 class UserListAdapter(
-    private val listener: UserListener
+    private val onStarredClick: (String) -> Unit
 ) : ListAdapter<UserListItem, UserListViewHolder>(DiffItemCallback()) {
 
     override fun getItemViewType(position: Int) = getItem(position).itemType
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserListViewHolder =
         when (UserListType.from(viewType)) {
-            UserListType.USER_HEADER -> {
-                val binding: ViewUserHeaderItemBinding =
-                    DataBindingUtil.inflate(
-                        LayoutInflater.from(parent.context),
-                        R.layout.view_user_header_item,
-                        parent,
-                        false
-                    )
-
-                UserListViewHolder.UserHeaderViewHolder(binding)
-            }
-
-            UserListType.USER_ITEM -> {
-                val binding: ViewUserItemBinding =
-                    DataBindingUtil.inflate(
-                        LayoutInflater.from(parent.context),
-                        R.layout.view_user_item,
-                        parent,
-                        false
-                    )
-
-                UserListViewHolder.UserItemViewHolder(binding, listener)
-            }
-
-            UserListType.LOADING -> {
-                UserListViewHolder.LoadingViewHolder(
-                    LoadingView(parent.context)
-                        .setLayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT
-                        )
-                )
-            }
+            UserListType.USER_HEADER -> UserListViewHolder.UserHeaderViewHolder(
+                HeaderView(parent.context)
+            )
+            UserListType.USER_ITEM -> UserListViewHolder.UserItemViewHolder(
+                UserItemView(parent.context),
+                onStarredClick::invoke
+            )
+            UserListType.LOADING -> UserListViewHolder.LoadingViewHolder(
+                LoadingView(parent.context)
+            )
         }
-
 
     override fun onBindViewHolder(holder: UserListViewHolder, position: Int) {
         val item = getItem(position)
@@ -72,11 +44,6 @@ class UserListAdapter(
     fun notifyUserBookmark(position: Int) {
         (currentList[position] as? UserListItem.UserItem)
             ?.let { it.bookmarked = it.bookmarked.not() }
-    }
-
-    interface UserListener {
-
-        fun onClickBookmark(name: String)
     }
 
     private class DiffItemCallback : DiffUtil.ItemCallback<UserListItem>() {
