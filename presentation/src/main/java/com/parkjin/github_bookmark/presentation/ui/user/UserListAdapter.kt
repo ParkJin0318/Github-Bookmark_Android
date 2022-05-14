@@ -6,25 +6,24 @@ import androidx.recyclerview.widget.ListAdapter
 import com.parkjin.github_bookmark.component.header.HeaderView
 import com.parkjin.github_bookmark.component.loading.LoadingView
 import com.parkjin.github_bookmark.component.user.UserItemView
+import com.parkjin.github_bookmark.presentation.R
 
-class UserListAdapter(
-    private val onStarredClick: (String) -> Unit
-) : ListAdapter<UserListItem, UserListViewHolder>(DiffItemCallback()) {
+class UserListAdapter : ListAdapter<UserListItem, UserListViewHolder>(DiffItemCallback()) {
 
-    override fun getItemViewType(position: Int) = getItem(position).itemType
+    override fun getItemViewType(position: Int) = when (getItem(position)) {
+        is UserListItem.UserHeader -> R.layout.view_header
+        is UserListItem.UserItem -> R.layout.view_user_item
+        is UserListItem.Loading -> R.layout.view_loading
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserListViewHolder =
-        when (UserListType.from(viewType)) {
-            UserListType.USER_HEADER -> UserListViewHolder.UserHeaderViewHolder(
-                HeaderView(parent.context)
-            )
-            UserListType.USER_ITEM -> UserListViewHolder.UserItemViewHolder(
-                UserItemView(parent.context),
-                onStarredClick::invoke
-            )
-            UserListType.LOADING -> UserListViewHolder.LoadingViewHolder(
-                LoadingView(parent.context)
-            )
+        when (viewType) {
+            R.layout.view_header ->
+                UserListViewHolder.UserHeaderViewHolder(HeaderView(parent.context))
+            R.layout.view_user_item ->
+                UserListViewHolder.UserItemViewHolder(UserItemView(parent.context))
+            else ->
+                UserListViewHolder.LoadingViewHolder(LoadingView(parent.context))
         }
 
     override fun onBindViewHolder(holder: UserListViewHolder, position: Int) {
@@ -33,17 +32,10 @@ class UserListAdapter(
         when (holder) {
             is UserListViewHolder.UserHeaderViewHolder ->
                 holder.bind(item as UserListItem.UserHeader)
-
             is UserListViewHolder.UserItemViewHolder ->
                 holder.bind(item as UserListItem.UserItem)
-
             else -> return
         }
-    }
-
-    fun notifyUserBookmark(position: Int) {
-        (currentList[position] as? UserListItem.UserItem)
-            ?.let { it.bookmarked = it.bookmarked.not() }
     }
 
     private class DiffItemCallback : DiffUtil.ItemCallback<UserListItem>() {

@@ -25,8 +25,7 @@ sealed class UserListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     }
 
     class UserItemViewHolder(
-        private val view: UserItemView,
-        private val onStarredClick: (String) -> Unit
+        private val view: UserItemView
     ) : UserListViewHolder(view) {
 
         init {
@@ -40,7 +39,7 @@ sealed class UserListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             view.name = item.user.name
             view.imgUrl = item.user.profileImageUrl
             view.starred = item.bookmarked
-            view.setOnStarredClick { onStarredClick(item.user.name) }
+            view.setOnStarredClick { item.bookmarkUser(item) }
         }
     }
 

@@ -7,6 +7,10 @@
         <variable
             name="viewModel"
             type="com.parkjin.github_bookmark.presentation.ui.user.UserListViewModel" />
+
+        <variable
+            name="adapter"
+            type="com.parkjin.github_bookmark.presentation.ui.user.UserListAdapter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,7 +34,7 @@
             android:layout_height="0dp"
             android:overScrollMode="never"
             android:scrollbars="none"
-            app:userAdapter="@{viewModel.adapter}"
+            app:userAdapter="@{adapter}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

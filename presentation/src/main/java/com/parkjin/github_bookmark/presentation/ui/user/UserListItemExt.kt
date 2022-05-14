@@ -9,14 +9,16 @@ fun List<UserListItem>.toUserItems() =
 fun List<UserListItem>.toHeaderItems() =
     this.filterIsInstance<UserListItem.UserHeader>()
 
-fun List<User>.toUserListItems(): List<UserListItem> {
+fun List<User>.toUserListItems(bookmarkUser: (UserListItem.UserItem) -> Unit): List<UserListItem> {
     val userListItems: MutableList<UserListItem> = mutableListOf()
 
     this.sortedBy(User::name)
         .groupBy(User::header)
         .forEach { (header, users) ->
             userListItems.add(UserListItem.UserHeader(header))
-            userListItems.addAll(users.map(UserListItem::UserItem))
+            userListItems.addAll(users.map {
+                UserListItem.UserItem(it, it.bookmarked, bookmarkUser::invoke)
+            })
         }
     return userListItems
 }
@@ -31,7 +33,7 @@ fun MutableList<UserListItem>.addUserItem(item: UserListItem.UserItem) {
         ?: this.add(UserListItem.UserHeader(item.user.header))
 
     this.add(item)
-    this.sortBy { it.itemName }
+    this.sortBy { it.orderName }
 }
 
 fun MutableList<UserListItem>.removeUserItem(item: UserListItem.UserItem) {

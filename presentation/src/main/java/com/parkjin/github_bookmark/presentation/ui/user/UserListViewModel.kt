@@ -20,22 +20,16 @@ class UserListViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val disposable = CompositeDisposable()
-    private val userListItems: MutableList<UserListItem> = mutableListOf()
+
+    private val _userListItems = MutableLiveData<List<UserListItem>>()
+    val userListItems: LiveData<List<UserListItem>> get() = _userListItems
 
     private val _onErrorEvent = MutableLiveData<Event<Throwable>>()
-    val onErrorEvent: LiveData<Event<Throwable>>
-        get() = _onErrorEvent
+    val onErrorEvent: LiveData<Event<Throwable>> get() = _onErrorEvent
 
     private var currentUserType = UserType.GITHUB
 
     val inputKeyword = MutableLiveData<String>()
-    val adapter = UserListAdapter { name ->
-        val item = userListItems.toUserItems()
-            .find { it.user.name == name }
-            ?: return@UserListAdapter
-
-        bookmarkToUser(item)
-    }
 
     init {
         initEvent()
@@ -56,6 +50,8 @@ class UserListViewModel @Inject constructor(
     }
 
     private fun initEvent() {
+        val userListItems = this.userListItems.value?.toMutableList() ?: return
+
         UserListItemManager.register()
             .filter { UserListItemManager.userType != currentUserType }
             .filter { UserListItemManager.userItem != null }
@@ -78,62 +74,54 @@ class UserListViewModel @Inject constructor(
                     }
                 }
 
-                submitList()
+                _userListItems.value = userListItems
             }, Throwable::printStackTrace)
             .addTo(disposable)
     }
 
     private fun bookmarkToUser(item: UserListItem.UserItem) {
+        val userListItems = this.userListItems.value?.toMutableList() ?: return
+
         bookmarkUserUseCase.execute(item.user, item.bookmarked)
             .onNetwork()
             .subscribe({
                 val position = userListItems.indexOf(item)
-                val newUserItem = UserListItem.UserItem(
-                    user = item.user,
-                    bookmarked = item.bookmarked.not()
-                )
+                val newItem = item.copy(bookmarked = item.bookmarked.not())
 
                 when (currentUserType) {
                     UserType.GITHUB -> {
-                        userListItems.replaceUserItem(position, newUserItem)
-                        notifyUserBookmark(position)
+                        userListItems.replaceUserItem(position, newItem)
                     }
                     UserType.BOOKMARK -> {
                         userListItems.removeUserItem(item)
-                        submitList()
                     }
                 }
 
-                UserListItemManager.onNext(currentUserType, newUserItem)
+                _userListItems.value = userListItems
+                UserListItemManager.onNext(currentUserType, newItem)
             }, {
                 _onErrorEvent.value = Event(it)
             }).addTo(disposable)
     }
 
     private fun loadUsers(name: String = "") {
+        val userListItems = this.userListItems.value?.toMutableList() ?: return
+
         if (userListItems.lastOrNull() == UserListItem.Loading) return
 
         val loadingItem = UserListItem.Loading
         userListItems.add(loadingItem)
-        submitList()
+        _userListItems.value = userListItems
 
         getUsersUseCase.execute(name, currentUserType)
             .onNetwork()
             .subscribe({
                 userListItems.clear()
                 userListItems.remove(loadingItem)
-                userListItems.addAll(it.toUserListItems())
-                submitList()
+                userListItems.addAll(it.toUserListItems(::bookmarkToUser))
+                _userListItems.value = userListItems
             }, {
                 _onErrorEvent.value = Event(it)
             }).addTo(disposable)
-    }
-
-    private fun submitList() {
-        adapter.submitList(userListItems.toMutableList())
-    }
-
-    private fun notifyUserBookmark(position: Int) {
-        adapter.notifyUserBookmark(position)
     }
 }

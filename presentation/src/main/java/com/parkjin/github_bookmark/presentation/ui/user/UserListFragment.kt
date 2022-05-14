@@ -9,9 +9,13 @@ import com.parkjin.github_bookmark.domain.model.UserType
 import com.parkjin.github_bookmark.presentation.BR
 import com.parkjin.github_bookmark.presentation.R
 import com.parkjin.github_bookmark.presentation.core.BindingFragment
+import com.parkjin.github_bookmark.presentation.core.EventObserver
 import com.parkjin.github_bookmark.presentation.databinding.FragmentUserBinding
 import com.parkjin.github_bookmark.presentation.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.core.Observable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flow
 import kotlinx.parcelize.Parcelize
 
 @AndroidEntryPoint
@@ -29,20 +33,24 @@ class UserListFragment : BindingFragment<FragmentUserBinding>(R.layout.fragment_
 
     private val viewModel: UserListViewModel by viewModels()
 
+    private val adapter: UserListAdapter by lazy { UserListAdapter() }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val argument = arguments?.getParcelable<Argument>(ARGUMENT_KEY) ?: return
 
-        binding.setVariable(BR.viewModel, viewModel)
+        binding.viewModel = viewModel
+        binding.adapter = adapter
+
         viewModel.initUserType(argument.type)
     }
 
     override fun observeLiveData() {
         with(viewModel) {
-            onErrorEvent.observe(this@UserListFragment,
-                com.parkjin.github_bookmark.presentation.core.EventObserver {
-                    context?.showToast(it.message)
-                })
+            userListItems.observe(this@UserListFragment, adapter::submitList)
+            onErrorEvent.observe(this@UserListFragment, EventObserver {
+                context?.showToast(it.message)
+            })
         }
     }
 
