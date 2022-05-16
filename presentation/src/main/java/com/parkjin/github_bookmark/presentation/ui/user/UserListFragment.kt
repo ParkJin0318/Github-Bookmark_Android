@@ -43,8 +43,8 @@ class UserListFragment : BindingFragment<FragmentUserBinding>(R.layout.fragment_
 
     override fun observeLiveData() {
         with(viewModel) {
-            userListItems.observe(this@UserListFragment) {
-                adapter.submitList(it.toList())
+            submit.observe(this@UserListFragment) { users ->
+                users.toList().let(adapter::submitList)
             }
             onErrorEvent.observe(this@UserListFragment, EventObserver {
                 context?.showToast(it.message)

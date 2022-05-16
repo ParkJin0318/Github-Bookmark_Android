@@ -21,8 +21,10 @@ class UserListViewModel @Inject constructor(
 
     private val disposable = CompositeDisposable()
 
-    private val _userListItems = MutableLiveData<List<UserListItem>>()
-    val userListItems: LiveData<List<UserListItem>> get() = _userListItems
+    private val userList = mutableListOf<UserListItem>()
+
+    private val _submit = MutableLiveData<List<UserListItem>>()
+    val submit: LiveData<List<UserListItem>> get() = _submit
 
     private val _onErrorEvent = MutableLiveData<Event<Throwable>>()
     val onErrorEvent: LiveData<Event<Throwable>> get() = _onErrorEvent
@@ -50,54 +52,50 @@ class UserListViewModel @Inject constructor(
     }
 
     private fun initEvent() {
-        val userListItems = this.userListItems.value?.toMutableList() ?: mutableListOf()
-
         UserListItemManager.register()
             .filter { UserListItemManager.userType != currentUserType }
             .filter { UserListItemManager.userItem != null }
             .map { UserListItemManager.userItem!! }
             .onNetwork()
             .subscribe({ userItem ->
-                val findItem = userListItems.toUserItems()
+                val findItem = userList.toUserItems()
                     .find { it.user.name == userItem.user.name }
 
                 when (UserListItemManager.userType) {
                     UserType.GITHUB -> {
-                        findItem?.let { userListItems.removeUserItem(it) }
-                            ?: let { userListItems.addUserItem(userItem) }
+                        findItem?.let { userList.removeUserItem(it) }
+                            ?: let { userList.addUserItem(userItem) }
                     }
                     UserType.BOOKMARK -> {
                         findItem?.let {
-                            val position = userListItems.indexOf(it)
-                            userListItems.replaceUserItem(position, userItem)
+                            val position = userList.indexOf(it)
+                            userList.replaceUserItem(position, userItem)
                         }
                     }
                 }
 
-                _userListItems.value = userListItems
+                _submit.value = userList
             }, Throwable::printStackTrace)
             .addTo(disposable)
     }
 
     private fun bookmarkToUser(item: UserListItem.UserItem) {
-        val userListItems = this.userListItems.value?.toMutableList() ?: mutableListOf()
-
         bookmarkUserUseCase.execute(item.user, item.bookmarked)
             .onNetwork()
             .subscribe({
-                val position = userListItems.indexOf(item)
+                val position = userList.indexOf(item)
                 val newItem = item.copy(bookmarked = item.bookmarked.not())
 
                 when (currentUserType) {
                     UserType.GITHUB -> {
-                        userListItems.replaceUserItem(position, newItem)
+                        userList.replaceUserItem(position, newItem)
                     }
                     UserType.BOOKMARK -> {
-                        userListItems.removeUserItem(item)
+                        userList.removeUserItem(item)
                     }
                 }
 
-                _userListItems.value = userListItems
+                _submit.value = userList
                 UserListItemManager.onNext(currentUserType, newItem)
             }, {
                 _onErrorEvent.value = Event(it)
@@ -105,21 +103,19 @@ class UserListViewModel @Inject constructor(
     }
 
     private fun loadUsers(name: String = "") {
-        val userListItems = this.userListItems.value?.toMutableList() ?: mutableListOf()
-
-        if (userListItems.lastOrNull() == UserListItem.Loading) return
+        if (userList.lastOrNull() == UserListItem.Loading) return
 
         val loadingItem = UserListItem.Loading
-        userListItems.add(loadingItem)
-        _userListItems.value = userListItems
+        userList.add(loadingItem)
+        _submit.value = userList
 
         getUsersUseCase.execute(name, currentUserType)
             .onNetwork()
             .subscribe({
-                userListItems.clear()
-                userListItems.remove(loadingItem)
-                userListItems.addAll(it.toUserListItems(::bookmarkToUser))
-                _userListItems.value = userListItems
+                userList.clear()
+                userList.remove(loadingItem)
+                userList.addAll(it.toUserListItems(::bookmarkToUser))
+                _submit.value = userList
             }, {
                 _onErrorEvent.value = Event(it)
             }).addTo(disposable)
