@@ -50,7 +50,7 @@ class UserListViewModel @Inject constructor(
     }
 
     private fun initEvent() {
-        val userListItems = this.userListItems.value?.toMutableList() ?: return
+        val userListItems = this.userListItems.value?.toMutableList() ?: mutableListOf()
 
         UserListItemManager.register()
             .filter { UserListItemManager.userType != currentUserType }
@@ -80,7 +80,7 @@ class UserListViewModel @Inject constructor(
     }
 
     private fun bookmarkToUser(item: UserListItem.UserItem) {
-        val userListItems = this.userListItems.value?.toMutableList() ?: return
+        val userListItems = this.userListItems.value?.toMutableList() ?: mutableListOf()
 
         bookmarkUserUseCase.execute(item.user, item.bookmarked)
             .onNetwork()
@@ -105,7 +105,7 @@ class UserListViewModel @Inject constructor(
     }
 
     private fun loadUsers(name: String = "") {
-        val userListItems = this.userListItems.value?.toMutableList() ?: return
+        val userListItems = this.userListItems.value?.toMutableList() ?: mutableListOf()
 
         if (userListItems.lastOrNull() == UserListItem.Loading) return
 

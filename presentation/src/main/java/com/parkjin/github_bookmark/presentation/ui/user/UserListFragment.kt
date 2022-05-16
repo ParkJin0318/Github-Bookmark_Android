@@ -6,16 +6,12 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import com.parkjin.github_bookmark.domain.model.UserType
-import com.parkjin.github_bookmark.presentation.BR
 import com.parkjin.github_bookmark.presentation.R
 import com.parkjin.github_bookmark.presentation.core.BindingFragment
 import com.parkjin.github_bookmark.presentation.core.EventObserver
 import com.parkjin.github_bookmark.presentation.databinding.FragmentUserBinding
 import com.parkjin.github_bookmark.presentation.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.rxjava3.core.Observable
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flow
 import kotlinx.parcelize.Parcelize
 
 @AndroidEntryPoint
@@ -47,7 +43,9 @@ class UserListFragment : BindingFragment<FragmentUserBinding>(R.layout.fragment_
 
     override fun observeLiveData() {
         with(viewModel) {
-            userListItems.observe(this@UserListFragment, adapter::submitList)
+            userListItems.observe(this@UserListFragment) {
+                adapter.submitList(it.toList())
+            }
             onErrorEvent.observe(this@UserListFragment, EventObserver {
                 context?.showToast(it.message)
             })
