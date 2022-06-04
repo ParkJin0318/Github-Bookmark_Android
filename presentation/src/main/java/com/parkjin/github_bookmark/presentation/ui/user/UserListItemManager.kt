@@ -1,25 +1,24 @@
 package com.parkjin.github_bookmark.presentation.ui.user
 
-import com.parkjin.github_bookmark.domain.model.UserType
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.subjects.PublishSubject
+import com.parkjin.github_bookmark.presentation.ui.main.MainTabType
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 object UserListItemManager {
 
-    private val notifier: PublishSubject<Unit> = PublishSubject.create()
+    private val notifier: MutableStateFlow<Unit> = MutableStateFlow(Unit)
 
-    var userType: UserType = UserType.GITHUB
+    var tabType: MainTabType = MainTabType.GITHUB
         private set
 
     var userItem: UserListItem.UserItem? = null
         private set
 
-    fun register(): Observable<Unit> = notifier
+    fun register(): Flow<Unit> = notifier
 
-    fun onNext(userType: UserType, userItem: UserListItem.UserItem) {
-        this.userType = userType
+    fun onNext(tabType: MainTabType, userItem: UserListItem.UserItem) {
+        this.tabType = tabType
         this.userItem = userItem
-
-        notifier.onNext(Unit)
+        notifier.value = Unit
     }
 }

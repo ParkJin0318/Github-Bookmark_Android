@@ -1,7 +1,6 @@
 package com.parkjin.github_bookmark.presentation.ui.user
 
 import com.parkjin.github_bookmark.domain.model.User
-import com.parkjin.github_bookmark.domain.model.header
 
 fun List<UserListItem>.toUserItems() =
     this.filterIsInstance<UserListItem.UserItem>()

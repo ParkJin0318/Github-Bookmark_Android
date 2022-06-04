@@ -1,14 +1,12 @@
 package com.parkjin.github_bookmark.data.datasource
 
 import com.parkjin.github_bookmark.data.model.BookmarkUser
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
 
 interface BookmarkUserDataSource {
 
-    fun getUsers(keyword: String): Single<List<BookmarkUser>>
+    suspend fun getUsers(name: String): List<BookmarkUser>
 
-    fun bookmarkUser(user: BookmarkUser): Completable
+    suspend fun bookmarkUser(user: BookmarkUser)
 
-    fun unBookmarkUser(user: BookmarkUser): Completable
+    suspend fun unBookmarkUser(user: BookmarkUser)
 }

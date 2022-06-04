@@ -5,12 +5,12 @@ import android.os.Parcelable
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
-import com.parkjin.github_bookmark.domain.model.UserType
 import com.parkjin.github_bookmark.presentation.R
 import com.parkjin.github_bookmark.presentation.core.BindingFragment
 import com.parkjin.github_bookmark.presentation.core.EventObserver
 import com.parkjin.github_bookmark.presentation.databinding.FragmentUserBinding
 import com.parkjin.github_bookmark.presentation.extension.showToast
+import com.parkjin.github_bookmark.presentation.ui.main.MainTabType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.parcelize.Parcelize
 
@@ -20,9 +20,9 @@ class UserListFragment : BindingFragment<FragmentUserBinding>(R.layout.fragment_
     companion object {
         private const val ARGUMENT_KEY = "ARGUMENT_KEY"
 
-        fun newInstance(type: UserType) = UserListFragment().apply {
+        fun newInstance(tabType: MainTabType) = UserListFragment().apply {
             this.arguments = bundleOf(
-                ARGUMENT_KEY to Argument(type)
+                ARGUMENT_KEY to Argument(tabType)
             )
         }
     }
@@ -54,6 +54,6 @@ class UserListFragment : BindingFragment<FragmentUserBinding>(R.layout.fragment_
 
     @Parcelize
     data class Argument(
-        val type: UserType
+        val type: MainTabType
     ) : Parcelable
 }

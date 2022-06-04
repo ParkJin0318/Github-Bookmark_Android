@@ -31,14 +31,7 @@ android {
 dependencies {
     implementation project(':data')
 
-    // Rx
-    implementation "io.reactivex.rxjava3:rxjava:$rootProject.rxJavaVersion"
-    implementation "io.reactivex.rxjava3:rxkotlin:$rootProject.rxKotlinVersion"
-
     // Room
-    implementation 'org.xerial:sqlite-jdbc:3.36.0'
-    implementation ("androidx.room:room-runtime:$rootProject.roomVersion") { exclude(group:'org.xerial') }
-    kapt ("androidx.room:room-compiler:$rootProject.roomVersion") { exclude(group:'org.xerial') }
-    implementation ("androidx.room:room-rxjava3:$rootProject.roomVersion") { exclude(group:'org.xerial') }
-    testImplementation ("androidx.room:room-testing:$rootProject.roomVersion") { exclude(group:'org.xerial') }
+    implementation ("androidx.room:room-runtime:$rootProject.roomVersion")
+    kapt ("androidx.room:room-compiler:$rootProject.roomVersion")
 }

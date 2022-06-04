@@ -42,10 +42,8 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation "androidx.fragment:fragment-ktx:1.4.1"
 
-    // Rx
-    implementation "io.reactivex.rxjava3:rxandroid:$rootProject.rxAndroidVersion"
-    implementation "io.reactivex.rxjava3:rxjava:$rootProject.rxJavaVersion"
-    implementation "io.reactivex.rxjava3:rxkotlin:$rootProject.rxKotlinVersion"
+    // Coroutine
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutineVersion"
 
     // Hilt
     implementation "com.google.dagger:hilt-android:$rootProject.hiltVersion"

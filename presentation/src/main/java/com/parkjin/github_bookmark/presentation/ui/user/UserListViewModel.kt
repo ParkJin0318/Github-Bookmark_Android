@@ -3,23 +3,26 @@ package com.parkjin.github_bookmark.presentation.ui.user
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.parkjin.github_bookmark.domain.model.UserType
+import androidx.lifecycle.viewModelScope
+import com.parkjin.github_bookmark.domain.model.Result
 import com.parkjin.github_bookmark.domain.usecase.BookmarkUserUseCase
-import com.parkjin.github_bookmark.domain.usecase.GetUsersUseCase
+import com.parkjin.github_bookmark.domain.usecase.GetBookmarkUsersUseCase
+import com.parkjin.github_bookmark.domain.usecase.GetGithubUsersUseCase
 import com.parkjin.github_bookmark.presentation.core.Event
-import com.parkjin.github_bookmark.presentation.extension.onNetwork
+import com.parkjin.github_bookmark.presentation.ui.main.MainTabType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.addTo
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
 class UserListViewModel @Inject constructor(
-    private val getUsersUseCase: GetUsersUseCase,
+    private val getGithubUsersUseCase: GetGithubUsersUseCase,
+    private val getBookmarkUsersUseCase: GetBookmarkUsersUseCase,
     private val bookmarkUserUseCase: BookmarkUserUseCase
 ) : ViewModel() {
-
-    private val disposable = CompositeDisposable()
 
     private val userList = mutableListOf<UserListItem>()
 
@@ -29,7 +32,7 @@ class UserListViewModel @Inject constructor(
     private val _onErrorEvent = MutableLiveData<Event<Throwable>>()
     val onErrorEvent: LiveData<Event<Throwable>> get() = _onErrorEvent
 
-    private var currentUserType = UserType.GITHUB
+    private var currentTabType = MainTabType.GITHUB
 
     val inputKeyword = MutableLiveData<String>()
 
@@ -37,69 +40,67 @@ class UserListViewModel @Inject constructor(
         initEvent()
     }
 
-    fun initUserType(type: UserType) {
-        currentUserType = type
-        if (type == UserType.BOOKMARK) loadUsers()
+    fun initUserType(type: MainTabType) {
+        currentTabType = type
+        if (type == MainTabType.BOOKMARK) loadUsers()
     }
 
     fun onClickSearch() {
         loadUsers(inputKeyword.value ?: "")
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        disposable.clear()
-    }
-
     private fun initEvent() {
         UserListItemManager.register()
-            .filter { UserListItemManager.userType != currentUserType }
+            .filter { UserListItemManager.tabType != currentTabType }
             .filter { UserListItemManager.userItem != null }
             .map { UserListItemManager.userItem!! }
-            .onNetwork()
-            .subscribe({ userItem ->
+            .onEach { userItem ->
                 val findItem = userList.toUserItems()
                     .find { it.user.name == userItem.user.name }
 
-                when (UserListItemManager.userType) {
-                    UserType.GITHUB -> {
+                when (UserListItemManager.tabType) {
+                    MainTabType.GITHUB -> {
                         findItem?.let { userList.removeUserItem(it) }
                             ?: let { userList.addUserItem(userItem) }
                     }
-                    UserType.BOOKMARK -> {
+                    MainTabType.BOOKMARK -> {
                         findItem?.let {
                             val position = userList.indexOf(it)
                             userList.replaceUserItem(position, userItem)
                         }
                     }
                 }
-
                 _submit.value = userList
-            }, Throwable::printStackTrace)
-            .addTo(disposable)
+            }.launchIn(viewModelScope)
     }
 
     private fun bookmarkToUser(item: UserListItem.UserItem) {
-        bookmarkUserUseCase.execute(item.user, item.bookmarked)
-            .onNetwork()
-            .subscribe({
-                val position = userList.indexOf(item)
-                val newItem = item.copy(bookmarked = item.bookmarked.not())
-
-                when (currentUserType) {
-                    UserType.GITHUB -> {
-                        userList.replaceUserItem(position, newItem)
+        bookmarkUserUseCase(item.user)
+            .onEach { result ->
+                when (result) {
+                    is Result.Loading -> {
+                        // TODO
                     }
-                    UserType.BOOKMARK -> {
-                        userList.removeUserItem(item)
+                    is Result.Success -> {
+                        val position = userList.indexOf(item)
+                        val newItem = item.copy(bookmarked = item.bookmarked.not())
+
+                        when (currentTabType) {
+                            MainTabType.GITHUB -> {
+                                userList.replaceUserItem(position, newItem)
+                            }
+                            MainTabType.BOOKMARK -> {
+                                userList.removeUserItem(item)
+                            }
+                        }
+                        _submit.value = userList
+                        UserListItemManager.onNext(currentTabType, newItem)
+                    }
+                    is Result.Failure -> {
+                        _onErrorEvent.value = Event(result.throwable)
                     }
                 }
-
-                _submit.value = userList
-                UserListItemManager.onNext(currentUserType, newItem)
-            }, {
-                _onErrorEvent.value = Event(it)
-            }).addTo(disposable)
+            }.launchIn(viewModelScope)
     }
 
     private fun loadUsers(name: String = "") {
@@ -109,15 +110,26 @@ class UserListViewModel @Inject constructor(
         userList.add(loadingItem)
         _submit.value = userList
 
-        getUsersUseCase.execute(name, currentUserType)
-            .onNetwork()
-            .subscribe({
-                userList.clear()
-                userList.remove(loadingItem)
-                userList.addAll(it.toUserListItems(::bookmarkToUser))
-                _submit.value = userList
-            }, {
-                _onErrorEvent.value = Event(it)
-            }).addTo(disposable)
+        val users =
+            if (currentTabType == MainTabType.GITHUB) getGithubUsersUseCase(name)
+            else getBookmarkUsersUseCase(name)
+
+        users.onEach { result ->
+            when (result) {
+                is Result.Loading -> {
+
+                }
+                is Result.Success -> {
+                    userList.clear()
+                    userList.remove(loadingItem)
+                    userList.addAll(result.value.toUserListItems(::bookmarkToUser))
+                    _submit.value = userList
+                }
+                is Result.Failure -> {
+                    _onErrorEvent.value = Event(result.throwable)
+                }
+            }
+
+        }.launchIn(viewModelScope)
     }
 }

@@ -8,19 +8,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-class BookmarkUserUseCase(
-    private val repository: BookmarkUserRepository
+class GetBookmarkUsersUseCase(
+    private val bookmarkUserRepository: BookmarkUserRepository
 ) {
 
-    operator fun invoke(user: User): Flow<Result<Unit>> = flow {
+    operator fun invoke(name: String): Flow<Result<List<User>>> = flow {
         emit(Result.Loading)
 
         try {
-            val bookmark =
-                if (user.bookmarked) repository.bookmarkUser(user)
-                else repository.unBookmarkUser(user)
-
-            emit(Result.Success(bookmark))
+            val users = bookmarkUserRepository.getUsers(name)
+            emit(Result.Success(users))
         } catch (e: Exception) {
             emit(Result.Failure(e))
         }
