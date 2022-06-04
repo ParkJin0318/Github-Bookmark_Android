@@ -10,8 +10,11 @@ class GithubUserRemoteDataSourceImpl(
     private val api: GithubUserAPI
 ) : GithubUserDataSource {
 
-    override suspend fun getUsers(name: String): List<GithubUser> =
+    override fun getUsers(name: String): List<GithubUser> =
         api.getGithubUsers("$name+in:login")
-            .items
-            .map(GithubUserResponse::toModel)
+            .execute()
+            .body()
+            ?.items
+            ?.map(GithubUserResponse::toModel)
+            ?: emptyList()
 }

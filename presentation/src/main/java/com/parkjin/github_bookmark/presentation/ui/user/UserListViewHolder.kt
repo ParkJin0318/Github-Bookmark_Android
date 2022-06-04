@@ -38,8 +38,11 @@ sealed class UserListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(item: UserListItem.UserItem) {
             view.name = item.user.name
             view.imgUrl = item.user.profileImageUrl
-            view.starred = item.bookmarked
-            view.setOnStarredClick { item.bookmarkUser(item) }
+            view.starred = item.user.bookmarked
+            view.setOnStarredClick {
+                val newUser = item.user.copy(bookmarked = it)
+                item.toggleBookmark(item.copy(user = newUser))
+            }
         }
     }
 

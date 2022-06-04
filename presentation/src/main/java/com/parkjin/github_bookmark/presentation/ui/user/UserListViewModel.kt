@@ -11,10 +11,8 @@ import com.parkjin.github_bookmark.domain.usecase.GetGithubUsersUseCase
 import com.parkjin.github_bookmark.presentation.core.Event
 import com.parkjin.github_bookmark.presentation.ui.main.MainTabType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -50,28 +48,27 @@ class UserListViewModel @Inject constructor(
     }
 
     private fun initEvent() {
-        UserListItemManager.register()
-            .filter { UserListItemManager.tabType != currentTabType }
-            .filter { UserListItemManager.userItem != null }
-            .map { UserListItemManager.userItem!! }
-            .onEach { userItem ->
-                val findItem = userList.toUserItems()
-                    .find { it.user.name == userItem.user.name }
+        viewModelScope.launch {
+            UserListItemManager.register()
+                .filter { UserListItemManager.tabType != currentTabType }
+                .filter { UserListItemManager.userItem != null }
+                .map { UserListItemManager.userItem!! }
+                .collect { userItem ->
+                    val findItem = userList.toUserItems()
+                        .find { it.user.name == userItem.user.name }
 
-                when (UserListItemManager.tabType) {
-                    MainTabType.GITHUB -> {
-                        findItem?.let { userList.removeUserItem(it) }
-                            ?: let { userList.addUserItem(userItem) }
-                    }
-                    MainTabType.BOOKMARK -> {
-                        findItem?.let {
-                            val position = userList.indexOf(it)
-                            userList.replaceUserItem(position, userItem)
+                    when (UserListItemManager.tabType) {
+                        MainTabType.GITHUB -> {
+                            findItem?.let { userList.removeUserItem(it) }
+                                ?: let { userList.addUserItem(userItem) }
+                        }
+                        MainTabType.BOOKMARK -> {
+                            findItem?.let { userList.replaceUserItem(userItem) }
                         }
                     }
+                    _submit.value = userList
                 }
-                _submit.value = userList
-            }.launchIn(viewModelScope)
+        }
     }
 
     private fun bookmarkToUser(item: UserListItem.UserItem) {
@@ -82,19 +79,16 @@ class UserListViewModel @Inject constructor(
                         // TODO
                     }
                     is Result.Success -> {
-                        val position = userList.indexOf(item)
-                        val newItem = item.copy(bookmarked = item.bookmarked.not())
-
                         when (currentTabType) {
                             MainTabType.GITHUB -> {
-                                userList.replaceUserItem(position, newItem)
+                                userList.replaceUserItem(item)
                             }
                             MainTabType.BOOKMARK -> {
                                 userList.removeUserItem(item)
                             }
                         }
                         _submit.value = userList
-                        UserListItemManager.onNext(currentTabType, newItem)
+                        UserListItemManager.emit(currentTabType, item)
                     }
                     is Result.Failure -> {
                         _onErrorEvent.value = Event(result.throwable)
@@ -106,10 +100,6 @@ class UserListViewModel @Inject constructor(
     private fun loadUsers(name: String = "") {
         if (userList.lastOrNull() == UserListItem.Loading) return
 
-        val loadingItem = UserListItem.Loading
-        userList.add(loadingItem)
-        _submit.value = userList
-
         val users =
             if (currentTabType == MainTabType.GITHUB) getGithubUsersUseCase(name)
             else getBookmarkUsersUseCase(name)
@@ -117,11 +107,11 @@ class UserListViewModel @Inject constructor(
         users.onEach { result ->
             when (result) {
                 is Result.Loading -> {
-
+                    userList.add(UserListItem.Loading)
+                    _submit.value = userList
                 }
                 is Result.Success -> {
                     userList.clear()
-                    userList.remove(loadingItem)
                     userList.addAll(result.value.toUserListItems(::bookmarkToUser))
                     _submit.value = userList
                 }
@@ -129,7 +119,6 @@ class UserListViewModel @Inject constructor(
                     _onErrorEvent.value = Event(result.throwable)
                 }
             }
-
         }.launchIn(viewModelScope)
     }
 }

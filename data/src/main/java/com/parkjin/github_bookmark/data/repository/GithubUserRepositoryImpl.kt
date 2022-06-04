@@ -10,7 +10,7 @@ class GithubUserRepositoryImpl(
     private val remoteDataSource: GithubUserDataSource
 ) : GithubUserRepository {
 
-    override suspend fun getUsers(name: String): List<User> =
+    override fun getUsers(name: String): List<User> =
         remoteDataSource.getUsers(name)
             .map(GithubUser::toUser)
 }

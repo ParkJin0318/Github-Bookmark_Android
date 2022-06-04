@@ -4,5 +4,5 @@ import com.parkjin.github_bookmark.data.model.GithubUser
 
 interface GithubUserDataSource {
 
-    suspend fun getUsers(name: String): List<GithubUser>
+    fun getUsers(name: String): List<GithubUser>
 }

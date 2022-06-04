@@ -1,12 +1,12 @@
 package com.parkjin.github_bookmark.presentation.ui.user
 
 import com.parkjin.github_bookmark.presentation.ui.main.MainTabType
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 
 object UserListItemManager {
 
-    private val notifier: MutableStateFlow<Unit> = MutableStateFlow(Unit)
+    private val notifier: MutableSharedFlow<Unit> = MutableSharedFlow()
 
     var tabType: MainTabType = MainTabType.GITHUB
         private set
@@ -14,11 +14,11 @@ object UserListItemManager {
     var userItem: UserListItem.UserItem? = null
         private set
 
-    fun register(): Flow<Unit> = notifier
+    fun register(): SharedFlow<Unit> = notifier
 
-    fun onNext(tabType: MainTabType, userItem: UserListItem.UserItem) {
+    suspend fun emit(tabType: MainTabType, userItem: UserListItem.UserItem) {
         this.tabType = tabType
         this.userItem = userItem
-        notifier.value = Unit
+        notifier.emit(Unit)
     }
 }

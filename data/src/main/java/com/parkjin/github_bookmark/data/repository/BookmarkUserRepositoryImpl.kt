@@ -11,13 +11,13 @@ class BookmarkUserRepositoryImpl(
     private val localDataSource: BookmarkUserDataSource
 ) : BookmarkUserRepository {
 
-    override suspend fun getUsers(name: String): List<User> =
+    override fun getUsers(name: String): List<User> =
         localDataSource.getUsers(name)
             .map(BookmarkUser::toUser)
 
-    override suspend fun bookmarkUser(user: User) =
+    override fun bookmarkUser(user: User) =
         localDataSource.bookmarkUser(user.toBookmarkUser())
 
-    override suspend fun unBookmarkUser(user: User) =
+    override fun unBookmarkUser(user: User) =
         localDataSource.unBookmarkUser(user.toBookmarkUser())
 }

@@ -11,7 +11,7 @@ class BookmarkUserLocalDataSourceImpl(
     private val dao: BookmarkUserDao
 ) : BookmarkUserDataSource {
 
-    override suspend fun getUsers(name: String): List<BookmarkUser> {
+    override fun getUsers(name: String): List<BookmarkUser> {
         val users =
             if (name.isEmpty() || name.isBlank()) dao.getBookmarkUsers()
             else dao.getBookmarkUsers(name)
@@ -19,9 +19,9 @@ class BookmarkUserLocalDataSourceImpl(
         return users.map(BookmarkUserEntity::toModel)
     }
 
-    override suspend fun bookmarkUser(user: BookmarkUser) =
+    override fun bookmarkUser(user: BookmarkUser) =
         dao.insertBookmarkUser(user.toEntity())
 
-    override suspend fun unBookmarkUser(user: BookmarkUser) =
+    override fun unBookmarkUser(user: BookmarkUser) =
         dao.deleteBookmarkUser(user.toEntity())
 }

@@ -4,9 +4,9 @@ import com.parkjin.github_bookmark.domain.model.User
 
 interface BookmarkUserRepository {
 
-    suspend fun getUsers(name: String): List<User>
+    fun getUsers(name: String): List<User>
 
-    suspend fun bookmarkUser(user: User)
+    fun bookmarkUser(user: User)
 
-    suspend fun unBookmarkUser(user: User)
+    fun unBookmarkUser(user: User)
 }

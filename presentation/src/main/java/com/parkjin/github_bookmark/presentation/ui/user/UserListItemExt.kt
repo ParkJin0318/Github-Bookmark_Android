@@ -16,13 +16,17 @@ fun List<User>.toUserListItems(bookmarkUser: (UserListItem.UserItem) -> Unit): L
         .forEach { (header, users) ->
             userListItems.add(UserListItem.UserHeader(header))
             userListItems.addAll(users.map {
-                UserListItem.UserItem(it, it.bookmarked, bookmarkUser::invoke)
+                UserListItem.UserItem(it, bookmarkUser::invoke)
             })
         }
     return userListItems
 }
 
-fun MutableList<UserListItem>.replaceUserItem(position: Int, item: UserListItem.UserItem) {
+fun MutableList<UserListItem>.replaceUserItem(item: UserListItem.UserItem) {
+    val position = this.indexOfFirst {
+        if (it is UserListItem.UserItem) it.user.name == item.user.name
+        else false
+    }.takeIf { it != -1 } ?: return
     this[position] = item
 }
 
@@ -36,7 +40,11 @@ fun MutableList<UserListItem>.addUserItem(item: UserListItem.UserItem) {
 }
 
 fun MutableList<UserListItem>.removeUserItem(item: UserListItem.UserItem) {
-    this.remove(item)
+    val position = this.indexOfFirst {
+        if (it is UserListItem.UserItem) it.user.name == item.user.name
+        else false
+    }.takeIf { it != -1 } ?: return
+    this.removeAt(position)
 
     this.toUserItems()
         .find { it.user.header == item.user.header }

@@ -48,7 +48,7 @@ class UserListAdapter : ListAdapter<UserListItem, UserListViewHolder>(DiffItemCa
             val isSameUser = oldItem is UserListItem.UserItem
                     && newItem is UserListItem.UserItem
                     && oldItem.user.name == newItem.user.name
-                    && oldItem.bookmarked == newItem.bookmarked
+                    && oldItem.user.bookmarked == newItem.user.bookmarked
 
             val isSameLoading = oldItem is UserListItem.Loading
                     && newItem is UserListItem.Loading

@@ -6,6 +6,7 @@ import com.parkjin.github_bookmark.domain.repository.GithubUserRepository
 import kotlinx.coroutines.Dispatchers
 import com.parkjin.github_bookmark.domain.model.Result
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.withContext
 
 class GetGithubUsersUseCase(
     private val githubUserRepository: GithubUserRepository,
@@ -16,23 +17,21 @@ class GetGithubUsersUseCase(
         emit(Result.Loading)
 
         try {
-            val users = flow<List<User>> { githubUserRepository.getUsers(name) }
-                .flowOn(Dispatchers.IO)
-                .zip(
-                    flow<List<User>> { bookmarkUserRepository.getUsers(name) }
-                        .flowOn(Dispatchers.IO)
-                ) { githubUsers, bookmarkUsers ->
-                    Result.Success(
-                        githubUsers.map { user ->
-                            val bookmarked = bookmarkUsers.map { it.name }.contains(user.name)
-                            user.copy(bookmarked = bookmarked)
-                        }
-                    )
-                }.flowOn(Dispatchers.Default)
+            val githubUsers = withContext(Dispatchers.IO) {
+                githubUserRepository.getUsers(name)
+            }
+            val bookmarkUsers = withContext(Dispatchers.IO) {
+                bookmarkUserRepository.getUsers(name)
+            }
 
-            emitAll(users)
+            val result = githubUsers.map { user ->
+                val bookmarked = bookmarkUsers.map { it.name }.contains(user.name)
+                user.copy(bookmarked = bookmarked)
+            }
+
+            emit(Result.Success(result))
         } catch (e: Exception) {
             emit(Result.Failure(e))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 }

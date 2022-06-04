@@ -4,9 +4,9 @@ import com.parkjin.github_bookmark.data.model.BookmarkUser
 
 interface BookmarkUserDataSource {
 
-    suspend fun getUsers(name: String): List<BookmarkUser>
+    fun getUsers(name: String): List<BookmarkUser>
 
-    suspend fun bookmarkUser(user: BookmarkUser)
+    fun bookmarkUser(user: BookmarkUser)
 
-    suspend fun unBookmarkUser(user: BookmarkUser)
+    fun unBookmarkUser(user: BookmarkUser)
 }

@@ -8,8 +8,7 @@ sealed class UserListItem(val orderName: String?) {
 
     data class UserItem (
         val user: User,
-        val bookmarked: Boolean = user.bookmarked,
-        val bookmarkUser: (UserItem) -> Unit
+        val toggleBookmark: (UserItem) -> Unit
     ) : UserListItem(user.header)
 
     object Loading : UserListItem(null)
