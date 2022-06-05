@@ -5,9 +5,9 @@ import android.os.Parcelable
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.parkjin.github_bookmark.presentation.R
 import com.parkjin.github_bookmark.presentation.core.BindingFragment
-import com.parkjin.github_bookmark.presentation.core.EventObserver
 import com.parkjin.github_bookmark.presentation.databinding.FragmentUserBinding
 import com.parkjin.github_bookmark.presentation.extension.showToast
 import com.parkjin.github_bookmark.presentation.ui.main.MainTabType
@@ -42,13 +42,18 @@ class UserListFragment : BindingFragment<FragmentUserBinding>(R.layout.fragment_
     }
 
     override fun observeLiveData() {
-        with(viewModel) {
-            submit.observe(this@UserListFragment) { users ->
-                users.toList().let(adapter::submitList)
-            }
-            onErrorEvent.observe(this@UserListFragment, EventObserver {
-                context?.showToast(it.message)
-            })
+        lifecycleScope.launchWhenStarted {
+            viewModel.userListItems
+                .collect {
+                    adapter.submitList(it)
+                }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.onErrorEvent
+                .collect {
+                    context?.showToast(it.message)
+                }
         }
     }
 

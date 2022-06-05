@@ -24,14 +24,14 @@ class GetGithubUsersUseCase(
                 bookmarkUserRepository.getUsers(name)
             }
 
-            val result = githubUsers.map { user ->
-                val bookmarked = bookmarkUsers.map { it.name }.contains(user.name)
-                user.copy(bookmarked = bookmarked)
-            }
-
-            emit(Result.Success(result))
+            emit(Result.Success(githubUsers.filteringBookmark(bookmarkUsers)))
         } catch (e: Exception) {
             emit(Result.Failure(e))
         }
     }.flowOn(Dispatchers.IO)
+
+    private fun List<User>.filteringBookmark(bookmarkUsers: List<User>) = this.map { user ->
+        val bookmarked = bookmarkUsers.map { it.name }.contains(user.name)
+        user.copy(bookmarked = bookmarked)
+    }
 }

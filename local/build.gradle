@@ -32,6 +32,6 @@ dependencies {
     implementation project(':data')
 
     // Room
-    implementation ("androidx.room:room-runtime:$rootProject.roomVersion")
-    kapt ("androidx.room:room-compiler:$rootProject.roomVersion")
+    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
+    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
 }

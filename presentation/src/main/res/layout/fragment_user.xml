@@ -26,7 +26,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:onSearchClick="@{() -> viewModel.onClickSearch()}"
-            app:text="@={viewModel.inputKeyword}"
+            app:text="@={viewModel.name}"
             />
 
         <androidx.recyclerview.widget.RecyclerView

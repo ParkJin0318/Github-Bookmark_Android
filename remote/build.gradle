@@ -33,9 +33,6 @@ android {
 dependencies {
     implementation project(':data')
 
-    // Okhttp
-    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp3Version"
-
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit2Version"
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit2Version"

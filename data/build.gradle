@@ -10,7 +10,4 @@ java {
 
 dependencies {
     implementation project(':domain')
-
-    // Coroutine
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutineVersion"
 }
