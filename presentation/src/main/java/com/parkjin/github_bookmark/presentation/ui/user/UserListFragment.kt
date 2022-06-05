@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.parkjin.github_bookmark.presentation.R
@@ -11,6 +12,7 @@ import com.parkjin.github_bookmark.presentation.core.BindingFragment
 import com.parkjin.github_bookmark.presentation.databinding.FragmentUserBinding
 import com.parkjin.github_bookmark.presentation.extension.showToast
 import com.parkjin.github_bookmark.presentation.ui.main.MainTabType
+import com.parkjin.github_bookmark.presentation.ui.main.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.parcelize.Parcelize
 
@@ -28,6 +30,7 @@ class UserListFragment : BindingFragment<FragmentUserBinding>(R.layout.fragment_
     }
 
     private val viewModel: UserListViewModel by viewModels()
+    private val shared: MainViewModel by activityViewModels()
 
     private val adapter: UserListAdapter by lazy { UserListAdapter() }
 
@@ -38,27 +41,42 @@ class UserListFragment : BindingFragment<FragmentUserBinding>(R.layout.fragment_
         binding.viewModel = viewModel
         binding.adapter = adapter
 
-        viewModel.initUserType(argument.type)
+        viewModel.setTabType(argument.type)
     }
 
-    override fun observeLiveData() {
+    override fun observeState() {
         lifecycleScope.launchWhenStarted {
             viewModel.userListItems
-                .collect {
-                    adapter.submitList(it)
+                .collect { userListItems ->
+                    adapter.submitList(userListItems)
                 }
         }
 
         lifecycleScope.launchWhenStarted {
             viewModel.onErrorEvent
-                .collect {
-                    context?.showToast(it.message)
+                .collect { throwable ->
+                    context?.showToast(throwable.message)
+                }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.toggleBookmark
+                .collect { (tabType, userItem) ->
+                    shared.toggleBookmark(tabType, userItem)
+                }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            shared.bookmarkedUser
+                .collect { (tabType, userItem) ->
+                    when (tabType) {
+                        MainTabType.GITHUB -> viewModel.bookmarkedUserForGithubTab(userItem)
+                        MainTabType.BOOKMARK -> viewModel.bookmarkedUserForBookmarkTab(userItem)
+                    }
                 }
         }
     }
 
     @Parcelize
-    data class Argument(
-        val type: MainTabType
-    ) : Parcelable
+    data class Argument(val type: MainTabType) : Parcelable
 }

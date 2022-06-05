@@ -16,7 +16,7 @@ abstract class BindingFragment<VB : ViewDataBinding>(
     private var _binding: VB? = null
     val binding get() = _binding!!
 
-    abstract fun observeLiveData()
+    abstract fun observeState()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,7 +31,7 @@ abstract class BindingFragment<VB : ViewDataBinding>(
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this
         binding.executePendingBindings()
-        observeLiveData()
+        observeState()
     }
 
     override fun onDestroyView() {
