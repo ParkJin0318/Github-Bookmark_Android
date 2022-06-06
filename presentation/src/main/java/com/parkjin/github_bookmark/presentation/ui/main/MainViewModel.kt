@@ -6,10 +6,7 @@ import com.parkjin.github_bookmark.domain.model.Result
 import com.parkjin.github_bookmark.domain.usecase.BookmarkUserUseCase
 import com.parkjin.github_bookmark.presentation.ui.user.UserListItem
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel

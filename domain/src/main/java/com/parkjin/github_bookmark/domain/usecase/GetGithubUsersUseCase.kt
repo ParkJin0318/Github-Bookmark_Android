@@ -5,8 +5,9 @@ import com.parkjin.github_bookmark.domain.repository.BookmarkUserRepository
 import com.parkjin.github_bookmark.domain.repository.GithubUserRepository
 import kotlinx.coroutines.Dispatchers
 import com.parkjin.github_bookmark.domain.model.Result
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.withContext
 
 class GetGithubUsersUseCase(
     private val githubUserRepository: GithubUserRepository,
@@ -17,21 +18,26 @@ class GetGithubUsersUseCase(
         emit(Result.Loading)
 
         try {
-            val githubUsers = withContext(Dispatchers.IO) {
+            val asyncGithubUsers = CoroutineScope(Dispatchers.IO).async {
                 githubUserRepository.getUsers(name)
             }
-            val bookmarkUsers = withContext(Dispatchers.IO) {
+            val asyncBookmarkUsers = CoroutineScope(Dispatchers.IO).async {
                 bookmarkUserRepository.getUsers(name)
             }
 
-            emit(Result.Success(githubUsers.filteringBookmark(bookmarkUsers)))
+            val filteringUsers = CoroutineScope(Dispatchers.Default).async {
+                val githubUsers = asyncGithubUsers.await()
+                val bookmarkUsers = asyncBookmarkUsers.await()
+
+                githubUsers.map { user ->
+                    val bookmarked = bookmarkUsers.map { it.name }.contains(user.name)
+                    user.copy(bookmarked = bookmarked)
+                }
+            }
+
+            emit(Result.Success(filteringUsers.await()))
         } catch (e: Exception) {
             emit(Result.Failure(e))
         }
     }.flowOn(Dispatchers.IO)
-
-    private fun List<User>.filteringBookmark(bookmarkUsers: List<User>) = this.map { user ->
-        val bookmarked = bookmarkUsers.map { it.name }.contains(user.name)
-        user.copy(bookmarked = bookmarked)
-    }
 }
