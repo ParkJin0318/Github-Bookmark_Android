@@ -7,7 +7,6 @@ import com.parkjin.github_bookmark.domain.usecase.GetBookmarkUsersUseCase
 import com.parkjin.github_bookmark.domain.usecase.GetGithubUsersUseCase
 import com.parkjin.github_bookmark.presentation.ui.main.MainTabType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,12 +33,6 @@ class UserListViewModel @Inject constructor(
 
     private var currentTabType = MainTabType.GITHUB
 
-    fun onChangedScrollY(y: Int) {
-        viewModelScope.launch {
-            _isVisibleInput.emit(y <= 0)
-        }
-    }
-
     fun setTabType(type: MainTabType) {
         currentTabType = type
         if (type == MainTabType.BOOKMARK) loadUsers()
@@ -47,6 +40,12 @@ class UserListViewModel @Inject constructor(
 
     fun onClickSearch() {
         loadUsers(name.value)
+    }
+
+    fun onInputVisible(isVisible: Boolean) {
+        viewModelScope.launch {
+            _isVisibleInput.emit(isVisible)
+        }
     }
 
     fun bookmarkedUserForGithubTab(item: UserListItem.UserItem) {

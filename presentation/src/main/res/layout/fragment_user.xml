@@ -7,6 +7,19 @@
         <variable
             name="viewModel"
             type="com.parkjin.github_bookmark.presentation.ui.user.UserListViewModel" />
+
+        <variable
+            name="adapter"
+            type="androidx.recyclerview.widget.ListAdapter" />
+
+        <variable
+            name="itemDecoration"
+            type="androidx.recyclerview.widget.RecyclerView.ItemDecoration" />
+
+        <variable
+            name="scrollListener"
+            type="androidx.recyclerview.widget.RecyclerView.OnScrollListener"
+            />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,6 +44,10 @@
             android:layout_height="0dp"
             android:overScrollMode="never"
             android:scrollbars="none"
+            app:adapter="@{adapter}"
+            app:itemDecoration="@{itemDecoration}"
+            app:onScrolled="@{scrollListener}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

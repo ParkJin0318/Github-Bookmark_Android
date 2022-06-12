@@ -7,7 +7,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.parkjin.github_bookmark.presentation.R
 import com.parkjin.github_bookmark.presentation.core.BindingFragment
@@ -43,17 +42,13 @@ class UserListFragment : BindingFragment<FragmentUserBinding>(R.layout.fragment_
         val argument = arguments?.getParcelable<Argument>(ARGUMENT_KEY) ?: return
 
         binding.viewModel = viewModel
-
-        val layoutManager = LinearLayoutManager(view.context)
-
-        binding.list.addItemDecoration(UserListItemDecoration(view.context))
-        binding.list.layoutManager = layoutManager
-        binding.list.adapter = adapter
-        binding.list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding.adapter = adapter
+        binding.itemDecoration = UserListItemDecoration(view.context)
+        binding.scrollListener = object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                viewModel.onChangedScrollY(dy)
+                viewModel.onInputVisible(dy <= 0)
             }
-        })
+        }
 
         viewModel.setTabType(argument.type)
     }
