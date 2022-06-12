@@ -3,10 +3,10 @@ package com.parkjin.github_bookmark.presentation.ui.user
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.parkjin.github_bookmark.presentation.extension.setLayoutParams
 import com.parkjin.github_bookmark.component.header.HeaderView
 import com.parkjin.github_bookmark.component.loading.LoadingView
 import com.parkjin.github_bookmark.component.user.UserItemView
+import com.parkjin.github_bookmark.presentation.extension.setLayoutParams
 
 sealed class UserListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 

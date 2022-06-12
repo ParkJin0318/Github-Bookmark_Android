@@ -2,13 +2,8 @@ package com.parkjin.github_bookmark.presentation.ui.user
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.View
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
-import android.view.animation.TranslateAnimation
 import androidx.core.os.bundleOf
-import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -20,10 +15,9 @@ import com.parkjin.github_bookmark.presentation.databinding.FragmentUserBinding
 import com.parkjin.github_bookmark.presentation.extension.showToast
 import com.parkjin.github_bookmark.presentation.ui.main.MainTabType
 import com.parkjin.github_bookmark.presentation.ui.main.MainViewModel
+import com.parkjin.github_bookmark.presentation.util.AnimationUtil.setExpandAnimation
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 
 @AndroidEntryPoint
@@ -67,20 +61,10 @@ class UserListFragment : BindingFragment<FragmentUserBinding>(R.layout.fragment_
     override fun observeState() {
         lifecycleScope.launchWhenStarted {
             viewModel.isVisibleInput
-                .debounce(350)
-                .collect {
-                    if (it) {
-                        val animation = TranslateAnimation(0f, 0f, 15f, 0f)
-                        animation.duration = 150
-                        binding.inputField.isVisible = true
-                        binding.inputField.animation = animation
-                    } else {
-                        val animation = TranslateAnimation(0f, 0f, 0f, 15f)
-                        animation.duration = 150
-                        binding.inputField.isVisible = false
-                        binding.inputField.animation = animation
-                    }
-
+                .debounce(500)
+                .distinctUntilChanged()
+                .collect { isVisible ->
+                    binding.inputField.setExpandAnimation(isExpand = isVisible)
                 }
         }
 
