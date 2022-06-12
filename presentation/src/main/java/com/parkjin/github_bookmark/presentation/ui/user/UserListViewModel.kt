@@ -7,6 +7,7 @@ import com.parkjin.github_bookmark.domain.usecase.GetBookmarkUsersUseCase
 import com.parkjin.github_bookmark.domain.usecase.GetGithubUsersUseCase
 import com.parkjin.github_bookmark.presentation.ui.main.MainTabType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,9 +27,18 @@ class UserListViewModel @Inject constructor(
     private val _onErrorEvent = MutableSharedFlow<Throwable>()
     val onErrorEvent = _onErrorEvent.asSharedFlow()
 
+    private val _isVisibleInput = MutableStateFlow<Boolean>(true)
+    val isVisibleInput = _isVisibleInput.asStateFlow()
+
     val name = MutableStateFlow("")
 
     private var currentTabType = MainTabType.GITHUB
+
+    fun onChangedScrollY(y: Int) {
+        viewModelScope.launch {
+            _isVisibleInput.emit(y <= 0)
+        }
+    }
 
     fun setTabType(type: MainTabType) {
         currentTabType = type
