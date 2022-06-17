@@ -46,7 +46,7 @@ class UserListFragment : BindingFragment<FragmentUserBinding>(R.layout.fragment_
         binding.itemDecoration = UserListItemDecoration(view.context)
         binding.scrollListener = object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                viewModel.onInputVisible(dy <= 0)
+                viewModel.onInputVisible(dy)
             }
         }
 
@@ -55,9 +55,11 @@ class UserListFragment : BindingFragment<FragmentUserBinding>(R.layout.fragment_
 
     override fun observeState() {
         lifecycleScope.launchWhenStarted {
-            viewModel.isVisibleInput
-                .debounce(500)
+            viewModel.isExpandedInput
+                .filter { it !in 30 downTo -30 }
+                .map { it <= 0 }
                 .distinctUntilChanged()
+                .debounce(100)
                 .collect { isVisible ->
                     binding.inputField.setExpandAnimation(isExpand = isVisible)
                 }

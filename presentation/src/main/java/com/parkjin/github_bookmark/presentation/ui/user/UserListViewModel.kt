@@ -26,8 +26,8 @@ class UserListViewModel @Inject constructor(
     private val _onErrorEvent = MutableSharedFlow<Throwable>()
     val onErrorEvent = _onErrorEvent.asSharedFlow()
 
-    private val _isVisibleInput = MutableStateFlow<Boolean>(true)
-    val isVisibleInput = _isVisibleInput.asStateFlow()
+    private val _isExpandedInput = MutableStateFlow(0)
+    val isExpandedInput = _isExpandedInput.asStateFlow()
 
     val name = MutableStateFlow("")
 
@@ -42,9 +42,9 @@ class UserListViewModel @Inject constructor(
         loadUsers(name.value)
     }
 
-    fun onInputVisible(isVisible: Boolean) {
+    fun onInputVisible(y: Int) {
         viewModelScope.launch {
-            _isVisibleInput.emit(isVisible)
+            _isExpandedInput.emit(y)
         }
     }
 

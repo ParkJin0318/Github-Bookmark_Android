@@ -25,7 +25,7 @@ object AnimationUtil {
                 interpolatedTime: Float,
                 transformation: Transformation?
             ) {
-                if (interpolatedTime <= 0.1) {
+                if (interpolatedTime <= 0.01) {
                     visibility = View.VISIBLE
                 } else {
                     layoutParams.height = (targetHeight * interpolatedTime).toInt()
@@ -43,7 +43,7 @@ object AnimationUtil {
                 interpolatedTime: Float,
                 t: Transformation?
             ) {
-                if (interpolatedTime >= 0.9) {
+                if (interpolatedTime >= 1) {
                     visibility = View.GONE
                 } else {
                     layoutParams.height = targetHeight - (targetHeight * interpolatedTime).toInt()
