@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserListViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val getGithubUsersUseCase: GetGithubUsersUseCase,
     private val getBookmarkUsersUseCase: GetBookmarkUsersUseCase
 ) : ViewModel() {
@@ -30,9 +30,13 @@ class UserListViewModel @Inject constructor(
 
     val name = MutableStateFlow("")
 
-    private var currentTabType: MainTabType = savedStateHandle
-        .get(MainTabType::class.java.name)
+    private val currentTabType = savedStateHandle.get(MainTabType::class.java.name)
         ?: MainTabType.GITHUB
+
+    init {
+        currentTabType.takeIf { it == MainTabType.BOOKMARK }
+            ?.let { loadUsers() }
+    }
 
     fun onClickSearch() {
         loadUsers(name.value)
