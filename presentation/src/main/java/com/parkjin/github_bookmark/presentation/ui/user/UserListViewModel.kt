@@ -1,5 +1,6 @@
 package com.parkjin.github_bookmark.presentation.ui.user
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.parkjin.github_bookmark.domain.model.Result
@@ -13,6 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserListViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val getGithubUsersUseCase: GetGithubUsersUseCase,
     private val getBookmarkUsersUseCase: GetBookmarkUsersUseCase
 ) : ViewModel() {
@@ -26,26 +28,14 @@ class UserListViewModel @Inject constructor(
     private val _onErrorEvent = MutableSharedFlow<Throwable>()
     val onErrorEvent = _onErrorEvent.asSharedFlow()
 
-    private val _isExpandedInput = MutableStateFlow(0)
-    val isExpandedInput = _isExpandedInput.asStateFlow()
-
     val name = MutableStateFlow("")
 
-    private var currentTabType = MainTabType.GITHUB
-
-    fun setTabType(type: MainTabType) {
-        currentTabType = type
-        if (type == MainTabType.BOOKMARK) loadUsers()
-    }
+    private var currentTabType: MainTabType = savedStateHandle
+        .get(MainTabType::class.java.name)
+        ?: MainTabType.GITHUB
 
     fun onClickSearch() {
         loadUsers(name.value)
-    }
-
-    fun onInputVisible(y: Int) {
-        viewModelScope.launch {
-            _isExpandedInput.emit(y)
-        }
     }
 
     fun bookmarkedUserForGithubTab(item: UserListItem.UserItem) {

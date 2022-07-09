@@ -10,16 +10,14 @@ import com.parkjin.github_bookmark.presentation.ui.user.UserListItemDecoration
 object RecyclerViewBinding {
 
     @JvmStatic
-    @BindingAdapter("adapter", "itemDecoration", "onScrolled")
+    @BindingAdapter("adapter", "itemDecoration")
     fun setList(
         view: RecyclerView,
         adapter: ListAdapter<*, *>?,
-        itemDecoration: RecyclerView.ItemDecoration?,
-        scrollListener: RecyclerView.OnScrollListener?
+        itemDecoration: RecyclerView.ItemDecoration?
     ) {
         if (view.adapter == null && adapter != null && itemDecoration != null) {
             view.addItemDecoration(UserListItemDecoration(view.context))
-            scrollListener?.let(view::addOnScrollListener)
             view.adapter = adapter
         }
     }

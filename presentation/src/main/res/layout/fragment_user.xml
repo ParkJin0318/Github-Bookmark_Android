@@ -15,11 +15,6 @@
         <variable
             name="itemDecoration"
             type="androidx.recyclerview.widget.RecyclerView.ItemDecoration" />
-
-        <variable
-            name="scrollListener"
-            type="androidx.recyclerview.widget.RecyclerView.OnScrollListener"
-            />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -46,7 +41,6 @@
             android:scrollbars="none"
             app:adapter="@{adapter}"
             app:itemDecoration="@{itemDecoration}"
-            app:onScrolled="@{scrollListener}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -1,33 +1,26 @@
 package com.parkjin.github_bookmark.presentation.ui.user
 
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
 import com.parkjin.github_bookmark.presentation.R
 import com.parkjin.github_bookmark.presentation.core.BindingFragment
 import com.parkjin.github_bookmark.presentation.databinding.FragmentUserBinding
 import com.parkjin.github_bookmark.presentation.extension.showToast
 import com.parkjin.github_bookmark.presentation.ui.main.MainTabType
 import com.parkjin.github_bookmark.presentation.ui.main.MainViewModel
-import com.parkjin.github_bookmark.presentation.util.AnimationUtil.setExpandAnimation
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.*
-import kotlinx.parcelize.Parcelize
 
 @AndroidEntryPoint
 class UserListFragment : BindingFragment<FragmentUserBinding>(R.layout.fragment_user) {
 
     companion object {
-        private const val ARGUMENT_KEY = "ARGUMENT_KEY"
-
         fun newInstance(tabType: MainTabType) = UserListFragment().apply {
             this.arguments = bundleOf(
-                ARGUMENT_KEY to Argument(tabType)
+                MainTabType::class.java.name to tabType
             )
         }
     }
@@ -39,32 +32,12 @@ class UserListFragment : BindingFragment<FragmentUserBinding>(R.layout.fragment_
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val argument = arguments?.getParcelable<Argument>(ARGUMENT_KEY) ?: return
-
         binding.viewModel = viewModel
         binding.adapter = adapter
         binding.itemDecoration = UserListItemDecoration(view.context)
-        binding.scrollListener = object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                viewModel.onInputVisible(dy)
-            }
-        }
-
-        viewModel.setTabType(argument.type)
     }
 
     override fun observeState() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.isExpandedInput
-                .filter { it !in 30 downTo -30 }
-                .map { it <= 0 }
-                .distinctUntilChanged()
-                .debounce(100)
-                .collect { isVisible ->
-                    binding.inputField.setExpandAnimation(isExpand = isVisible)
-                }
-        }
-
         lifecycleScope.launchWhenStarted {
             viewModel.userListItems
                 .collect { userListItems ->
@@ -96,7 +69,4 @@ class UserListFragment : BindingFragment<FragmentUserBinding>(R.layout.fragment_
                 }
         }
     }
-
-    @Parcelize
-    data class Argument(val type: MainTabType) : Parcelable
 }
