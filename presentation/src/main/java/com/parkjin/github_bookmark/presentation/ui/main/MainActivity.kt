@@ -1,7 +1,6 @@
 package com.parkjin.github_bookmark.presentation.ui.main
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import com.google.android.material.tabs.TabLayoutMediator
 import com.parkjin.github_bookmark.presentation.R
 import com.parkjin.github_bookmark.presentation.core.BindingActivity
@@ -12,8 +11,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity: BindingActivity<ActivityMainBinding>(R.layout.activity_main) {
-
-    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

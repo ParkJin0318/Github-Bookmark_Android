@@ -39,24 +39,13 @@ class UserListFragment : BindingFragment<FragmentUserBinding>(R.layout.fragment_
 
     override fun observeState() {
         lifecycleScope.launchWhenStarted {
-            viewModel.userListItems
-                .collect { userListItems ->
-                    adapter.submitList(userListItems)
+            viewModel.state.collect { state ->
+                when (state) {
+                    is UserListState.UserList -> adapter.submitList(state.list)
+                    is UserListState.Bookmark -> shared.toggleBookmark(state.tabType, state.item)
+                    is UserListState.Message -> context?.showToast(state.message)
                 }
-        }
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.onErrorEvent
-                .collect { throwable ->
-                    context?.showToast(throwable.message)
-                }
-        }
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.toggleBookmark
-                .collect { (tabType, userItem) ->
-                    shared.toggleBookmark(tabType, userItem)
-                }
+            }
         }
 
         lifecycleScope.launchWhenStarted {

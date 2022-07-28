@@ -12,6 +12,12 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+sealed class UserListState {
+    data class UserList(val list: List<UserListItem>) : UserListState()
+    data class Bookmark(val tabType: MainTabType, val item: UserListItem.UserItem) : UserListState()
+    data class Message(val message: String?) : UserListState()
+}
+
 @HiltViewModel
 class UserListViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
@@ -19,16 +25,12 @@ class UserListViewModel @Inject constructor(
     private val getBookmarkUsersUseCase: GetBookmarkUsersUseCase
 ) : ViewModel() {
 
-    private val _userListItems = MutableStateFlow<List<UserListItem>>(emptyList())
-    val userListItems = _userListItems.asStateFlow()
-
-    private val _toggleBookmark = MutableSharedFlow<Pair<MainTabType, UserListItem.UserItem>>()
-    val toggleBookmark = _toggleBookmark.asSharedFlow()
-
-    private val _onErrorEvent = MutableSharedFlow<Throwable>()
-    val onErrorEvent = _onErrorEvent.asSharedFlow()
+    private val _state = MutableStateFlow<UserListState>(UserListState.UserList(emptyList()))
+    val state = _state.asStateFlow()
 
     val name = MutableStateFlow("")
+
+    private val userListItems = mutableListOf<UserListItem>()
 
     private val currentTabType = savedStateHandle.get(MainTabType::class.java.name)
         ?: MainTabType.GITHUB
@@ -43,14 +45,12 @@ class UserListViewModel @Inject constructor(
     }
 
     fun bookmarkedUserForGithubTab(item: UserListItem.UserItem) {
-        val userListItems = _userListItems.value.toMutableList()
-
         when (currentTabType) {
             MainTabType.GITHUB -> {
                 userListItems.replaceUserItem(item)
             }
             MainTabType.BOOKMARK -> {
-                userListItems.toUserItems()
+                userListItems.filterIsInstance<UserListItem.UserItem>()
                     .find { it.user.name == item.user.name }
                     ?.let { userListItems.removeUserItem(it) }
                     ?: let { userListItems.addUserItem(item) }
@@ -58,16 +58,14 @@ class UserListViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            _userListItems.emit(userListItems.toList())
+            _state.emit(UserListState.UserList(userListItems.toList()))
         }
     }
 
     fun bookmarkedUserForBookmarkTab(item: UserListItem.UserItem) {
-        val userListItems = _userListItems.value.toMutableList()
-
         when (currentTabType) {
             MainTabType.GITHUB -> {
-                userListItems.toUserItems()
+                userListItems.filterIsInstance<UserListItem.UserItem>()
                     .find { it.user.name == item.user.name }
                     ?.let { userListItems.replaceUserItem(item) }
             }
@@ -77,12 +75,11 @@ class UserListViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            _userListItems.emit(userListItems.toList())
+            _state.emit(UserListState.UserList(userListItems.toList()))
         }
     }
 
     private fun loadUsers(name: String = "") {
-        val userListItems = _userListItems.value.toMutableList()
         if (userListItems.lastOrNull() == UserListItem.Loading) return
 
         val users =
@@ -93,19 +90,19 @@ class UserListViewModel @Inject constructor(
             when (result) {
                 is Result.Loading -> {
                     userListItems.add(UserListItem.Loading)
-                    _userListItems.emit(userListItems.toList())
+                    _state.emit(UserListState.UserList(userListItems.toList()))
                 }
                 is Result.Success -> {
                     userListItems.clear()
                     userListItems.addAll(result.value.toUserListItems {
                         viewModelScope.launch {
-                            _toggleBookmark.emit(currentTabType to it)
+                            _state.emit(UserListState.Bookmark(currentTabType, it))
                         }
                     })
-                    _userListItems.emit(userListItems.toList())
+                    _state.emit(UserListState.UserList(userListItems.toList()))
                 }
                 is Result.Failure -> {
-                    _onErrorEvent.emit(result.throwable)
+                    _state.emit(UserListState.Message(result.throwable.message))
                 }
             }
         }.launchIn(viewModelScope)
