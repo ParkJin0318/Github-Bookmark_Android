@@ -3,6 +3,7 @@ package com.parkjin.github_bookmark.component.user
 import android.content.Context
 import android.content.res.ColorStateList
 import android.util.AttributeSet
+import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -10,6 +11,7 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.parkjin.github_bookmark.component.R
+import com.parkjin.github_bookmark.component.extension.setLayoutParams
 
 class UserItemView @JvmOverloads constructor(
     context: Context,
@@ -42,6 +44,8 @@ class UserItemView @JvmOverloads constructor(
 
     init {
         inflate(context, R.layout.view_user_item, this)
+        setLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+
         imgUser = findViewById(R.id.img_user)
         txtName = findViewById(R.id.txt_name)
         imgStarred = findViewById(R.id.img_starred)

@@ -13,7 +13,7 @@ class UserListAdapter : ListAdapter<UserListModel, UserListViewHolder>(DiffItemC
     override fun getItemViewType(position: Int) = when (getItem(position)) {
         is UserListModel.Header -> R.layout.view_header
         is UserListModel.Item -> R.layout.view_user_item
-        is UserListModel.Loading -> R.layout.view_loading
+        else -> R.layout.view_loading
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserListViewHolder =

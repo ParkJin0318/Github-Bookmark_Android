@@ -1,23 +1,14 @@
 package com.parkjin.github_bookmark.presentation.ui.common
 
 import android.view.View
-import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.parkjin.github_bookmark.component.header.HeaderView
 import com.parkjin.github_bookmark.component.loading.LoadingView
 import com.parkjin.github_bookmark.component.user.UserItemView
-import com.parkjin.github_bookmark.presentation.extension.setLayoutParams
 
 sealed class UserListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     class UserHeaderViewHolder(private val view: HeaderView) : UserListViewHolder(view) {
-
-        init {
-            view.setLayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-        }
 
         fun bind(item: UserListModel.Header) {
             view.text = item.header
@@ -28,17 +19,11 @@ sealed class UserListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val view: UserItemView
     ) : UserListViewHolder(view) {
 
-        init {
-            view.setLayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-        }
-
         fun bind(item: UserListModel.Item) {
             view.name = item.user.name
             view.imgUrl = item.user.profileImageUrl
             view.starred = item.user.bookmarked
+
             view.setOnStarredClick {
                 val newUser = item.user.copy(bookmarked = it)
                 item.toggleBookmark(item.copy(user = newUser))
@@ -46,14 +31,8 @@ sealed class UserListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
     }
 
-    class LoadingViewHolder(private val view: LoadingView) : UserListViewHolder(view) {
-
-        init {
-            view.setLayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-        }
-    }
+    class LoadingViewHolder(
+        private val view: LoadingView
+    ) : UserListViewHolder(view)
 
 }
