@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout"
+    tools:parentTag="androidx.cardview.widget.CardView"
     >
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="@dimen/spacing20"
-        android:layout_marginVertical="@dimen/spacing4"
+        android:layout_marginTop="@dimen/spacing8"
+        android:layout_marginBottom="@dimen/spacing2"
         android:maxLength="1"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/txt_title"
-        style="@style/TextAppearance.Component.Headline6"
+        style="@style/TextAppearance.Component.Title2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/spacing16"

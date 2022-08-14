@@ -4,33 +4,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout"
+    tools:parentTag="androidx.cardview.widget.CardView"
     >
 
-    <androidx.appcompat.widget.AppCompatEditText
-        style="@style/TextAppearance.Component.Subtitle1"
-        android:id="@+id/txt_input"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginStart="@dimen/spacing12"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/img_search"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/img_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/spacing4"
-        android:layout_marginEnd="@dimen/spacing12"
-        android:layout_marginVertical="@dimen/spacing12"
-        android:src="@drawable/ic_search"
-        app:layout_constraintStart_toEndOf="@id/txt_input"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing12"
+            android:layout_marginVertical="@dimen/spacing12"
+            android:src="@drawable/ic_search"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/txt_input"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/dark_gray"
+            />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/txt_input"
+            style="@style/TextAppearance.Component.Body1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing8"
+            android:layout_marginEnd="@dimen/spacing12"
+            android:layout_weight="1"
+            android:background="@null"
+            android:textColor="@color/dark_gray"
+            android:textColorHint="@color/dark_gray"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
+            app:layout_constraintBottom_toBottomOf="@id/img_search"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/img_search"
+            app:layout_constraintTop_toTopOf="@id/img_search"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </merge>

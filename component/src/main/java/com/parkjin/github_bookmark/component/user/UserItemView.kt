@@ -70,7 +70,7 @@ class UserItemView @JvmOverloads constructor(
     }
 
     private fun setStarredImage(starred: Boolean) {
-        val color = ContextCompat.getColor(context, if (starred) R.color.yellow else R.color.gray)
+        val color = ContextCompat.getColor(context, if (starred) R.color.blue else R.color.gray)
         imgStarred.imageTintList = ColorStateList.valueOf(color)
     }
 }

@@ -45,7 +45,7 @@ class BookmarkUserListFragment : Fragment() {
         binding.list.adapter = UserListAdapter().also { adapter = it }
         binding.list.addItemDecoration(UserListItemDecoration(requireContext()))
 
-        binding.inputField.onSearchClick {
+        binding.inputField.onSearchAction {
             viewModel.setAction(BookmarkUserListViewModel.Action.SearchUserList(it))
         }
     }
