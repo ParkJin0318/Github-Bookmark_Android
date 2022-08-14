@@ -25,6 +25,7 @@ class BookmarkUserListViewModel @Inject constructor(
 
     sealed class Action {
         data class SearchUserList(val name: String) : Action()
+        data class BookmarkUser(val user: User) : Action()
     }
 
     data class State(
@@ -54,6 +55,9 @@ class BookmarkUserListViewModel @Inject constructor(
         when (action) {
             is Action.SearchUserList -> {
                 loadGithubUsers(action.name)
+            }
+            is Action.BookmarkUser -> {
+                bookmarkUser(action.user)
             }
         }
     }
@@ -92,9 +96,9 @@ class BookmarkUserListViewModel @Inject constructor(
                             UserListModel.Header(header)
                                 .let(userListModels::add)
 
-                            users.map {
-                                UserListModel.Item(it) { model ->
-                                    bookmarkUser(model.user)
+                            users.map { user ->
+                                UserListModel.Item(user) {
+                                    setAction(Action.BookmarkUser(it.user))
                                 }
                             }.let(userListModels::addAll)
                         }
@@ -143,7 +147,7 @@ class BookmarkUserListViewModel @Inject constructor(
             }
 
             UserListModel.Item(user) { model ->
-                bookmarkUser(model.user)
+                setAction(Action.BookmarkUser(model.user))
             }.let(userListModels::add)
 
             userListModels.sortBy { it.orderName }
