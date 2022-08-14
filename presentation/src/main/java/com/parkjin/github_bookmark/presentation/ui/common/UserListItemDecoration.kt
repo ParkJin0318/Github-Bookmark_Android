@@ -1,4 +1,4 @@
-package com.parkjin.github_bookmark.presentation.ui.user
+package com.parkjin.github_bookmark.presentation.ui.common
 
 import android.content.Context
 import android.graphics.Rect

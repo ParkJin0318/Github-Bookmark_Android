@@ -1,4 +1,4 @@
-package com.parkjin.github_bookmark.presentation.ui.user
+package com.parkjin.github_bookmark.presentation.ui.common
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -8,12 +8,12 @@ import com.parkjin.github_bookmark.component.loading.LoadingView
 import com.parkjin.github_bookmark.component.user.UserItemView
 import com.parkjin.github_bookmark.presentation.R
 
-class UserListAdapter : ListAdapter<UserListItem, UserListViewHolder>(DiffItemCallback()) {
+class UserListAdapter : ListAdapter<UserListModel, UserListViewHolder>(DiffItemCallback()) {
 
     override fun getItemViewType(position: Int) = when (getItem(position)) {
-        is UserListItem.UserHeader -> R.layout.view_header
-        is UserListItem.UserItem -> R.layout.view_user_item
-        is UserListItem.Loading -> R.layout.view_loading
+        is UserListModel.Header -> R.layout.view_header
+        is UserListModel.Item -> R.layout.view_user_item
+        is UserListModel.Loading -> R.layout.view_loading
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserListViewHolder =
@@ -31,35 +31,35 @@ class UserListAdapter : ListAdapter<UserListItem, UserListViewHolder>(DiffItemCa
 
         when (holder) {
             is UserListViewHolder.UserHeaderViewHolder ->
-                holder.bind(item as UserListItem.UserHeader)
+                holder.bind(item as UserListModel.Header)
             is UserListViewHolder.UserItemViewHolder ->
-                holder.bind(item as UserListItem.UserItem)
+                holder.bind(item as UserListModel.Item)
             else -> return
         }
     }
 
-    private class DiffItemCallback : DiffUtil.ItemCallback<UserListItem>() {
+    private class DiffItemCallback : DiffUtil.ItemCallback<UserListModel>() {
 
-        override fun areItemsTheSame(oldItem: UserListItem, newItem: UserListItem): Boolean {
-            val isSameHeader = oldItem is UserListItem.UserHeader
-                    && newItem is UserListItem.UserHeader
+        override fun areItemsTheSame(oldItem: UserListModel, newItem: UserListModel): Boolean {
+            val isSameHeader = oldItem is UserListModel.Header
+                    && newItem is UserListModel.Header
                     && oldItem.header == newItem.header
 
-            val isSameUser = oldItem is UserListItem.UserItem
-                    && newItem is UserListItem.UserItem
+            val isSameUser = oldItem is UserListModel.Item
+                    && newItem is UserListModel.Item
                     && oldItem.user.name == newItem.user.name
                     && oldItem.user.bookmarked == newItem.user.bookmarked
 
-            val isSameLoading = oldItem is UserListItem.Loading
-                    && newItem is UserListItem.Loading
+            val isSameLoading = oldItem is UserListModel.Loading
+                    && newItem is UserListModel.Loading
                     && oldItem == newItem
 
             return isSameHeader || isSameUser || isSameLoading
         }
 
         override fun areContentsTheSame(
-            oldItem: UserListItem,
-            newItem: UserListItem
+            oldItem: UserListModel,
+            newItem: UserListModel
         ) = oldItem == newItem
     }
 }

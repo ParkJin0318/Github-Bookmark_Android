@@ -17,7 +17,7 @@ buildscript {
         okhttp3Version = '4.9.1'
         retrofit2Version = '2.9.0'
 
-        roomVersion = '2.4.2'
+        roomVersion = '2.4.3'
 
         glideVersion = '4.12.0'
 

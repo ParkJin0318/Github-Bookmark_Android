@@ -1,4 +1,4 @@
-package com.parkjin.github_bookmark.presentation.ui.user
+package com.parkjin.github_bookmark.presentation.ui.common
 
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +19,7 @@ sealed class UserListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             )
         }
 
-        fun bind(item: UserListItem.UserHeader) {
+        fun bind(item: UserListModel.Header) {
             view.text = item.header
         }
     }
@@ -35,7 +35,7 @@ sealed class UserListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             )
         }
 
-        fun bind(item: UserListItem.UserItem) {
+        fun bind(item: UserListModel.Item) {
             view.name = item.user.name
             view.imgUrl = item.user.profileImageUrl
             view.starred = item.user.bookmarked

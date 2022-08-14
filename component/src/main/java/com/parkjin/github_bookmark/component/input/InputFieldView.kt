@@ -1,12 +1,10 @@
 package com.parkjin.github_bookmark.component.input
 
 import android.content.Context
-import android.text.Editable
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.widget.doAfterTextChanged
 import com.parkjin.github_bookmark.component.R
 
 class InputFieldView @JvmOverloads constructor(
@@ -32,11 +30,7 @@ class InputFieldView @JvmOverloads constructor(
         txtInput.setHint(R.string.input_field_hint)
     }
 
-    fun onTextChanged(action: (Editable?) -> Unit) {
-        txtInput.doAfterTextChanged(action::invoke)
-    }
-
-    fun onSearchClick(action: () -> Unit) {
-        imgSearch.setOnClickListener { action.invoke() }
+    fun onSearchClick(action: (String) -> Unit) {
+        imgSearch.setOnClickListener { action.invoke(text.toString()) }
     }
 }
