@@ -10,6 +10,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -18,21 +19,25 @@ object UseCaseModule {
     @Singleton
     @Provides
     fun provideBookmarkUserUseCase(
+        @IoDispatcher dispatcher: CoroutineDispatcher,
         repository: BookmarkUserRepository
-    ) = BookmarkUserUseCase(repository)
+    ) = BookmarkUserUseCase(dispatcher, repository)
 
     @Singleton
     @Provides
     fun provideGetBookmarkUsersUseCase(
+        @IoDispatcher dispatcher: CoroutineDispatcher,
         repository: BookmarkUserRepository
-    ) = GetBookmarkUsersUseCase(repository)
+    ) = GetBookmarkUsersUseCase(dispatcher, repository)
 
     @Singleton
     @Provides
     fun provideGetGithubUsersUseCase(
+        @IoDispatcher dispatcher: CoroutineDispatcher,
         githubUserRepository: GithubUserRepository,
         bookmarkUserRepository: BookmarkUserRepository
     ) = GetGithubUsersUseCase(
+        dispatcher,
         githubUserRepository,
         bookmarkUserRepository
     )

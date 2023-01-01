@@ -6,7 +6,7 @@ sealed class UserListModel(val orderName: String?) {
 
     data class Header(val header: String) : UserListModel(header)
 
-    data class Item (
+    data class Item(
         val user: User,
         val toggleBookmark: (Item) -> Unit
     ) : UserListModel(user.header)

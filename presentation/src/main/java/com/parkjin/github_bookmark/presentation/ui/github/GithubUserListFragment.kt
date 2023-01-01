@@ -42,6 +42,8 @@ class GithubUserListFragment : Fragment() {
     }
 
     private fun initializeView() {
+        binding.list.setHasFixedSize(true)
+        binding.list.itemAnimator = null
         binding.list.adapter = UserListAdapter().also { adapter = it }
         binding.list.addItemDecoration(UserListItemDecoration(requireContext()))
 
