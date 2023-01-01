@@ -78,28 +78,26 @@ class BookmarkUserListViewModel @Inject constructor(
 
     private fun loadGithubUsers(name: String = "") {
         val userListModels = currentState.userListModels.toMutableList()
-        if (userListModels.lastOrNull() == UserListModel.Loading) return
+        if (userListModels.lastOrNull() == UserListModel.LoadingModel) return
 
-        userListModels.add(UserListModel.Loading)
+        userListModels.add(UserListModel.LoadingModel)
         setState(userListModels = userListModels)
 
         getBookmarkUsersUseCase(name)
             .onEach { users ->
                 userListModels.clear()
 
-                users.sortedBy(User::name)
-                    .groupBy(User::header)
-                    .entries
+                users.map { user ->
+                    UserListModel.UserModel(
+                        user = user,
+                        toggleBookmark = { setAction(Action.BookmarkUser(it.user)) }
+                    )
+                }
+                    .sortedBy(UserListModel.UserModel::header)
+                    .groupBy(UserListModel.UserModel::header)
                     .forEach { (header, users) ->
-                        UserListModel.Header(header)
-                            .let(userListModels::add)
-
-                        users.map { user ->
-                            UserListModel.Item(
-                                user = user,
-                                toggleBookmark = { setAction(Action.BookmarkUser(it.user)) }
-                            )
-                        }.let(userListModels::addAll)
+                        userListModels.add(UserListModel.HeaderModel(header))
+                        userListModels.addAll(users)
                     }
 
                 setState(userListModels = userListModels)

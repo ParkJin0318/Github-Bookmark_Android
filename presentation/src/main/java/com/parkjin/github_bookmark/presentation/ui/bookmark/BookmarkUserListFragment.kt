@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.parkjin.github_bookmark.presentation.databinding.FragmentUserListBinding
+import com.parkjin.github_bookmark.presentation.extension.repeatOnStarted
 import com.parkjin.github_bookmark.presentation.extension.showToast
 import com.parkjin.github_bookmark.presentation.ui.common.UserListAdapter
 import com.parkjin.github_bookmark.presentation.ui.common.UserListItemDecoration
@@ -43,7 +43,6 @@ class BookmarkUserListFragment : Fragment() {
 
     private fun initializeView() {
         binding.list.setHasFixedSize(true)
-        binding.list.itemAnimator = null
         binding.list.adapter = UserListAdapter().also { adapter = it }
         binding.list.addItemDecoration(UserListItemDecoration(requireContext()))
 
@@ -53,7 +52,7 @@ class BookmarkUserListFragment : Fragment() {
     }
 
     private fun observeState() {
-        lifecycleScope.launchWhenStarted {
+        repeatOnStarted {
             viewModel.state
                 .map { it.userListModels }
                 .collect {
@@ -61,7 +60,7 @@ class BookmarkUserListFragment : Fragment() {
                 }
         }
 
-        lifecycleScope.launchWhenStarted {
+        repeatOnStarted {
             viewModel.state
                 .map { it.errorMessage }
                 .filter { it != null }

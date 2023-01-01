@@ -10,8 +10,8 @@ sealed class UserListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     class UserHeaderViewHolder(private val view: HeaderView) : UserListViewHolder(view) {
 
-        fun bind(item: UserListModel.Header) {
-            view.text = item.header
+        fun bind(item: UserListModel.HeaderModel) {
+            item.value?.let { view.text = it.toString() }
         }
     }
 
@@ -19,7 +19,7 @@ sealed class UserListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val view: UserItemView
     ) : UserListViewHolder(view) {
 
-        fun bind(item: UserListModel.Item) {
+        fun bind(item: UserListModel.UserModel) {
             view.name = item.user.name
             view.imgUrl = item.user.profileImageUrl
             view.starred = item.user.bookmarked

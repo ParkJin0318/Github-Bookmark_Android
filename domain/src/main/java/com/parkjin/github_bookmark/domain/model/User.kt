@@ -4,6 +4,4 @@ data class User(
     val name: String,
     val profileImageUrl: String,
     val bookmarked: Boolean
-) {
-    val header = name.first().uppercaseChar().toString()
-}
+)

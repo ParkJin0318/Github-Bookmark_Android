@@ -11,8 +11,8 @@ import com.parkjin.github_bookmark.presentation.R
 class UserListAdapter : ListAdapter<UserListModel, UserListViewHolder>(DiffItemCallback()) {
 
     override fun getItemViewType(position: Int) = when (getItem(position)) {
-        is UserListModel.Header -> R.layout.view_header
-        is UserListModel.Item -> R.layout.view_user_item
+        is UserListModel.HeaderModel -> R.layout.view_header
+        is UserListModel.UserModel -> R.layout.view_user_item
         else -> R.layout.view_loading
     }
 
@@ -31,9 +31,9 @@ class UserListAdapter : ListAdapter<UserListModel, UserListViewHolder>(DiffItemC
 
         when (holder) {
             is UserListViewHolder.UserHeaderViewHolder ->
-                holder.bind(item as UserListModel.Header)
+                holder.bind(item as UserListModel.HeaderModel)
             is UserListViewHolder.UserItemViewHolder ->
-                holder.bind(item as UserListModel.Item)
+                holder.bind(item as UserListModel.UserModel)
             else -> return
         }
     }
@@ -41,18 +41,17 @@ class UserListAdapter : ListAdapter<UserListModel, UserListViewHolder>(DiffItemC
     private class DiffItemCallback : DiffUtil.ItemCallback<UserListModel>() {
 
         override fun areItemsTheSame(oldItem: UserListModel, newItem: UserListModel): Boolean {
-            val isSameHeader = oldItem is UserListModel.Header
-                    && newItem is UserListModel.Header
-                    && oldItem.header == newItem.header
+            val isSameHeader = oldItem is UserListModel.HeaderModel &&
+                newItem is UserListModel.HeaderModel &&
+                oldItem.value == newItem.value
 
-            val isSameUser = oldItem is UserListModel.Item
-                    && newItem is UserListModel.Item
-                    && oldItem.user.name == newItem.user.name
-                    && oldItem.user.bookmarked == newItem.user.bookmarked
+            val isSameUser = oldItem is UserListModel.UserModel &&
+                newItem is UserListModel.UserModel &&
+                oldItem.user == newItem.user
 
-            val isSameLoading = oldItem is UserListModel.Loading
-                    && newItem is UserListModel.Loading
-                    && oldItem == newItem
+            val isSameLoading = oldItem is UserListModel.LoadingModel &&
+                newItem is UserListModel.LoadingModel &&
+                oldItem == newItem
 
             return isSameHeader || isSameUser || isSameLoading
         }
@@ -60,6 +59,20 @@ class UserListAdapter : ListAdapter<UserListModel, UserListViewHolder>(DiffItemC
         override fun areContentsTheSame(
             oldItem: UserListModel,
             newItem: UserListModel
-        ) = oldItem == newItem
+        ): Boolean {
+            val isSameHeader = oldItem is UserListModel.HeaderModel &&
+                newItem is UserListModel.HeaderModel &&
+                oldItem.value == newItem.value
+
+            val isSameUser = oldItem is UserListModel.UserModel &&
+                newItem is UserListModel.UserModel &&
+                oldItem.user == newItem.user
+
+            val isSameLoading = oldItem is UserListModel.LoadingModel &&
+                newItem is UserListModel.LoadingModel &&
+                oldItem == newItem
+
+            return isSameHeader || isSameUser || isSameLoading
+        }
     }
 }
