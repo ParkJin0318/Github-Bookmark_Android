@@ -1,12 +1,13 @@
 package com.parkjin.github_bookmark.domain.repository
 
 import com.parkjin.github_bookmark.domain.model.User
+import kotlinx.coroutines.flow.Flow
 
 interface BookmarkUserRepository {
 
-    fun getUsers(name: String): List<User>
+    fun getUsers(name: String): Flow<List<User>>
 
-    fun bookmarkUser(user: User)
+    suspend fun activateUserBookmark(user: User)
 
-    fun unBookmarkUser(user: User)
+    suspend fun disableUserBookmark(user: User)
 }

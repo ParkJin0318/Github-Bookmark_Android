@@ -2,7 +2,6 @@ package com.parkjin.github_bookmark.remote.api
 
 import com.parkjin.github_bookmark.remote.response.GithubResponse
 import com.parkjin.github_bookmark.remote.response.GithubUserResponse
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -14,9 +13,9 @@ interface GithubUserAPI {
     }
 
     @GET("search/users")
-    fun getGithubUsers(
+    suspend fun getGithubUsers(
         @Query("q", encoded = true) keyword: String,
         @Query("page") page: Int = DEFAULT_PAGE,
         @Query("per_page") perPage: Int = DEFAULT_PER_PAGE
-    ): Call<GithubResponse<GithubUserResponse>>
+    ): GithubResponse<GithubUserResponse>
 }
