@@ -1,8 +1,8 @@
 package com.parkjin.github_bookmark.remote
 
-import com.parkjin.github_bookmark.remote.api.GithubUserAPI
 import com.parkjin.github_bookmark.data.datasource.GithubUserDataSource
 import com.parkjin.github_bookmark.data.model.GithubUser
+import com.parkjin.github_bookmark.remote.api.GithubUserAPI
 import com.parkjin.github_bookmark.remote.response.GithubUserResponse
 import com.parkjin.github_bookmark.remote.response.toModel
 

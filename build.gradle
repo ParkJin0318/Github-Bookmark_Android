@@ -1,27 +1,27 @@
 buildscript {
     ext {
-        compileSdk = 32
-        targetSdk = 32
+        compileSdk = 33
+        targetSdk = 33
         minSdk = 23
         versionCode = 1
         versionName = "1.0"
 
-        kotlinVersion = '1.6.10'
-        gradleVersion = '7.2.1'
+        kotlinVersion = '1.7.20'
+        gradleVersion = '7.3.0'
 
-        coroutineVersion = '1.6.1'
+        coroutineVersion = '1.6.4'
         lifecycleVersion = '2.2.0'
 
-        hiltVersion = '2.41'
+        hiltVersion = '2.44'
 
-        okhttp3Version = '4.9.1'
+        okhttp3Version = '4.9.2'
         retrofit2Version = '2.9.0'
 
         roomVersion = '2.4.3'
 
-        glideVersion = '4.12.0'
+        glideVersion = '4.13.0'
 
-        materialVersion = '1.6.1'
+        materialVersion = '1.7.0'
     }
     repositories {
         google()
