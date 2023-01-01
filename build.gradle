@@ -12,7 +12,7 @@ buildscript {
         coroutineVersion = '1.6.4'
         lifecycleVersion = '2.2.0'
 
-        hiltVersion = '2.44'
+        hiltVersion = '2.44.1'
 
         okhttp3Version = '4.9.2'
         retrofit2Version = '2.9.0'

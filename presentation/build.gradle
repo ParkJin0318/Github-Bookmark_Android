@@ -39,8 +39,8 @@ dependencies {
     implementation project(':domain')
     implementation project(':component')
 
-    implementation 'androidx.core:core-ktx:1.8.0'
-    implementation "androidx.fragment:fragment-ktx:1.5.2"
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation "androidx.fragment:fragment-ktx:1.5.5"
 
     // Coroutine
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutineVersion"
