@@ -1,10 +1,12 @@
 package com.parkjin.github_bookmark.remote.response
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class GithubResponse<T>(
-    @SerializedName("total_count")
+    @SerialName("total_count")
     val count: Int,
-    @SerializedName("items")
+    @SerialName("items")
     val items: List<T>
 )

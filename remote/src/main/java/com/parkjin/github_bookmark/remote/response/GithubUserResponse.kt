@@ -1,12 +1,14 @@
 package com.parkjin.github_bookmark.remote.response
 
-import com.google.gson.annotations.SerializedName
 import com.parkjin.github_bookmark.data.model.GithubUser
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class GithubUserResponse(
-    @SerializedName("login")
+    @SerialName("login")
     val name: String,
-    @SerializedName("avatar_url")
+    @SerialName("avatar_url")
     val profileImageUrl: String
 )
 

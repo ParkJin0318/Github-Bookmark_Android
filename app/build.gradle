@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'kotlin-parcelize'
+    id 'kotlinx-serialization'
 }
 
 android {
@@ -59,12 +60,12 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$rootProject.hiltVersion"
     kapt "com.google.dagger:hilt-compiler:$rootProject.hiltVersion"
 
-    // Okhttp
-    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp3Version"
-
-    // Retrofit
-    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit2Version"
-    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit2Version"
+    // Ktor
+    implementation "io.ktor:ktor-client-core:$rootProject.ktorVersion"
+    implementation "io.ktor:ktor-client-cio:$rootProject.ktorVersion"
+    implementation "io.ktor:ktor-client-logging:$rootProject.ktorVersion"
+    implementation "io.ktor:ktor-client-content-negotiation:$rootProject.ktorVersion"
+    implementation "io.ktor:ktor-serialization-kotlinx-json:$rootProject.ktorVersion"
 
     // Room
     kapt "androidx.room:room-compiler:$rootProject.roomVersion"

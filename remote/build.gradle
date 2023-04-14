@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'kotlinx-serialization'
 }
 
 android {
@@ -36,7 +37,10 @@ dependencies {
     // Coroutine
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutineVersion"
 
-    // Retrofit
-    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit2Version"
-    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit2Version"
+    // Ktor
+    implementation "io.ktor:ktor-client-core:$rootProject.ktorVersion"
+    implementation "io.ktor:ktor-client-cio:$rootProject.ktorVersion"
+    implementation "io.ktor:ktor-client-logging:$rootProject.ktorVersion"
+    implementation "io.ktor:ktor-client-content-negotiation:$rootProject.ktorVersion"
+    implementation "io.ktor:ktor-serialization-kotlinx-json:$rootProject.ktorVersion"
 }

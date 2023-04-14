@@ -5,7 +5,7 @@ import com.parkjin.github_bookmark.data.datasource.GithubUserDataSource
 import com.parkjin.github_bookmark.local.BookmarkUserLocalDataSourceImpl
 import com.parkjin.github_bookmark.local.dao.BookmarkUserDao
 import com.parkjin.github_bookmark.remote.GithubUserRemoteDataSourceImpl
-import com.parkjin.github_bookmark.remote.api.GithubUserAPI
+import com.parkjin.github_bookmark.remote.api.GithubUserApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,6 +27,6 @@ object DataSourceModule {
     @Singleton
     @Provides
     fun providesGithubUserRemoteDataSource(
-        api: GithubUserAPI
+        api: GithubUserApi
     ): GithubUserDataSource = GithubUserRemoteDataSourceImpl(api)
 }
